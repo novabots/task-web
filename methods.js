@@ -3,8 +3,10 @@ Meteor.methods({
         if (Meteor.isServer) {
             this.unblock();
             try {
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = user.profile.apikey;
                 var result = HTTP.get(Meteor.settings.apiURL + "/project", {
-                    "auth": Meteor.settings.apiKey + ":X",
+                    "auth": apikey + ":X",
                     "params": req,
                     "headers": {
                         "Accept": "application/json"
@@ -20,8 +22,10 @@ Meteor.methods({
         if (Meteor.isServer) {
             this.unblock();
             try {
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = user.profile.apikey;
                 var result = HTTP.get(Meteor.settings.apiURL + "/worktype", {
-                    "auth": Meteor.settings.apiKey + ":X",
+                    "auth": apikey + ":X",
                     "params": req,
                     "headers": {
                         "Accept": "application/json"
@@ -37,8 +41,10 @@ Meteor.methods({
         if (Meteor.isServer) {
             this.unblock();
             try {
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = user.profile.apikey;
                 var result = HTTP.get(Meteor.settings.apiURL + "/person", {
-                    "auth": Meteor.settings.apiKey + ":X",
+                    "auth": apikey + ":X",
                     "params": req,
                     "headers": {
                         "Accept": "application/json"
@@ -54,8 +60,10 @@ Meteor.methods({
         if (Meteor.isServer) {
             this.unblock();
             try {
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = user.profile.apikey;
                 var result = HTTP.get(Meteor.settings.apiURL + "/client", {
-                    "auth": Meteor.settings.apiKey + ":X",
+                    "auth": apikey + ":X",
                     "params": req,
                     "headers": {
                         "Accept": "application/json"
@@ -71,8 +79,10 @@ Meteor.methods({
         if (Meteor.isServer) {
             this.unblock();
             try {
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = user.profile.apikey;
                 var result = HTTP.get(Meteor.settings.apiURL + "/module", {
-                    "auth": Meteor.settings.apiKey + ":X",
+                    "auth": apikey + ":X",
                     "params": req,
                     "headers": {
                         "Accept": "application/json"
@@ -87,8 +97,8 @@ Meteor.methods({
     postTime: function (req) {
         if (Meteor.isServer) {
             try {
-                var user = this.userId;
-                var apikey = user.apikey;
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = user.profile.apikey;
                 var result = HTTP.post(Meteor.settings.apiURL + "/time", {
                     "auth": apikey + ":X",
                     "params": req,

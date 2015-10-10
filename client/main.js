@@ -7,8 +7,7 @@ Template.mainLayout.helpers({
 Template.app.helpers({
     apiConnected: function(){
         var user = Meteor.user();
-        console.log(typeof user.profile.apikey);
-        return user.apikey != "";
+        return user.profile.apikey != "";
     }
 });
 
