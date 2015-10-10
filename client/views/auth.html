@@ -1,0 +1,79 @@
+<template name="auth">
+    <div class="mask"> </div>
+    <div class="modal fade in wide-modal" id="authenticateDialog">
+        {{#if loggingIn}}
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    {{> spinner}}
+                </div>
+            </div>
+        {{else}}
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Login or Create an Account</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <button type="button" id="loginToggle" class="btn {{authModeClass "login"}}">Login</button>
+                            </div>
+                            <div class="btn-group">
+                                <button type="button" id="createToggle" class="btn {{authModeClass "create"}}">Create Account</button>
+                            </div>
+                        </div>
+                        <div class="">
+                            {{#if authMode "login"}}
+                                {{> login }}
+                            {{/if}}
+                            {{#if authMode "create"}}
+                                {{> register }}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</template>
+
+<template name="login">
+    <hr class="divider" />
+    <div class="service-buttons">
+        <button class="google-login btn"><i class="fa fa-google-plus"></i> &nbsp;Login with Google</button>
+    </div>
+    <hr class="divider" />
+    <form id="login-form">
+        <div class="form-group">
+            <label for="login-username">Username</label>
+            <input type="text" id="login-username" class="form-control" placeholder="Username" />
+        </div>
+        <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-control" placeholder="Password" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Log In</button>
+        <button type="button" class="btn btn-default" id="authCancel">Cancel</button>
+    </form>
+</template>
+
+<template name="register">
+    <hr class="divider" />
+    <form id="create-account-form">
+        <div class="form-group">
+            <label for="create-username">Username</label>
+            <input type="text" id="create-username" class="form-control" placeholder="Username" />
+        </div>
+        <div class="form-group">
+            <label for="create-password">Password</label>
+            <input type="password" id="create-password" class="form-control" placeholder="Password" />
+        </div>
+        <div class="form-group">
+            <label for="create-email">Email Address</label>
+            <input type="email" id="create-email" class="form-control" placeholder="name@domain.com" />
+        </div>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+        <button type="button" class="btn btn-default" id="authCancel">Cancel</button>
+    </form>
+</template>
