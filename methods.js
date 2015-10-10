@@ -87,8 +87,10 @@ Meteor.methods({
     postTime: function (req) {
         if (Meteor.isServer) {
             try {
+                var user = this.userId;
+                var apikey = user.apikey;
                 var result = HTTP.post(Meteor.settings.apiURL + "/time", {
-                    "auth": Meteor.settings.apiKey + ":X",
+                    "auth": apikey + ":X",
                     "params": req,
                     "headers": {
                         "Accept": "application/json"
@@ -99,5 +101,8 @@ Meteor.methods({
                 throw e;
             }
         }
+    },
+    setAPIKey: function (req) {
+        return Meteor.users.update({_id: this.userId}, {$set:{profile: {apikey: req}}});
     }
 });

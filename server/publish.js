@@ -19,3 +19,9 @@ Meteor.publish("organizations", function(){
         Organizations.find();
     }
 });
+
+Meteor.publish("users", function(){
+    if(this.userId){
+        return Meteor.users.find();
+    }
+});
