@@ -63,8 +63,31 @@ var TaskList = React.createClass({
     },
     render() {
         return (
-          <ul>{this.renderTasks()}</ul>
+            <div>
+                <form className="new-task" onSubmit={this.handleSubmit}>
+                <input
+                    type="text"
+                    className="form-control"
+                    ref="textInput"
+                    placeholder="Type to add new tasks" />
+                </form>
+                <div>{this.renderTasks()}</div>
+            </div>
         );
+    },
+    handleSubmit(event) {
+        event.preventDefault();
+        // Find the text field via the React ref
+        var text = React.findDOMNode(this.refs.textInput).value.trim();
+
+        Tasks.insert({
+            text: text,
+            createdAt: new Date(), // current time
+            userId: this.userId
+        });
+
+        // Clear form
+        React.findDOMNode(this.refs.textInput).value = "";
     }
 });
 
@@ -74,7 +97,10 @@ var Task = React.createClass({
     },
     render() {
         return (
-            <li>{this.props.task.text}</li>
+            <div className="panel panel-default">
+                <div className="panel-heading">{this.props.task.text}</div>
+                <div className="panel-body"></div>
+            </div>
         );
     }
 });
