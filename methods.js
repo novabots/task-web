@@ -1,19 +1,103 @@
 Meteor.methods({
-    getProjects: function () {
-        this.unblock();
-        try {
-            var result = HTTP.get('http://localhost:3000/intervals-project.json');
-            return result;
-        } catch (e) {
-            return false;
+    getProjects: function (req) {
+        if (Meteor.isServer) {
+            this.unblock();
+            try {
+                var result = HTTP.get(Meteor.settings.apiURL + "/project", {
+                    "auth": Meteor.settings.apiKey + ":X",
+                    "params": req,
+                    "headers": {
+                        "Accept": "application/json"
+                    }
+                });
+                return result;
+            } catch (e) {
+                throw e;
+            }
+        }
+    },
+    getWorkTypes: function (req) {
+        if (Meteor.isServer) {
+            this.unblock();
+            try {
+                var result = HTTP.get(Meteor.settings.apiURL + "/worktype", {
+                    "auth": Meteor.settings.apiKey + ":X",
+                    "params": req,
+                    "headers": {
+                        "Accept": "application/json"
+                    }
+                });
+                return result;
+            } catch (e) {
+                throw e;
+            }
+        }
+    },
+    getPersons: function (req) {
+        if (Meteor.isServer) {
+            this.unblock();
+            try {
+                var result = HTTP.get(Meteor.settings.apiURL + "/person", {
+                    "auth": Meteor.settings.apiKey + ":X",
+                    "params": req,
+                    "headers": {
+                        "Accept": "application/json"
+                    }
+                });
+                return result;
+            } catch (e) {
+                throw e;
+            }
+        }
+    },
+    getClients: function (req) {
+        if (Meteor.isServer) {
+            this.unblock();
+            try {
+                var result = HTTP.get(Meteor.settings.apiURL + "/client", {
+                    "auth": Meteor.settings.apiKey + ":X",
+                    "params": req,
+                    "headers": {
+                        "Accept": "application/json"
+                    }
+                });
+                return result;
+            } catch (e) {
+                throw e;
+            }
+        }
+    },
+    getModules: function (req) {
+        if (Meteor.isServer) {
+            this.unblock();
+            try {
+                var result = HTTP.get(Meteor.settings.apiURL + "/module", {
+                    "auth": Meteor.settings.apiKey + ":X",
+                    "params": req,
+                    "headers": {
+                        "Accept": "application/json"
+                    }
+                });
+                return result;
+            } catch (e) {
+                throw e;
+            }
         }
     },
     postTime: function (req) {
-        try {
-            var result = HTTP.post('http://localhost:3000/intervals-project.json');
-            return req;
-        } catch (e) {
-            return false;
+        if (Meteor.isServer) {
+            try {
+                var result = HTTP.post(Meteor.settings.apiURL + "/time", {
+                    "auth": Meteor.settings.apiKey + ":X",
+                    "params": req,
+                    "headers": {
+                        "Accept": "application/json"
+                    }
+                });
+                return result;
+            } catch (e) {
+                throw e;
+            }
         }
     }
 });

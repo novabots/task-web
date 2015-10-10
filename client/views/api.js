@@ -1,11 +1,26 @@
 Template.apiLayout.events({
     "click .get-projects": function (evt) {
-        Meteor.call("getProjects", function (error, result) {
+        Meteor.call("getProjects", {
+            //"clientid": "-1",
+            "active": "t",
+            //"personid": "-1",
+            "limit": "0"
+        }, function (error, result) {
+            console.log(error);
             console.log(result);
         });
     },
     "click .post-time": function (evt) {
-        Meteor.call("postTime", { userId: 123, startTime: "20:30", endTime: "21:30", startDate: "9/1/2015", endDate: "9/1/2015" }, function (error, result) {
+        Meteor.call("postTime", {
+            "projectid": "",
+            "moduleid": "",
+            "worktypeid": "",
+            "personid": "",
+            "date": "",
+            "time": "",
+            "billable": ""
+        }, function (error, result) {
+            console.log(error);
             console.log(result);
         });
     }
