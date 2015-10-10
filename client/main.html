@@ -24,13 +24,15 @@
 </template>
 
 <template name="header">
-  <div id="header">
-      
-  </div>
+    <div id="header">
+        {{> React component=ActionBar}}
+    </div>
 </template>
 
 <template name="sidebar">
-
+    <div id="sidebar" class="col-sm-4 {{statusClass}}">
+        {{> React component=TaskList}}
+    </div>
 </template>
 
 <template name="nodeGraph">

@@ -1,0 +1,33 @@
+body {
+  background-color: #999999;
+}
+
+*, *:focus, *:active {
+  outline: none !important;
+}
+
+.modal {
+  display: block !important;
+}
+
+#header {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+#sidebar {
+  background-color: @gray-lighter;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  &.sidebar-closed {
+    left: -100%;
+  }
+  &.sidebar-open {
+    left: 0;
+  }
+}

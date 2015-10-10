@@ -1,3 +1,7 @@
+Template.auth.onCreated(function(){
+    this.authMode = new ReactiveVar("login");
+});
+
 Template.register.events({
     "submit #create-account-form": function(event, template) {
         event.preventDefault();
@@ -45,18 +49,21 @@ Template.login.events({
 
 Template.auth.helpers({
     authMode: function(what){
-        return what == Session.get("authMode");
+        return what == Template.instance().authMode.get("authMode");
     },
     authModeClass: function(what){
-        return what == Session.get("authMode") ? "btn-primary" : "btn-default";
+        return what == Template.instance().authMode.get("authMode") ? "btn-primary" : "btn-default";
+    },
+    loggingIn: function(){
+        return Meteor.loggingIn()
     }
 });
 
 Template.auth.events({
-    'click #loginToggle': function(){
-        return Session.set("authMode", "login");
+    'click #loginToggle': function(e, template){
+        return template.authMode.set("login");
     },
-    'click #createToggle': function(){
-        return Session.set("authMode", "create");
+    'click #createToggle': function(e, template){
+        return template.authMode.set("create");
     }
 });
