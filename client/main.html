@@ -1,3 +1,34 @@
+<head>
+    <title>Task Web - by the Nova Bots</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+</body>
+
 <template name="mainLayout">
-    <h1>Hi there.</h1>
+    {{#if currentUser}}
+        {{> app}}
+    {{else}}
+        {{> auth}}
+    {{/if}}
+</template>
+
+<template name="app">
+
+</template>
+
+<template name="header">
+
+</template>
+
+<template name="sidebar">
+
+</template>
+
+<template name="nodeGraph">
+
 </template>

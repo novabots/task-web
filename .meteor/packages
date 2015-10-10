@@ -24,4 +24,9 @@ matb33:collection-hooks
 kadira:flow-router
 kadira:blaze-layout
 momentjs:moment
+accounts-password
+accounts-google
+reactive-var
 http
+pfafman:font-awesome-4
+chrismbeckett:toastr
