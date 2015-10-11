@@ -24,7 +24,7 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
-                var result = HTTP.get(Meteor.settings.apiURL + "/worktype", {
+                var result = HTTP.get(Meteor.settings.apiURL + "/projectworktype", {
                     "auth": apikey + ":X",
                     "params": req,
                     "headers": {
@@ -81,7 +81,7 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
-                var result = HTTP.get(Meteor.settings.apiURL + "/module", {
+                var result = HTTP.get(Meteor.settings.apiURL + "/projectmodule", {
                     "auth": apikey + ":X",
                     "params": req,
                     "headers": {
