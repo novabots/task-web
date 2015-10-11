@@ -58,7 +58,11 @@ var TaskForm = React.createClass({
             <div>
             { this.state.enteringNew ?
                 <form className="new-task" onSubmit={this.handleSubmit}>
-                    <input type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" placeholder="Search Clients" />
+                    <input ref="personId" type="text" className="form-control typeahead" name="person" autoComplete="off" spellCheck="off" data-source="persons" data-min-length="0" data-select="personSelected" placeholder="Search People" />
+                    <input ref="clientId" type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
+                    <input ref="projectId" type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
+                    <input ref="projectModuleId" type="text" className="form-control typeahead" name="projectmodule" autoComplete="off" spellCheck="off" data-source="projectmodules" data-min-length="0" data-select="projectmoduleSelected" placeholder="Search Modules" />
+                    <input ref="projectWorkTypeId" type="text" className="form-control typeahead" name="projectworktype" autoComplete="off" spellCheck="off" data-source="projectworktypes" data-min-length="0" data-select="projectworktypeSelected" placeholder="Search Work Types" />
                     <input
                         type="text"
                         className="form-control"
@@ -72,6 +76,7 @@ var TaskForm = React.createClass({
                         ref="taskDueDate"
                         type="date"
                         placeholder="Task Due Date" />
+                    <button type="submit" className="btn btn-primary btn-block">Submit</button>
                 </form> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
             }
             </div>
@@ -84,14 +89,41 @@ var TaskForm = React.createClass({
         event.preventDefault();
         // Find the text field via the React ref
         var taskTitle = React.findDOMNode(this.refs.taskTitle).value.trim();
-        var taskDescription = React.findDOMNode(this.refs.taskTitle).value.trim();
+        var taskDescription = React.findDOMNode(this.refs.taskDescription).value.trim();
+        var taskDueDate = React.findDOMNode(this.refs.taskDueDate).value.trim();
+        var personId = Session.get("personId");
+        var clientId = Session.get("clientId");
+        var projectId = Session.get("projectId");
+        var projectModuleId = Session.get("projectModuleId");
+        var projectWorkTypeId = Session.get("projectWorkTypeId");
 
-        Tasks.insert({
-            title: taskTitle,
-            description: taskDescription,
-            createdAt: new Date(), // current time
-            userId: this.userId
-        });
+        // Meteor.call("postTime", {
+        //     "projectid": projectId,
+        //     "moduleid": projectModuleId,
+        //     "worktypeid": projectWorkTypeId,
+        //     "date": "2015-10-10",
+        //     "time": "1.00",
+        //     "description": taskDescription,
+        //     "billable": "f",
+        //     "personid": personId
+        // }, function (error, result) {
+        //     if (error) {
+        //         toastr.error(error);
+        //     } else {
+                Tasks.insert({
+                    title: taskTitle,
+                    description: taskDescription,
+                    createdAt: new Date(), // current time
+                    dueDate: taskDueDate,
+                    userId: this.userId,
+                    personId: personId,
+                    clientId: clientId,
+                    projectId: projectId,
+                    projectModuleId: projectModuleId,
+                    projectWorkTypeId: projectWorkTypeId
+                });
+        //     }
+        // });
 
         this.setState({enteringNew: false});
     },
@@ -126,8 +158,8 @@ var Task = React.createClass({
     render() {
         return (
             <div className="panel panel-default">
-                <div className="panel-heading">{this.props.task.text}</div>
-                <div className="panel-body"></div>
+                <div className="panel-heading">{this.props.task.title}</div>
+                <div className="panel-body">{this.props.task.description}</div>
             </div>
         );
     }
@@ -142,11 +174,47 @@ Template.taskList.helpers({
         return TaskList;
     }
 });
+
+Template.taskForm.onCreated(function () {
+    Session.set("personId", 0);
+    Session.set("clientId", 0);
+    Session.set("projectId", 0);
+    Session.set("projectModuleId", 0);
+    Session.set("projectWorkTypeId", 0);
+});
+
 Template.taskForm.helpers({
     TaskForm() {
         return TaskForm;
     },
-    clients: function () {
-        return Clients.find().fetch().map(function (it) { return it.name; });
+    persons() {
+        return Persons.find().fetch().map(function (it) { return { "value": it.firstname + " " + it.lastname, "id": it.id }; });
+    },
+    clients() {
+        return Clients.find().fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+    },
+    projects() {
+        return Projects.find({ clientid: Session.get("clientId") }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+    },
+    projectmodules() {
+        return ProjectModules.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.modulename, "id": it.moduleid }; });
+    },
+    projectworktypes() {
+        return ProjectWorkTypes.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.worktype, "id": it.worktypeid }; });
+    },
+    personSelected(event, suggestion, datasetName) {
+        Session.set("personId", suggestion.id);
+    },
+    clientSelected(event, suggestion, datasetName) {
+        Session.set("clientId", suggestion.id);
+    },
+    projectSelected(event, suggestion, datasetName) {
+        Session.set("projectId", suggestion.id);
+    },
+    projectmoduleSelected(event, suggestion, datasetName) {
+        Session.set("projectModuleId", suggestion.id);
+    },
+    projectworktypeSelected(event, suggestion, datasetName) {
+        Session.set("projectWorkTypeId", suggestion.id);
     }
 });

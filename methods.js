@@ -12,13 +12,18 @@ Meteor.methods({
                         "Accept": "application/json"
                     }
                 });
+                Projects.remove({ "userId": user._id });
+                _.each (result.data.project, function (it) {
+                    it.userId = user._id;
+                    Projects.insert(it);
+                });
                 return result;
             } catch (e) {
                 throw e;
             }
         }
     },
-    getWorkTypes: function (req) {
+    getProjectWorkTypes: function (req) {
         if (Meteor.isServer) {
             this.unblock();
             try {
@@ -30,6 +35,11 @@ Meteor.methods({
                     "headers": {
                         "Accept": "application/json"
                     }
+                });
+                ProjectWorkTypes.remove({ "userId": user._id });
+                _.each (result.data.projectworktype, function (it) {
+                    it.userId = user._id;
+                    ProjectWorkTypes.insert(it);
                 });
                 return result;
             } catch (e) {
@@ -49,6 +59,11 @@ Meteor.methods({
                     "headers": {
                         "Accept": "application/json"
                     }
+                });
+                Persons.remove({ "userId": user._id });
+                _.each (result.data.person, function (it) {
+                    it.userId = user._id;
+                    Persons.insert(it);
                 });
                 return result;
             } catch (e) {
@@ -80,7 +95,7 @@ Meteor.methods({
             }
         }
     },
-    getModules: function (req) {
+    getProjectModules: function (req) {
         if (Meteor.isServer) {
             this.unblock();
             try {
@@ -93,6 +108,11 @@ Meteor.methods({
                         "Accept": "application/json"
                     }
                 });
+                ProjectModules.remove({ "userId": user._id });
+                _.each (result.data.projectmodule, function (it) {
+                    it.userId = user._id;
+                    ProjectModules.insert(it);
+                });
                 return result;
             } catch (e) {
                 throw e;
@@ -102,13 +122,15 @@ Meteor.methods({
     postTime: function (req) {
         if (Meteor.isServer) {
             try {
+                console.log(req);
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
                 var result = HTTP.post(Meteor.settings.apiURL + "/time", {
                     "auth": apikey + ":X",
-                    "params": req,
+                    "data": req,
                     "headers": {
-                        "Accept": "application/json"
+                        "Accept": "application/json",
+                        "Content-type": "application/json"
                     }
                 });
                 return result;
@@ -121,11 +143,3 @@ Meteor.methods({
         return Meteor.users.update({_id: this.userId}, {$set:{profile: {apikey: req}}});
     }
 });
-// if (Meteor.isServer) {
-//     Meteor.startup(function () {
-//         Clients.remove({});
-//         JSON.parse(Meteor.call("getClients").client).forEach(function (it) {
-//             Clients.insert(it);
-//         });
-//     });
-// }

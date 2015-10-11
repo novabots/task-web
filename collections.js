@@ -8,3 +8,10 @@ Organizations = new Meteor.Collection("organizations");
 
 Clients = new Meteor.Collection("clients");
 
+Projects = new Meteor.Collection("projects");
+
+ProjectModules = new Meteor.Collection("projectmodules");
+
+ProjectWorkTypes = new Meteor.Collection("projectworktypes");
+
+Persons = new Meteor.Collection("persons");
