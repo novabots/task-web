@@ -69,6 +69,11 @@ Meteor.methods({
                         "Accept": "application/json"
                     }
                 });
+                Clients.remove({ "userId": user._id });
+                _.each (result.data.client, function (it) {
+                    it.userId = user._id;
+                    Clients.insert(it);
+                });
                 return result;
             } catch (e) {
                 throw e;
@@ -116,3 +121,11 @@ Meteor.methods({
         return Meteor.users.update({_id: this.userId}, {$set:{profile: {apikey: req}}});
     }
 });
+// if (Meteor.isServer) {
+//     Meteor.startup(function () {
+//         Clients.remove({});
+//         JSON.parse(Meteor.call("getClients").client).forEach(function (it) {
+//             Clients.insert(it);
+//         });
+//     });
+// }

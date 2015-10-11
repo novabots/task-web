@@ -25,3 +25,9 @@ Meteor.publish("users", function(){
         return Meteor.users.find();
     }
 });
+
+Meteor.publish("clients", function () {
+    if (this.userId) {
+        return Clients.find({ userId: this.userId });
+    }
+});

@@ -30,3 +30,5 @@ reactive-var
 http
 pfafman:font-awesome-4
 chrismbeckett:toastr
+sergeyt:typeahead
+twbs:bootstrap

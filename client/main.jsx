@@ -49,31 +49,54 @@ Template.header.helpers({
 });
 
 var TaskForm = React.createClass({
+    getInitialState() {
+        return { enteringNew: false, user: Meteor.user() }
+    },
     userId: Meteor.userId(),
     render() {
         return (
-            <form className="new-task" onSubmit={this.handleSubmit}>
-            <input
-                type="text"
-                className="form-control"
-                ref="textInput"
-                placeholder="Type to add new tasks" />
-            </form>
+            <div>
+            { this.state.enteringNew ?
+                <form className="new-task" onSubmit={this.handleSubmit}>
+                    <input type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" placeholder="Search Clients" />
+                    <input
+                        type="text"
+                        className="form-control"
+                        ref="taskTitle"
+                        placeholder="Task Title" />
+                    <textarea
+                        className="form-control"
+                        ref="taskDescription" placeholder="Task Description"></textarea>
+                    <input
+                        className="form-control"
+                        ref="taskDueDate"
+                        type="date"
+                        placeholder="Task Due Date" />
+                </form> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
+            }
+            </div>
         );
+    },
+    toggleForm() {
+        this.setState({enteringNew: true});
     },
     handleSubmit(event) {
         event.preventDefault();
         // Find the text field via the React ref
-        var text = React.findDOMNode(this.refs.textInput).value.trim();
+        var taskTitle = React.findDOMNode(this.refs.taskTitle).value.trim();
+        var taskDescription = React.findDOMNode(this.refs.taskTitle).value.trim();
 
         Tasks.insert({
-            text: text,
+            title: taskTitle,
+            description: taskDescription,
             createdAt: new Date(), // current time
             userId: this.userId
         });
 
-        // Clear form
-        React.findDOMNode(this.refs.textInput).value = "";
+        this.setState({enteringNew: false});
+    },
+    componentDidUpdate() {
+        Meteor.typeahead.inject();
     }
 });
 var TaskList = React.createClass({
@@ -122,5 +145,8 @@ Template.taskList.helpers({
 Template.taskForm.helpers({
     TaskForm() {
         return TaskForm;
+    },
+    clients: function () {
+        return Clients.find().fetch().map(function (it) { return it.name; });
     }
 });

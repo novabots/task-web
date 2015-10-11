@@ -6,3 +6,4 @@ Teams = new Meteor.Collection("teams");
 
 Organizations = new Meteor.Collection("organizations");
 
+Clients = new Meteor.Collection("clients");
