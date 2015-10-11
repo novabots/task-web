@@ -60,6 +60,11 @@ Meteor.methods({
                         "Accept": "application/json"
                     }
                 });
+                Persons.remove({ "userId": user._id });
+                _.each (result.data.person, function (it) {
+                    it.userId = user._id;
+                    Persons.insert(it);
+                });
                 return result;
             } catch (e) {
                 throw e;

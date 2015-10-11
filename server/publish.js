@@ -62,3 +62,9 @@ Meteor.publish("projectworktypes", function () {
         return ProjectWorkTypes.find({ userId: this.userId });
     }
 });
+
+Meteor.publish("persons", function () {
+    if (this.userId) {
+        return Persons.find({ userId: this.userId });
+    }
+});

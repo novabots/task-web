@@ -58,6 +58,7 @@ var TaskForm = React.createClass({
             <div>
             { this.state.enteringNew ?
                 <form className="new-task" onSubmit={this.handleSubmit}>
+                    <input ref="personId" type="text" className="form-control typeahead" name="person" autoComplete="off" spellCheck="off" data-source="persons" data-min-length="0" data-select="personSelected" placeholder="Search People" />
                     <input ref="clientId" type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
                     <input ref="projectId" type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
                     <input ref="projectModuleId" type="text" className="form-control typeahead" name="projectmodule" autoComplete="off" spellCheck="off" data-source="projectmodules" data-min-length="0" data-select="projectmoduleSelected" placeholder="Search Modules" />
@@ -89,36 +90,40 @@ var TaskForm = React.createClass({
         // Find the text field via the React ref
         var taskTitle = React.findDOMNode(this.refs.taskTitle).value.trim();
         var taskDescription = React.findDOMNode(this.refs.taskDescription).value.trim();
+        var taskDueDate = React.findDOMNode(this.refs.taskDueDate).value.trim();
+        var personId = Session.get("personId");
         var clientId = Session.get("clientId");
         var projectId = Session.get("projectId");
         var projectModuleId = Session.get("projectModuleId");
         var projectWorkTypeId = Session.get("projectWorkTypeId");
 
-        Meteor.call("postTime", {
-            "projectid": projectId,
-            "moduleid": projectModuleId,
-            "worktypeid": projectWorkTypeId,
-            "date": "2015-10-10",
-            "time": "1.00",
-            "description": taskDescription,
-            "billable": "f",
-            "personid": 252388
-        }, function (error, result) {
-            if (error) {
-                toastr.error(error);
-            } else {
+        // Meteor.call("postTime", {
+        //     "projectid": projectId,
+        //     "moduleid": projectModuleId,
+        //     "worktypeid": projectWorkTypeId,
+        //     "date": "2015-10-10",
+        //     "time": "1.00",
+        //     "description": taskDescription,
+        //     "billable": "f",
+        //     "personid": personId
+        // }, function (error, result) {
+        //     if (error) {
+        //         toastr.error(error);
+        //     } else {
                 Tasks.insert({
                     title: taskTitle,
                     description: taskDescription,
                     createdAt: new Date(), // current time
+                    dueDate: taskDueDate,
                     userId: this.userId,
+                    personId: personId,
                     clientId: clientId,
                     projectId: projectId,
                     projectModuleId: projectModuleId,
                     projectWorkTypeId: projectWorkTypeId
                 });
-            }
-        });
+        //     }
+        // });
 
         this.setState({enteringNew: false});
     },
@@ -171,6 +176,7 @@ Template.taskList.helpers({
 });
 
 Template.taskForm.onCreated(function () {
+    Session.set("personId", 0);
     Session.set("clientId", 0);
     Session.set("projectId", 0);
     Session.set("projectModuleId", 0);
@@ -180,6 +186,9 @@ Template.taskForm.onCreated(function () {
 Template.taskForm.helpers({
     TaskForm() {
         return TaskForm;
+    },
+    persons() {
+        return Persons.find().fetch().map(function (it) { return { "value": it.firstname + " " + it.lastname, "id": it.id }; });
     },
     clients() {
         return Clients.find().fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
@@ -192,6 +201,9 @@ Template.taskForm.helpers({
     },
     projectworktypes() {
         return ProjectWorkTypes.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.worktype, "id": it.worktypeid }; });
+    },
+    personSelected(event, suggestion, datasetName) {
+        Session.set("personId", suggestion.id);
     },
     clientSelected(event, suggestion, datasetName) {
         Session.set("clientId", suggestion.id);

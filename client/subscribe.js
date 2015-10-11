@@ -17,3 +17,5 @@ Meteor.subscribe("projects");
 Meteor.subscribe("projectmodules");
 
 Meteor.subscribe("projectworktypes");
+
+Meteor.subscribe("persons");
