@@ -23,7 +23,7 @@ Meteor.methods({
             }
         }
     },
-    getWorkTypes: function (req) {
+    getProjectWorkTypes: function (req) {
         if (Meteor.isServer) {
             this.unblock();
             try {
@@ -35,6 +35,11 @@ Meteor.methods({
                     "headers": {
                         "Accept": "application/json"
                     }
+                });
+                ProjectWorkTypes.remove({ "userId": user._id });
+                _.each (result.data.projectworktype, function (it) {
+                    it.userId = user._id;
+                    ProjectWorkTypes.insert(it);
                 });
                 return result;
             } catch (e) {
@@ -85,7 +90,7 @@ Meteor.methods({
             }
         }
     },
-    getModules: function (req) {
+    getProjectModules: function (req) {
         if (Meteor.isServer) {
             this.unblock();
             try {
@@ -97,6 +102,11 @@ Meteor.methods({
                     "headers": {
                         "Accept": "application/json"
                     }
+                });
+                ProjectModules.remove({ "userId": user._id });
+                _.each (result.data.projectmodule, function (it) {
+                    it.userId = user._id;
+                    ProjectModules.insert(it);
                 });
                 return result;
             } catch (e) {

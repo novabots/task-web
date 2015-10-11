@@ -49,4 +49,16 @@ Meteor.publish("projects", function () {
     if (this.userId) {
         return Projects.find({ userId: this.userId });
     }
-})
+});
+
+Meteor.publish("projectmodules", function () {
+    if (this.userId) {
+        return ProjectModules.find({ userId: this.userId });
+    }
+});
+
+Meteor.publish("projectworktypes", function () {
+    if (this.userId) {
+        return ProjectWorkTypes.find({ userId: this.userId });
+    }
+});

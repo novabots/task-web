@@ -58,8 +58,10 @@ var TaskForm = React.createClass({
             <div>
             { this.state.enteringNew ?
                 <form className="new-task" onSubmit={this.handleSubmit}>
-                    <input type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
-                    <input type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
+                    <input ref="clientId" type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
+                    <input ref="projectId" type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
+                    <input ref="projectModuleId" type="text" className="form-control typeahead" name="projectmodule" autoComplete="off" spellCheck="off" data-source="projectmodules" data-min-length="0" data-select="projectmoduleSelected" placeholder="Search Modules" />
+                    <input ref="projectWorkTypeId" type="text" className="form-control typeahead" name="projectworktype" autoComplete="off" spellCheck="off" data-source="projectworktypes" data-min-length="0" data-select="projectworktypeSelected" placeholder="Search Work Types" />
                     <input
                         type="text"
                         className="form-control"
@@ -73,6 +75,7 @@ var TaskForm = React.createClass({
                         ref="taskDueDate"
                         type="date"
                         placeholder="Task Due Date" />
+                    <button type="submit" className="btn btn-primary btn-block">Submit</button>
                 </form> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
             }
             </div>
@@ -85,13 +88,21 @@ var TaskForm = React.createClass({
         event.preventDefault();
         // Find the text field via the React ref
         var taskTitle = React.findDOMNode(this.refs.taskTitle).value.trim();
-        var taskDescription = React.findDOMNode(this.refs.taskTitle).value.trim();
+        var taskDescription = React.findDOMNode(this.refs.taskDescription).value.trim();
+        var clientId = Session.get("clientId");
+        var projectId = Session.get("projectId");
+        var projectModuleId = Session.get("projectModuleId");
+        var projectWorkTypeId = Session.get("projectWorkTypeId");
 
         Tasks.insert({
             title: taskTitle,
             description: taskDescription,
             createdAt: new Date(), // current time
-            userId: this.userId
+            userId: this.userId,
+            clientId: clientId,
+            projectId: projectId,
+            projectModuleId: projectModuleId,
+            projectWorkTypeId: projectWorkTypeId
         });
 
         this.setState({enteringNew: false});
@@ -127,8 +138,8 @@ var Task = React.createClass({
     render() {
         return (
             <div className="panel panel-default">
-                <div className="panel-heading">{this.props.task.text}</div>
-                <div className="panel-body"></div>
+                <div className="panel-heading">{this.props.task.title}</div>
+                <div className="panel-body">{this.props.task.description}</div>
             </div>
         );
     }
@@ -145,8 +156,10 @@ Template.taskList.helpers({
 });
 
 Template.taskForm.onCreated(function () {
-    this.clientid = new ReactiveVar(0);
-    this.projectid = new ReactiveVar(0);
+    Session.set("clientId", 0);
+    Session.set("projectId", 0);
+    Session.set("projectModuleId", 0);
+    Session.set("projectWorkTypeId", 0);
 });
 
 Template.taskForm.helpers({
@@ -157,12 +170,24 @@ Template.taskForm.helpers({
         return Clients.find().fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
     },
     projects() {
-        return Projects.find({ clientid: Template.instance().clientid.get() }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+        return Projects.find({ clientid: Session.get("clientId") }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+    },
+    projectmodules() {
+        return ProjectModules.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.modulename, "id": it.id }; });
+    },
+    projectworktypes() {
+        return ProjectWorkTypes.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.worktype, "id": it.id }; });
     },
     clientSelected(event, suggestion, datasetName) {
-        Template.instance().clientid.set(suggestion.id);
+        Session.set("clientId", suggestion.id);
     },
-    projectsSelected(event, suggestion, datasetName) {
-        Template.instance().projectid.set(suggestion.id);
+    projectSelected(event, suggestion, datasetName) {
+        Session.set("projectId", suggestion.id);
+    },
+    projectmoduleSelected(event, suggestion, datasetName) {
+        Session.set("projectModuleId", suggestion.id);
+    },
+    projectworktypeSelected(event, suggestion, datasetName) {
+        Session.set("projectWorkTypeId", suggestion.id);
     }
 });
