@@ -34,12 +34,21 @@
 </template>
 
 <template name="sidebar">
-
     <div id="sidebar" class="col-sm-4 {{statusClass}}">
+        {{> taskForm }}
+        {{> taskList }}
+    </div>
+</template>
+<template name="taskForm">
+    <div id="taskForm">
+        {{> React component=TaskForm }}
+    </div>
+</template>
+<template name="taskList">
+    <div id="taskList">
         {{> React component=TaskList}}
     </div>
 </template>
-
 <template name="nodeGraph">
 
 </template>

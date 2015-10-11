@@ -48,31 +48,17 @@ Template.header.helpers({
    }
 });
 
-var TaskList = React.createClass({
-    mixins: [ReactMeteorData],
+var TaskForm = React.createClass({
     userId: Meteor.userId(),
-    getMeteorData() {
-        return {
-            tasks: Tasks.find({userId: this.userId},{sort: {dueDate: 1}}).fetch()
-        }
-    },
-    renderTasks() {
-        return this.data.tasks.map((task) => {
-            return <Task key={task._id} task={task} />;
-        });
-    },
     render() {
         return (
-            <div>
-                <form className="new-task" onSubmit={this.handleSubmit}>
-                <input
-                    type="text"
-                    className="form-control"
-                    ref="textInput"
-                    placeholder="Type to add new tasks" />
-                </form>
-                <div>{this.renderTasks()}</div>
-            </div>
+            <form className="new-task" onSubmit={this.handleSubmit}>
+            <input
+                type="text"
+                className="form-control"
+                ref="textInput"
+                placeholder="Type to add new tasks" />
+            </form>
         );
     },
     handleSubmit(event) {
@@ -88,6 +74,25 @@ var TaskList = React.createClass({
 
         // Clear form
         React.findDOMNode(this.refs.textInput).value = "";
+    }
+});
+var TaskList = React.createClass({
+    mixins: [ReactMeteorData],
+    userId: Meteor.userId(),
+    getMeteorData() {
+        return {
+            tasks: Tasks.find({userId: this.userId},{sort: {dueDate: 1}}).fetch()
+        }
+    },
+    renderTasks() {
+        return this.data.tasks.map((task) => {
+            return <Task key={task._id} task={task} />;
+        });
+    },
+    render() {
+        return (
+            <div>{this.renderTasks()}</div>
+        );
     }
 });
 
@@ -106,8 +111,16 @@ var Task = React.createClass({
 });
 
 Template.sidebar.helpers({
+    statusClass: () => Session.get("sidebarOpen") ? "sidebar-open" : "sidebar-closed"
+});
+
+Template.taskList.helpers({
     TaskList() {
         return TaskList;
-    },
-    statusClass: () => Session.get("sidebarOpen") ? "sidebar-open" : "sidebar-closed"
+    }
+});
+Template.taskForm.helpers({
+    TaskForm() {
+        return TaskForm;
+    }
 });
