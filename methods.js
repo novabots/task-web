@@ -159,5 +159,14 @@ Meteor.methods({
                 throw e;
             }
         }
+    },
+    createOrg: function(req) {
+        if (Meteor.isServer) {
+            try {
+                return Organizations.insert({name: req});
+            } catch (e) {
+                throw e;
+            }
+        }
     }
 });

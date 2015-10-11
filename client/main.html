@@ -40,10 +40,10 @@
     </div>
 </template>
 <template name="users">
-    <div id="organisations">
+    <div id="organizations">
         {{#if orgExists}}
-            {{#each organisation}}
-
+            {{#each organization}}
+                {{> org}}
             {{/each}}
         {{else}}
             {{> createOrg}}
@@ -59,11 +59,45 @@
     <div class="col-sm-3">
         <div class="well well-lg">
             <h3>{{username}}</h3>
+            {{#each task _id}}
+                {{> taskIcon}}
+            {{/each}}
         </div>
     </div>
 </template>
+<template name="taskIcon">
+    <button class="btn btn-info"><i class="fa fa-edit"></i></button>
+</template>
 <template name="createOrg">
-    <div class="btn-group btn-group-lg"><button class="btn btn-primary" id="create-org-button">Create Organisation <i class="fa fa-plus"></i></button></div>
+    {{#if creatingOrg}}
+        <form id="create-org-form">
+            <div class="form-group">
+                <input type="text" class="form-control" id="orgName" placeholder="Organization Name" />
+            </div>
+        </form>
+    {{else}}
+        <div class="btn-group btn-group-lg">
+            <button class="btn btn-primary" id="create-org-button">Create Organisation <i class="fa fa-plus"></i></button>
+        </div>
+    {{/if}}
+</template>
+<template name="org">
+    <div class="well well-lg">
+        <h1>{{name}}</h1>
+        {{#if teamsExist _id}}
+            {{#each teams _id}}
+                {{> team}}
+            {{/each}}
+        {{else}}
+            {{> createTeam }}
+        {{/if}}
+    </div>
+</template>
+<template name="team">
+
+</template>
+<template name="createTeam">
+
 </template>
 <template name="clientPill">
     <span class="label">{{name}}</span>

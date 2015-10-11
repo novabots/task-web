@@ -5,18 +5,18 @@ Meteor.publish("tasks", function(){
 });
 
 Meteor.publish("permissions", function(){
-    Permissions.find({userId: this.userId});
+    return Permissions.find({userId: this.userId});
 });
 
 Meteor.publish("teams", function(){
     if(this.userId){
-        Teams.find();
+        return Teams.find();
     }
 });
 
 Meteor.publish("organizations", function(){
     if(this.userId){
-        Organizations.find();
+        return Organizations.find();
     }
 });
 
