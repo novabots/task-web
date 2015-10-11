@@ -91,11 +91,16 @@ var TaskForm = React.createClass({
         var taskTitle = React.findDOMNode(this.refs.taskTitle).value.trim();
         var taskDescription = React.findDOMNode(this.refs.taskDescription).value.trim();
         var taskDueDate = React.findDOMNode(this.refs.taskDueDate).value.trim();
-        var personId = Session.get("personId");
-        var clientId = Session.get("clientId");
-        var projectId = Session.get("projectId");
-        var projectModuleId = Session.get("projectModuleId");
-        var projectWorkTypeId = Session.get("projectWorkTypeId");
+        var personId = Session.get("person").id;
+        var personName = Session.get("person").value;
+        var clientId = Session.get("client").id;
+        var clientName = Session.get("client").value;
+        var projectId = Session.get("project").id;
+        var projectName = Session.get("project").value;
+        var projectModuleId = Session.get("projectModule").id;
+        var projectModuleName = Session.get("projectModule").value;
+        var projectWorkTypeId = Session.get("projectWorkType").id;
+        var projectWorkTypeName = Session.get("projectWorkType").value;
 
         // Meteor.call("postTime", {
         //     "projectid": projectId,
@@ -117,10 +122,15 @@ var TaskForm = React.createClass({
                     dueDate: taskDueDate,
                     userId: this.userId,
                     personId: personId,
+                    personName: personName,
                     clientId: clientId,
+                    clientName: clientName,
                     projectId: projectId,
+                    projectName: projectName,
                     projectModuleId: projectModuleId,
-                    projectWorkTypeId: projectWorkTypeId
+                    projectModuleName: projectModuleName,
+                    projectWorkTypeId: projectWorkTypeId,
+                    projectWorkTypeName: projectWorkTypeName
                 });
         //     }
         // });
@@ -152,16 +162,44 @@ var TaskList = React.createClass({
 });
 
 var Task = React.createClass({
+    getInitialState() {
+        return { expandTask: false };
+    },
     propTypes: {
         task: React.PropTypes.object.isRequired
     },
     render() {
         return (
-            <div className="panel panel-default">
-                <div className="panel-heading">{this.props.task.title}</div>
-                <div className="panel-body">{this.props.task.description}</div>
+            <div>
+            { this.state.expandTask ?
+                <div className="panel panel-default">
+                    <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-close" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
+                    <div className="panel-body">
+                        <p>{this.props.task.description}</p>
+                    </div>
+                    <ul className="list-group">
+                        <li className="list-group-item">{this.props.task.clientName}</li>
+                        <li className="list-group-item">{this.props.task.projectName}</li>
+                        <li className="list-group-item">{this.props.task.projectModuleName}</li>
+                        <li className="list-group-item">{this.props.task.projectWorkTypeName}</li>
+                        <li className="list-group-item">{this.props.task.personName}</li>
+                    </ul>
+                </div>
+            : <div className="panel panel-default">
+                <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-close" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
+            </div> }
             </div>
         );
+    },
+    handleExpand() {
+        if (this.state.expandTask === true) {
+            this.setState({ expandTask: false })
+        } else {
+            this.setState({ expandTask: true });
+        }
+    },
+    handleClose() {
+
     }
 });
 
@@ -176,11 +214,11 @@ Template.taskList.helpers({
 });
 
 Template.taskForm.onCreated(function () {
-    Session.set("personId", 0);
-    Session.set("clientId", 0);
-    Session.set("projectId", 0);
-    Session.set("projectModuleId", 0);
-    Session.set("projectWorkTypeId", 0);
+    Session.set("person", {});
+    Session.set("client", {});
+    Session.set("project", {});
+    Session.set("projectModule", {});
+    Session.set("projectWorkType", {});
 });
 
 Template.taskForm.helpers({
@@ -194,27 +232,27 @@ Template.taskForm.helpers({
         return Clients.find().fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
     },
     projects() {
-        return Projects.find({ clientid: Session.get("clientId") }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+        return Projects.find({ clientid: Session.get("client").id }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
     },
     projectmodules() {
-        return ProjectModules.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.modulename, "id": it.moduleid }; });
+        return ProjectModules.find({ projectid: Session.get("project").id }).fetch().map(function (it) { return { "value": it.modulename, "id": it.moduleid }; });
     },
     projectworktypes() {
-        return ProjectWorkTypes.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.worktype, "id": it.worktypeid }; });
+        return ProjectWorkTypes.find({ projectid: Session.get("project").id }).fetch().map(function (it) { return { "value": it.worktype, "id": it.worktypeid }; });
     },
     personSelected(event, suggestion, datasetName) {
-        Session.set("personId", suggestion.id);
+        Session.set("person", suggestion);
     },
     clientSelected(event, suggestion, datasetName) {
-        Session.set("clientId", suggestion.id);
+        Session.set("client", suggestion);
     },
     projectSelected(event, suggestion, datasetName) {
-        Session.set("projectId", suggestion.id);
+        Session.set("project", suggestion);
     },
     projectmoduleSelected(event, suggestion, datasetName) {
-        Session.set("projectModuleId", suggestion.id);
+        Session.set("projectModule", suggestion);
     },
     projectworktypeSelected(event, suggestion, datasetName) {
-        Session.set("projectWorkTypeId", suggestion.id);
+        Session.set("projectWorkType", suggestion);
     }
 });
