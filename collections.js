@@ -12,3 +12,4 @@ Connectors = new Meteor.Collection("connectors");
 
 Clients = new Meteor.Collection("clients");
 
+Projects = new Meteor.Collection("projects");

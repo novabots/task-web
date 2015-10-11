@@ -12,3 +12,4 @@ Meteor.subscribe("users");
 
 Meteor.subscribe("clients");
 
+Meteor.subscribe("projects");

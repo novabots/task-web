@@ -45,3 +45,8 @@ Meteor.publish("clients", function () {
     }
 });
 
+Meteor.publish("projects", function () {
+    if (this.userId) {
+        return Projects.find({ userId: this.userId });
+    }
+})

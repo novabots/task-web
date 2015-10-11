@@ -58,7 +58,8 @@ var TaskForm = React.createClass({
             <div>
             { this.state.enteringNew ?
                 <form className="new-task" onSubmit={this.handleSubmit}>
-                    <input type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" placeholder="Search Clients" />
+                    <input type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
+                    <input type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
                     <input
                         type="text"
                         className="form-control"
@@ -142,11 +143,26 @@ Template.taskList.helpers({
         return TaskList;
     }
 });
+
+Template.taskForm.onCreated(function () {
+    this.clientid = new ReactiveVar(0);
+    this.projectid = new ReactiveVar(0);
+});
+
 Template.taskForm.helpers({
     TaskForm() {
         return TaskForm;
     },
-    clients: function () {
-        return Clients.find().fetch().map(function (it) { return it.name; });
+    clients() {
+        return Clients.find().fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+    },
+    projects() {
+        return Projects.find({ clientid: Template.instance().clientid.get() }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
+    },
+    clientSelected(event, suggestion, datasetName) {
+        Template.instance().clientid.set(suggestion.id);
+    },
+    projectsSelected(event, suggestion, datasetName) {
+        Template.instance().projectid.set(suggestion.id);
     }
 });
