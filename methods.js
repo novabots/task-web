@@ -149,7 +149,6 @@ Meteor.methods({
                         "Accept": "application/json",
                     }
                 });
-                console.log(result);
                 if (result.statusCode === 200) {
                     return Meteor.users.update({_id: user._id }, { $set: { profile: { personid: result.data.personid, apikey: req } }});
                 } else {
