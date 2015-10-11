@@ -122,7 +122,6 @@ Meteor.methods({
     postTime: function (req) {
         if (Meteor.isServer) {
             try {
-                console.log(req);
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
                 var result = HTTP.post(Meteor.settings.apiURL + "/time", {
@@ -140,6 +139,25 @@ Meteor.methods({
         }
     },
     setAPIKey: function (req) {
-        return Meteor.users.update({_id: this.userId}, {$set:{profile: {apikey: req}}});
+         if (Meteor.isServer) {
+            try {
+                var user = Meteor.users.findOne(this.userId);
+                var apikey = req;
+                var result = HTTP.get(Meteor.settings.apiURL + "/me", {
+                    "auth": apikey + ":X",
+                    "headers": {
+                        "Accept": "application/json",
+                    }
+                });
+                console.log(result);
+                if (result.statusCode === 200) {
+                    return Meteor.users.update({_id: user._id }, { $set: { profile: { personid: result.data.personid, apikey: req } }});
+                } else {
+                    throw Meteor.Error(result.statusCode);
+                }
+            } catch (e) {
+                throw e;
+            }
+        }
     }
 });
