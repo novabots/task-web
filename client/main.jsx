@@ -173,7 +173,7 @@ var Task = React.createClass({
             <div>
             { this.state.expandTask ?
                 <div className="panel panel-default">
-                    <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-times" title="Delete Task" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
+                    <div className="panel-heading"><span>{this.props.task.title}</span> <div className="btn-group pull-right"><button className="btn btn-xs btn-danger pull-right" onClick={this.handleClose}><i className="fa fa-times" title="Delete Task" ></i></button> <button className="btn btn-xs btn-info pull-right" onClick={this.handleExpand}><i title="Expand Task" className="fa fa-expand" ></i></button></div></div>
                     <div className="panel-body">
                         <p>{this.props.task.description}</p>
                     </div>
@@ -186,7 +186,7 @@ var Task = React.createClass({
                     </ul>
                 </div>
             : <div className="panel panel-default">
-                <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-times" title="Delete Task" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
+                <div className="panel-heading"><span>{this.props.task.title}</span> <div className="btn-group pull-right"><button className="btn btn-xs btn-danger pull-right" onClick={this.handleClose}><i className="fa fa-times" title="Delete Task" ></i></button> <button className="btn btn-xs btn-info pull-right" onClick={this.handleExpand}><i title="Expand Task" className="fa fa-expand" ></i></button></div></div>
             </div> }
             </div>
         );
