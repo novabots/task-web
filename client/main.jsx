@@ -229,7 +229,14 @@ Template.taskIcon.onRendered(function () {
     });
     $(".droppable").droppable({
         drop: function( event, ui ) {
-
+            Meteor.call("changeTaskOwner", event.target.id, ui.draggable[0].id, function(err, res){
+                if(res) {
+                    toastr.success('You have updated the task.');
+                }
+                if(err) {
+                    toastr.error('Error: You have not updated the task.');
+                }
+            })
         }
     });
 });
