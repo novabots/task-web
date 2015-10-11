@@ -15,6 +15,14 @@ body {
   position: fixed;
   top: 0;
   right: 0;
+  .nav.nav-pills {
+    a:hover {
+      background-color: @gray-dark;
+    }
+    a.btn-primary:hover {
+      background-color: @brand-success;
+    }
+  }
 }
 
 #sidebar {
@@ -24,6 +32,7 @@ body {
   top: 0;
   left: 0;
   height: 100%;
+  overflow-y: scroll;
   &.sidebar-closed {
     left: -100%;
   }
