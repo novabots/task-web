@@ -159,10 +159,28 @@ Meteor.methods({
             }
         }
     },
-    createOrg: function(req) {
+    createOrg: function(org) {
         if (Meteor.isServer) {
             try {
-                return Organizations.insert({name: req});
+                return Organizations.insert({name: org});
+            } catch (e) {
+                throw e;
+            }
+        }
+    },
+    createTeam: function(team, orgId) {
+        if (Meteor.isServer) {
+            try {
+                return Teams.insert({name: team, orgId: orgId});
+            } catch (e) {
+                throw e;
+            }
+        }
+    },
+    joinTeam: function(teamId) {
+        if (Meteor.isServer) {
+            try {
+                return Meteor.users.update({_id: this.userId }, { $addToSet: { 'profile.teams': teamId} });
             } catch (e) {
                 throw e;
             }

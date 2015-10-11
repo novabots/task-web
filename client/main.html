@@ -40,7 +40,7 @@
     </div>
 </template>
 <template name="users">
-    <div id="organizations">
+    <div id="organizations" class="{{statusClass}}">
         {{#if orgExists}}
             {{#each organization}}
                 {{> org}}
@@ -51,7 +51,9 @@
     </div>
     <div id="users" class="{{statusClass}}">
         {{#each users}}
-            {{> userBox}}
+            {{#if noTeam _id}}
+                {{> userBox}}
+            {{/if}}
         {{/each}}
     </div>
 </template>
@@ -66,13 +68,13 @@
     </div>
 </template>
 <template name="taskIcon">
-    <button class="btn btn-info draggable"><i class="fa fa-edit"></i></button>
+    <button class="btn btn-info draggable" title="{{clientName}} - {{description}}"><i class="fa fa-arrows"></i> {{title}}</button>
 </template>
 <template name="createOrg">
     {{#if creatingOrg}}
         <form id="create-org-form">
-            <div class="form-group">
-                <input type="text" class="form-control" id="orgName" placeholder="Organization Name" />
+            <div class="form-group col-sm-4">
+                <input type="text" class="form-control big-input" id="orgName" placeholder="Organization Name" />
             </div>
         </form>
     {{else}}
@@ -82,22 +84,49 @@
     {{/if}}
 </template>
 <template name="org">
-    <div class="well well-lg">
+    <div id="org" class="well well-lg">
         <h1>{{name}}</h1>
         {{#if teamsExist _id}}
             {{#each teams _id}}
                 {{> team}}
             {{/each}}
+            {{> createTeam }}
         {{else}}
             {{> createTeam }}
         {{/if}}
     </div>
 </template>
 <template name="team">
-
+    <div id="team" class="panel panel-default">
+        <div class="panel-heading">
+            <h3>{{name}}</h3>
+        </div>
+        <div class="panel-body">
+            {{#each user _id}}
+                {{> userBox}}
+            {{/each}}
+        </div>
+        <div class="panel-footer">
+            {{#if notTeamMember _id}}
+                <button class="btn btn-support join-team" id="{{_id}}">Join Team</button>
+            {{/if}}
+        </div>
+    </div>
 </template>
 <template name="createTeam">
-
+    {{#if creatingTeam}}
+        <form id="create-team-form">
+            <div class="form-group col-sm-4">
+                <input type="text" class="form-control big-input" id="teamName" placeholder="Team Name" />
+                <input type="hidden" id="orgId" value="{{_id}}" />
+            </div>
+        </form>
+    {{else}}
+    <div class="btn-group btn-group-lg">
+        <input type="hidden" id="orgId" value="{{_id}}" />
+        <button class="btn btn-support create-team-button">Create Team <i class="fa fa-plus"></i></button>
+    </div>
+    {{/if}}
 </template>
 <template name="clientPill">
     <span class="label">{{name}}</span>
