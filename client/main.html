@@ -40,6 +40,15 @@
     </div>
 </template>
 <template name="users">
+    <div id="organisations">
+        {{#if orgExists}}
+            {{#each organisation}}
+
+            {{/each}}
+        {{else}}
+            {{> createOrg}}
+        {{/if}}
+    </div>
     <div id="users" class="{{statusClass}}">
         {{#each users}}
             {{> userBox}}
@@ -52,6 +61,9 @@
             <h3>{{username}}</h3>
         </div>
     </div>
+</template>
+<template name="createOrg">
+    <div class="btn-group btn-group-lg"><button class="btn btn-primary" id="create-org-button">Create Organisation <i class="fa fa-plus"></i></button></div>
 </template>
 <template name="clientPill">
     <span class="label">{{name}}</span>
