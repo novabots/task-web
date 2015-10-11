@@ -25,3 +25,15 @@ Meteor.publish("users", function(){
         return Meteor.users.find();
     }
 });
+
+Meteor.publish("nodes", function(){
+    if(this.userId){
+        return Nodes.find();
+    }
+});
+
+Meteor.publish("connectors", function(){
+    if(this.userId){
+        return Connectors.find();
+    }
+});

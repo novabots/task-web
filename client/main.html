@@ -50,9 +50,16 @@
     </div>
 </template>
 <template name="nodeGraph">
+    <div id="graphContainer">
+        {{#if noOrganization}}
 
+        {{/if}}
+        <div id="nodeGraph">
+
+
+        </div>
+    </div>
 </template>
-
 <template name="connectApi">
     <div class="mask"> </div>
     <div class="modal fade in wide-modal" id="apiDialog">
