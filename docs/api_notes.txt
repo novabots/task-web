@@ -1,0 +1,4 @@
+load people, clients, and projects
+then based on client selection, reload projects
+then based on project selection, load modules
+then based on module selection, load worktypes
