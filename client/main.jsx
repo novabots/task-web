@@ -173,7 +173,7 @@ var Task = React.createClass({
             <div>
             { this.state.expandTask ?
                 <div className="panel panel-default">
-                    <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-close" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
+                    <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-times" title="Delete Task" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
                     <div className="panel-body">
                         <p>{this.props.task.description}</p>
                     </div>
@@ -186,7 +186,7 @@ var Task = React.createClass({
                     </ul>
                 </div>
             : <div className="panel panel-default">
-                <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-close" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
+                <div className="panel-heading"><span>{this.props.task.title}</span> <i className="fa fa-times" title="Delete Task" onClick={this.handleClose}></i> <i title="Expand Task" className="fa fa-expand" onClick={this.handleExpand}></i></div>
             </div> }
             </div>
         );
@@ -199,7 +199,9 @@ var Task = React.createClass({
         }
     },
     handleClose() {
-
+        if (confirm("Are you sure you want to delete this task?")) {
+            Tasks.remove({ _id: this.props.task._id });
+        }
     }
 });
 
