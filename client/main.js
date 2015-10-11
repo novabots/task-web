@@ -50,7 +50,6 @@ Template.users.helpers({
 Template.users.events({
     'click #create-org-button': function(e) {
         e.preventDefault();
-
     }
 });
 
