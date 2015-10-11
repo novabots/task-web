@@ -9,3 +9,6 @@ Organizations = new Meteor.Collection("organizations");
 Nodes = new Meteor.Collection("nodes");
 
 Connectors = new Meteor.Collection("connectors");
+
+Clients = new Meteor.Collection("clients");
+

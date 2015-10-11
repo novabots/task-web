@@ -26,6 +26,7 @@ Meteor.publish("users", function(){
     }
 });
 
+
 Meteor.publish("nodes", function(){
     if(this.userId){
         return Nodes.find();
@@ -37,3 +38,10 @@ Meteor.publish("connectors", function(){
         return Connectors.find();
     }
 });
+
+Meteor.publish("clients", function () {
+    if (this.userId) {
+        return Clients.find({ userId: this.userId });
+    }
+});
+
