@@ -2,6 +2,7 @@ BlazeLayout.setRoot('body');
 
 Meteor.startup(function(){
     Session.set("creatingOrg", false);
+    Session.set("creatingTeam", false);
 });
 
 Template.app.helpers({
@@ -37,6 +38,12 @@ Template.users.helpers({
     },
     organization: function() {
         return Organizations.find();
+    },
+    noTeam: function(userId) {
+        var user = Meteor.users.findOne(userId);
+        if(user){
+            return _.isEmpty(user.profile.teams);
+        }
     }
 });
 
@@ -83,5 +90,55 @@ Template.org.helpers({
     },
     teams: function(orgId) {
         return Teams.find({orgId: orgId});
+    }
+});
+
+Template.createTeam.helpers({
+    creatingTeam: function(){
+        return Session.get("creatingTeam");
+    }
+});
+
+Template.createTeam.events({
+    'submit #create-team-form': function(e, t){
+        e.preventDefault();
+        Meteor.call("createTeam", t.find("#teamName").value, t.find("#orgId").value, function(err, res) {
+            if(res) {
+                toastr.success('Team created.');
+                Session.set("creatingTeam", false);
+            }
+            if(err) {
+                toastr.error('Error: Team not created.');
+            }
+        });
+    },
+    'click .create-team-button': function(e,t){
+        e.preventDefault();
+        Session.set("orgSelected", t.find("#orgId").value);
+        Session.set("creatingTeam", true);
+    }
+});
+
+Template.team.helpers({
+    notTeamMember: function(teamId) {
+        var user = Meteor.user();
+        return ! _.contains(user.profile.teams, teamId );
+    },
+    user: function(teamId) {
+        return Meteor.users.find({'profile.teams': teamId});
+    }
+});
+
+Template.team.events({
+    'click .join-team': function(e, t) {
+        e.preventDefault();
+        Meteor.call("joinTeam", t.find("button").id, function(err, res) {
+            if(res) {
+                toastr.success('You have joined the team.');
+            }
+            if(err) {
+                toastr.error('Error: You have not joined the team.');
+            }
+        });
     }
 });
