@@ -94,15 +94,30 @@ var TaskForm = React.createClass({
         var projectModuleId = Session.get("projectModuleId");
         var projectWorkTypeId = Session.get("projectWorkTypeId");
 
-        Tasks.insert({
-            title: taskTitle,
-            description: taskDescription,
-            createdAt: new Date(), // current time
-            userId: this.userId,
-            clientId: clientId,
-            projectId: projectId,
-            projectModuleId: projectModuleId,
-            projectWorkTypeId: projectWorkTypeId
+        Meteor.call("postTime", {
+            "projectid": projectId,
+            "moduleid": projectModuleId,
+            "worktypeid": projectWorkTypeId,
+            "date": "2015-10-10",
+            "time": "1.00",
+            "description": taskDescription,
+            "billable": "f",
+            "personid": 252388
+        }, function (error, result) {
+            if (error) {
+                toastr.error(error);
+            } else {
+                Tasks.insert({
+                    title: taskTitle,
+                    description: taskDescription,
+                    createdAt: new Date(), // current time
+                    userId: this.userId,
+                    clientId: clientId,
+                    projectId: projectId,
+                    projectModuleId: projectModuleId,
+                    projectWorkTypeId: projectWorkTypeId
+                });
+            }
         });
 
         this.setState({enteringNew: false});
@@ -173,10 +188,10 @@ Template.taskForm.helpers({
         return Projects.find({ clientid: Session.get("clientId") }).fetch().map(function (it) { return { "value": it.name, "id": it.id }; });
     },
     projectmodules() {
-        return ProjectModules.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.modulename, "id": it.id }; });
+        return ProjectModules.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.modulename, "id": it.moduleid }; });
     },
     projectworktypes() {
-        return ProjectWorkTypes.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.worktype, "id": it.id }; });
+        return ProjectWorkTypes.find({ projectid: Session.get("projectId") }).fetch().map(function (it) { return { "value": it.worktype, "id": it.worktypeid }; });
     },
     clientSelected(event, suggestion, datasetName) {
         Session.set("clientId", suggestion.id);

@@ -117,13 +117,15 @@ Meteor.methods({
     postTime: function (req) {
         if (Meteor.isServer) {
             try {
+                console.log(req);
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
                 var result = HTTP.post(Meteor.settings.apiURL + "/time", {
                     "auth": apikey + ":X",
-                    "params": req,
+                    "data": req,
                     "headers": {
-                        "Accept": "application/json"
+                        "Accept": "application/json",
+                        "Content-type": "application/json"
                     }
                 });
                 return result;
