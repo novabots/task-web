@@ -225,12 +225,11 @@ Template.taskForm.onCreated(function () {
 
 Template.taskIcon.onRendered(function () {
     $( ".draggable" ).draggable({
-        revert: "invalid",
-        zIndex: 10000
+        revert: "invalid"
     });
     $(".droppable").droppable({
         drop: function( event, ui ) {
-            
+
         }
     });
 });
