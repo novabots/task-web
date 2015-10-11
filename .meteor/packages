@@ -30,5 +30,4 @@ reactive-var
 http
 pfafman:font-awesome-4
 chrismbeckett:toastr
-d3js:d3
 sergeyt:typeahead

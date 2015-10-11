@@ -10,6 +10,13 @@ body {
   outline: none !important;
 }
 
+.animate {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
 .modal {
   display: block !important;
 }
@@ -19,6 +26,7 @@ body {
   position: fixed;
   top: 0;
   right: 0;
+  z-index: 3;
   .nav.nav-pills {
     a:hover {
       background-color: @gray-dark;
@@ -30,6 +38,7 @@ body {
 }
 
 #sidebar {
+  .animate();
   background-color: @gray-lighter;
   display: block;
   position: fixed;
@@ -45,11 +54,6 @@ body {
   }
 }
 
-#graphContainer {
-  height: 100%;
-  width: 100%;
-  svg {
-    height: 100%;
-    width: 100%;
-  }
+#users {
+  .animate();
 }

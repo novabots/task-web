@@ -21,7 +21,7 @@
     {{> header}}
     {{#if apiConnected}}
         {{> sidebar}}
-        {{> nodeGraph}}
+        {{> users}}
     {{else}}
         {{> connectApi}}
     {{/if}}
@@ -39,6 +39,20 @@
         {{> taskList }}
     </div>
 </template>
+<template name="users">
+    <div id="users" class="{{statusClass}}">
+        {{#each users}}
+            {{> userBox}}
+        {{/each}}
+    </div>
+</template>
+<template name="userBox">
+    <div class="col-sm-3">
+        <div class="well well-lg">
+            <h3>{{username}}</h3>
+        </div>
+    </div>
+</template>
 <template name="clientPill">
     <span class="label">{{name}}</span>
 </template>
@@ -50,17 +64,6 @@
 <template name="taskList">
     <div id="taskList">
         {{> React component=TaskList}}
-    </div>
-</template>
-<template name="nodeGraph">
-    <div id="graphContainer">
-        {{#if noOrganization}}
-
-        {{/if}}
-        <div id="nodeGraph">
-
-
-        </div>
     </div>
 </template>
 <template name="connectApi">
