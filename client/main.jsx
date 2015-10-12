@@ -130,7 +130,8 @@ var TaskForm = React.createClass({
                     projectModuleId: projectModuleId,
                     projectModuleName: projectModuleName,
                     projectWorkTypeId: projectWorkTypeId,
-                    projectWorkTypeName: projectWorkTypeName
+                    projectWorkTypeName: projectWorkTypeName,
+                    archived: false
                 });
         //     }
         // });
