@@ -55,7 +55,7 @@ Template.users.events({
 
 Template.userBox.helpers({
     task: function(userId){
-        return Tasks.find({userId: userId, archived: false});
+        return Tasks.find({userId: userId, archived: {$ne: true}});
     }
 });
 

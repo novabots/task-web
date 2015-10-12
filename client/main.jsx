@@ -147,7 +147,7 @@ var TaskList = React.createClass({
     userId: Meteor.userId(),
     getMeteorData() {
         return {
-            tasks: Tasks.find({userId: this.userId},{sort: {dueDate: 1}}).fetch()
+            tasks: Tasks.find({userId: this.userId, archived: {$ne: true}},{sort: {dueDate: 1}}).fetch()
         }
     },
     renderTasks() {
