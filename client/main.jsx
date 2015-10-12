@@ -230,17 +230,14 @@ Template.taskIcon.onRendered(function () {
     });
     $(".droppable").droppable({
         drop: function( event, ui ) {
-            var isUser = Meteor.users.findOne(event.target.id);
-            if (typeof isUser !== "undefined" && event.target.id !== Meteor.userId()) {
-                Meteor.call("changeTaskOwner", event.target.id, ui.draggable[0].id, function(err, res){
-                    if(res) {
-                        toastr.success('You have updated the task.');
-                    }
-                    if(err) {
-                        toastr.error('Error: You have not updated the task.');
-                    }
-                });
-            }
+            Meteor.call("changeTaskOwner", event.target.id, ui.draggable[0].id, function(err, res){
+                if(res) {
+                    toastr.success('You have updated the task.');
+                }
+                if(err) {
+                    toastr.error('Error: You have not updated the task.');
+                }
+            })
         }
     });
 });
