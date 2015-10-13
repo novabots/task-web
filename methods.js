@@ -192,8 +192,6 @@ Meteor.methods({
             var task = Tasks.findOne(taskId);
             try {
                 if(user && task) {
-                    console.log(user._id);
-                    console.log(task.userId);
                     if(user._id !== task.userId){
                         var doc = task;
                         delete doc._id;

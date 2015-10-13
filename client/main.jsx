@@ -234,8 +234,6 @@ Template.taskIcon.onRendered(function () {
                 user = Meteor.users.findOne(userId),
                 taskId = ui.draggable[0].id,
                 task = Tasks.findOne(taskId);
-            console.log(task.userId);
-            console.log(userId);
             if(task.userId !== userId) {
                 Meteor.call("changeTaskOwner", event.target.id, ui.draggable[0].id, function(err, res){
                     if(res) {
