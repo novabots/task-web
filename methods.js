@@ -124,7 +124,7 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
-                var result = HTTP.post(Meteor.settings.apiURL + "/time", {
+                return HTTP.post(Meteor.settings.apiURL + "/time", {
                     "auth": apikey + ":X",
                     "data": req,
                     "headers": {
@@ -132,17 +132,15 @@ Meteor.methods({
                         "Content-type": "application/json"
                     }
                 });
-                return result;
             } catch (e) {
                 throw e;
             }
         }
     },
-    setAPIKey: function (req) {
+    setAPIKey: function (apikey) {
          if (Meteor.isServer) {
             try {
                 var user = Meteor.users.findOne(this.userId);
-                var apikey = req;
                 var result = HTTP.get(Meteor.settings.apiURL + "/me", {
                     "auth": apikey + ":X",
                     "headers": {
