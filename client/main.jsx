@@ -234,8 +234,8 @@ Template.taskIcon.onRendered(function () {
                 user = Meteor.users.findOne(userId),
                 taskId = ui.draggable[0].id,
                 task = Tasks.findOne(taskId);
-            if(task.userId !== userId) {
-                Meteor.call("changeTaskOwner", event.target.id, ui.draggable[0].id, function(err, res){
+            if(task && user && task.userId !== user._id) {
+                Meteor.call("changeTaskOwner", user._id, task._id, function(err, res){
                     if(res) {
                         toastr.success('You have updated the task.');
                     }

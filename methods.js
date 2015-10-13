@@ -191,17 +191,14 @@ Meteor.methods({
             var user = Meteor.users.findOne(userId);
             var task = Tasks.findOne(taskId);
             try {
-                if(user && task) {
-                    if(user._id !== task.userId){
-                        var doc = task;
-                        delete doc._id;
-                        doc.userId = user._id;
-                        doc.personId = user.profile.personid;
-                        doc.archived = false;
-
-                        Tasks.update({_id: taskId}, {$set: {archived: true}});
-                        return Tasks.insert(doc);
-                    }
+                if(user && task && user._id !== task.userId) {
+                    var doc = task;
+                    delete doc._id;
+                    doc.userId = user._id;
+                    doc.personId = user.profile.personid;
+                    doc.archived = false;
+                    Tasks.update({_id: taskId}, {$set: {archived: true}});
+                    return Tasks.insert(doc);
                 }
             } catch (e) {
                 throw e;
