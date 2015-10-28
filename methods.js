@@ -5,6 +5,11 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
+                if (typeof req === "undefined") {
+                    req = {};
+                }
+                req.active = "t";
+                req.limit = 0;
                 var result = HTTP.get(Meteor.settings.apiURL + "/project", {
                     "auth": apikey + ":X",
                     "params": req,
@@ -29,6 +34,11 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
+                if (typeof req === "undefined") {
+                    req = {};
+                }
+                req.active = "t";
+                req.limit = 0;
                 var result = HTTP.get(Meteor.settings.apiURL + "/projectworktype", {
                     "auth": apikey + ":X",
                     "params": req,
@@ -53,6 +63,11 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
+                if (typeof req === "undefined") {
+                    req = {};
+                }
+                req.active = "t";
+                req.limit = 0;
                 var result = HTTP.get(Meteor.settings.apiURL + "/person", {
                     "auth": apikey + ":X",
                     "params": req,
@@ -77,6 +92,11 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
+                if (typeof req === "undefined") {
+                    req = {};
+                }
+                req.active = "t";
+                req.limit = 0;
                 var result = HTTP.get(Meteor.settings.apiURL + "/client", {
                     "auth": apikey + ":X",
                     "params": req,
@@ -101,6 +121,11 @@ Meteor.methods({
             try {
                 var user = Meteor.users.findOne(this.userId);
                 var apikey = user.profile.apikey;
+                if (typeof req === "undefined") {
+                    req = {};
+                }
+                req.active = "t";
+                req.limit = 0;
                 var result = HTTP.get(Meteor.settings.apiURL + "/projectmodule", {
                     "auth": apikey + ":X",
                     "params": req,
