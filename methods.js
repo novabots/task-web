@@ -148,7 +148,7 @@ Meteor.methods({
                     }
                 });
                 if (result.statusCode === 200) {
-                    return Meteor.users.update({_id: user._id }, { $set: { profile: { personid: result.data.personid, apikey: req } }});
+                    return Meteor.users.update({_id: user._id }, { $set: { profile: { personid: result.data.personid, apikey: apikey } }});
                 } else {
                     throw Meteor.Error(result.statusCode);
                 }
