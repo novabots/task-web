@@ -3,6 +3,7 @@ var ActionBar = React.createClass({
         return (
             <ul className="nav nav-pills pull-right">
                 <UserButton />
+                <RefreshData />
                 <LogoutButton />
             </ul>
         );
@@ -28,6 +29,42 @@ var UserButton = React.createClass({
         return (
             <li><a className={buttonClass} onClick={this.selectUser}>{username}</a></li>
         )
+    }
+});
+function handleApiResponse(err, res, collection) {
+    if (res.data.status === "OK") {
+        toastr.success(`${collection} updated!`);
+    } else {
+        toastr.warning(err);
+        console.log(err);
+    }
+}
+var RefreshData = React.createClass({
+    render() {
+        return (
+            <li><a className="btn btn-default" onClick={this.refreshData}>refresh</a></li>
+        );
+    },
+    refreshData() {
+        try {
+            Meteor.call("getClients", function (err, res) {
+                handleApiResponse(err, res, "Clients");
+            });
+            Meteor.call("getProjects", function (err, res) {
+                handleApiResponse(err, res, "Projects");
+            });
+            Meteor.call("getProjectModules", function (err, res) {
+                handleApiResponse(err, res, "Modules");
+            });
+            Meteor.call("getProjectWorkTypes", function (err, res) {
+                handleApiResponse(err, res, "Work Types");
+            });
+            Meteor.call("getPersons", function (err, res) {
+                handleApiResponse(err, res, "People");
+            });
+        } catch(e) {
+            toastr.error(e);
+        }
     }
 });
 
