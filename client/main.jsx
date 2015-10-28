@@ -57,7 +57,7 @@ var TaskForm = React.createClass({
         return (
             <div>
             { this.state.enteringNew ?
-                <form className="new-task" onSubmit={this.handleSubmit}>
+                <div><form className="new-task" onSubmit={this.handleSubmit}>
                     <input ref="personId" type="text" className="form-control typeahead" name="person" autoComplete="off" spellCheck="off" data-source="persons" data-min-length="0" data-select="personSelected" placeholder="Search People" />
                     <input ref="clientId" type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
                     <input ref="projectId" type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
@@ -76,14 +76,19 @@ var TaskForm = React.createClass({
                         ref="taskDueDate"
                         type="date"
                         placeholder="Task Due Date" />
-                    <button type="submit" className="btn btn-primary btn-block">Submit</button>
-                </form> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
+                    <button type="submit" className="btn btn-primary btn-block">Save</button>
+                </form>
+                <button className="btn btn-danger btn-block" onClick={this.toggleForm}>Cancel</button></div> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
             }
             </div>
         );
     },
     toggleForm() {
-        this.setState({enteringNew: true});
+        if (this.state.enteringNew === true) {
+            this.setState({enteringNew: false});
+        } else {
+            this.setState({enteringNew: true});
+        }
     },
     handleSubmit(event) {
         event.preventDefault();
