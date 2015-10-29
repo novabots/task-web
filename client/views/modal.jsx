@@ -8,24 +8,17 @@ var Modal = React.createClass({
     open() {
         this.setState({ showModal: true });
     },
-    activeModal() {
-        return Session.get("modal")
+    renderModalContent: function() {
+        return <this.props.component>
+        </this.props.component>;
     },
     render() {
-
         return (
             <div>
                 <Modal show={this.state.showModal} onHide={this.close}>
-                    <ModalContent component={this.activeModal} />
+                    {this.renderModalContent}
                 </Modal>
             </div>
         );
-    }
-});
-
-var ModalContent = React.createClass({
-    render: function() {
-        return <this.props.component>
-        </this.props.component>;
     }
 });
