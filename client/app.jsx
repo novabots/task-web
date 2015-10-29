@@ -19,6 +19,7 @@ App = React.createClass({
                 </div>
                 <div id="organizations" className={mainClass}>
                     <OrganizationList />
+                    <OrganizationForm />
                 </div>
                 <div id="users" className={mainClass}>
                     <UserList />

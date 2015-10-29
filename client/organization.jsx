@@ -27,19 +27,37 @@ Organization = React.createClass({
 });
 
 OrganizationForm = React.createClass({
+    getInitialState() {
+        return { "creatingOrg" : false };
+    },
     render () {
         return (
             <div>
             { this.state.creatingOrg ?
-            <form id="create-org-form">
-                <div class="form-group col-sm-4">
-                    <input type="text" class="form-control big-input" id="orgName" placeholder="Organization Name" />
+            <form id="create-org-form" onSubmit={this.handleSubmit}>
+                <div className="form-group col-sm-4">
+                    <input type="text" className="form-control big-input" ref="orgName" id="orgName" placeholder="Organization Name" />
                 </div>
-            </form> : <div class="btn-group btn-group-lg">
-                        <button class="btn btn-primary" id="create-org-button">Create Organisation <i class="fa fa-plus"></i></button>
+            </form> : <div className="btn-group btn-group-lg">
+                        <button className="btn btn-primary" id="create-org-button" onClick={this.handleClick}>Create Organisation <i className="fa fa-plus"></i></button>
                     </div>
             }
             </div>
         );
+    },
+    handleClick() {
+        this.setState({ "creatingOrg" : true });
+    },
+    handleSubmit(evt) {
+        evt.preventDefault();
+        Meteor.call("createOrg", this.refs.orgName.value, (err, res) => {
+            if(res) {
+                toastr.success('Organization created.');
+                this.setState({"creatingOrg": false});
+            }
+            if(err) {
+                toastr.error('Error: Organization not created.');
+            }
+        });
     }
 });

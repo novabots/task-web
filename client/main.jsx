@@ -40,7 +40,3 @@ var ConnectApi = React.createClass({
         );
     }
 });
-
-Template.sidebar.helpers({
-    statusClass: () => Session.get("sidebarOpen") ? "sidebar-open" : "sidebar-closed"
-});
