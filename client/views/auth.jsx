@@ -1,4 +1,4 @@
-var Auth = React.createClass({
+Auth = React.createClass({
     getInitialState() {
         return { loginMode: true, loginClass: 'btn-primary', createClass: 'btn-default' };
     },
@@ -64,18 +64,18 @@ var Auth = React.createClass({
                 </div>
                 { this.state.loginMode ?
                     <div>
-                        <hr class="divider" />
+                        <hr className="divider" />
                         <div className="service-buttons">
                             <button className="google-login btn" onClick={this.googleLogin}><i className="fa fa-google-plus"></i> &nbsp;Login with Google</button>
                         </div>
-                        <hr class="divider" />
+                        <hr className="divider" />
                         <form id="login-form" onSubmit={this.login}>
-                            <div class="form-group">
-                            <label for="usernameLogin">Username</label>
+                            <div className="form-group">
+                            <label htmlFor="usernameLogin">Username</label>
                             <input type="text" className="form-control" ref="usernameLogin" placeholder="Username" />
                             </div>
-                            <div class="form-group">
-                            <label for="passwordLogin">Password</label>
+                            <div className="form-group">
+                            <label htmlFor="passwordLogin">Password</label>
                             <input type="password" className="form-control" ref="usernameLogin" placeholder="Password" />
                             </div>
 
@@ -84,21 +84,21 @@ var Auth = React.createClass({
                     </div>
                     :
                     <div>
-                        <hr class="divider" />
+                        <hr className="divider" />
                         <form id="create-account-form" onSubmit={this.register}>
                             <div className="form-group">
-                                <label for="usernameRegister">Username</label>
+                                <label htmlFor="usernameRegister">Username</label>
                                 <input type="text" className="form-control" ref="usernameRegister" placeholder="Username" />
                             </div>
-                            <div class="form-group">
-                                <label for="passwordRegister">Password</label>
+                            <div className="form-group">
+                                <label htmlFor="passwordRegister">Password</label>
                                 <input type="password" className="form-control" ref="passwordRegister" placeholder="Password" />
                             </div>
-                            <div class="form-group">
-                                <label for="email">Email Address</label>
+                            <div className="form-group">
+                                <label htmlFor="email">Email Address</label>
                                 <input type="email" className="form-control" ref="emailAddress" placeholder="name@domain.com" />
                             </div>
-                            <button type="submit" class="btn btn-primary">Create Account</button>
+                            <button type="submit" className="btn btn-primary">Create Account</button>
                         </form>
                     </div>
                 }

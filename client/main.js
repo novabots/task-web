@@ -1,9 +1,9 @@
-BlazeLayout.setRoot('body');
+//BlazeLayout.setRoot('body');
 
-Meteor.startup(function(){
-    Session.set("creatingOrg", false);
-    Session.set("creatingTeam", false);
-});
+//Meteor.startup(function(){
+//     Session.set("creatingOrg", false);
+//     Session.set("creatingTeam", false);
+// });
 
 Template.app.helpers({
     apiConnected: function(){
