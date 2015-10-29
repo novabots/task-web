@@ -8,10 +8,10 @@ App = React.createClass({
     render() {
         return (
             <div>
-                {this.loggedIn ?
+                {this.state.loggedIn ?
                     <MainLayout />
                     :
-                    <Auth/>
+                    <Auth />
                 }
             </div>
         );
