@@ -6,24 +6,24 @@ App = React.createClass({
         return Meteor.user();
     },
     toggleSidebar() {
-        this.setState({mainClass: this.state.mainClass ?  "col-sm-offset-4 col-sm-8" : "col-sm-12"});
-        this.setState({sidebarClass: this.state.sidebarClass ?  "sidebar-open" : "sidebar-closed" });
+        this.setState({mainClass: this.state.mainClass === "col-sm-12" ?  "col-sm-offset-4 col-sm-8" : "col-sm-12"});
+        this.setState({sidebarClass: this.state.sidebarClass === "col-sm-4 sidebar-closed" ?  "col-sm-4 sidebar-open" : "col-sm-4 sidebar-closed" });
     },
     render() {
-        let mainClass = this.state.mainClass ?  "col-sm-offset-4 col-sm-8" : "col-sm-12";
-        let sidebarClass = this.state.sidebarClass ?  "sidebar-open" : "sidebar-closed";
+        let mainClass = this.state.mainClass === "col-sm-12" ?  "col-sm-offset-4 col-sm-8" : "col-sm-12";
+        let sidebarClass = this.state.sidebarClass === "col-sm-4 sidebar-closed" ?  "col-sm-4 sidebar-open" : "col-sm-4 sidebar-closed";
         return (
             <div>
                 <div id="header">
-                    <ActionBar onClick={this.toggleSidebar} />
+                    <ActionBar toggleSidebar={this.toggleSidebar} />
                 </div>
-                <div id="organizations" className="{mainClass}">
+                <div id="organizations" className={mainClass}>
                     <OrganizationList />
                 </div>
-                <div id="users" className="{mainClass}">
+                <div id="users" className={mainClass}>
                     <UserList />
                 </div>
-                <div id="sidebar" className="col-sm-4 {sidebarClass}">
+                <div id="sidebar" className={sidebarClass}>
                     <TaskForm />
                     <TaskList />
                 </div>
@@ -37,7 +37,7 @@ var ActionBar = React.createClass({
         return (
             <div id="header">
                 <ul className="nav nav-pills pull-right">
-                    <UserButton onClick={this.props.onClick} />
+                    <UserButton toggleSidebar={this.props.toggleSidebar} />
                     <RefreshData />
                     <LogoutButton />
                 </ul>
@@ -51,6 +51,7 @@ var UserButton = React.createClass({
         return { selected: null, user: Meteor.user()}
     },
     selectUser() {
+        this.props.toggleSidebar();
         Session.set("userSelected", this.state.selected === this.state.user._id ? this.state.user._id : null );
         if(! Session.get("sidebarOpen")){
             Session.set("sidebarOpen", true);
