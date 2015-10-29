@@ -3,11 +3,3 @@ Meteor.startup(() => {
     Session.set("creatingTeam", false);
     ReactDOM.render(<App />, document.getElementById('render-element'));
 });
-
-
-/*
- Tracker.autorun(function(){
-
- });
-
- */

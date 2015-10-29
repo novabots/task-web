@@ -34,7 +34,7 @@ MainLayout = React.createClass({
         let mainClass = this.state.mainClass === "col-sm-12" ?  "col-sm-offset-4 col-sm-8" : "col-sm-12";
         let sidebarClass = this.state.sidebarClass === "col-sm-4 sidebar-closed" ?  "col-sm-4 sidebar-open" : "col-sm-4 sidebar-closed";
         return (
-            <div>
+                <div>
                 {this.getConnectApiStatus ?
                     <div>
                         <div id="header">
