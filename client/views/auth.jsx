@@ -1,13 +1,20 @@
 Auth = React.createClass({
     getInitialState() {
-        return { loginMode: true, loginClass: 'btn-primary', createClass: 'btn-default' };
+        return { showModal: true, loginMode: true, loginClass: 'btn btn-primary', createClass: 'btn btn-default' };
     },
-    register() {
+    close() {
+        this.setState({ showModal: false });
+    },
+    open() {
+        this.setState({ showModal: true });
+    },
+    register(event) {
+        event.preventDefault();
         Accounts.createUser({
-            username: React.findDOMNode(this.refs.usernameRegister).value.trim(),
-            password: React.findDOMNode(this.refs.passwordRegister).value.trim(),
+            username: ReactDOM.findDOMNode(this.refs.usernameRegister).value.trim(),
+            password: ReactDOM.findDOMNode(this.refs.passwordRegister).value.trim(),
             emails: [
-                { address: React.findDOMNode(this.refs.emailAddress).value.trim(), verified: false }]
+                { address: ReactDOM.findDOMNode(this.refs.emailAddress).value.trim(), verified: false }]
         }, function(error) {
             if (! error) {
 
@@ -16,10 +23,11 @@ Auth = React.createClass({
             }
         });
     },
-    login() {
+    login(event) {
+        event.preventDefault();
         Meteor.loginWithPassword(
-            React.findDOMNode(this.refs.usernameLogin).value.trim(),
-            React.findDOMNode(this.refs.passwordLogin).value.trim(),
+            ReactDOM.findDOMNode(this.refs.usernameLogin).value.trim(),
+            ReactDOM.findDOMNode(this.refs.passwordLogin).value.trim(),
             function(error) {
                 if (! error) {
                     Session.set("modal", false);
@@ -40,69 +48,71 @@ Auth = React.createClass({
         });
     },
     loginMode() {
-        this.setState({loginMode: true, loginClass: 'btn-primary', createClass: 'btn-default'});
+        this.setState({loginMode: true, loginClass: 'btn btn-primary', createClass: 'btn btn-default'});
     },
     createMode() {
-        this.setState({loginMode: false, loginClass: 'btn-default', createClass: 'btn-primary'});
+        this.setState({loginMode: false, loginClass: 'btn btn-default', createClass: 'btn btn-primary'});
     },
     render() {
         let loginClass = this.state.loginClass;
         let createClass = this.state.createClass;
         return (
             <div>
-            <Modal.Header closeButton>
-                <Modal.Title>Login or Create Account</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <div className="btn-group btn-group-justified">
-                    <div className="btn-group">
-                        <button type="button" id="loginToggle" onClick={this.loginMode} className="btn {loginClass}">Login</button>
-                    </div>
-                    <div className="btn-group">
-                        <button type="button" id="createToggle" onClick={this.createMode} className="btn {createClass}">Create Account</button>
-                    </div>
-                </div>
-                { this.state.loginMode ?
-                    <div>
-                        <hr className="divider" />
-                        <div className="service-buttons">
-                            <button className="google-login btn" onClick={this.googleLogin}><i className="fa fa-google-plus"></i> &nbsp;Login with Google</button>
+                <Modal show={this.state.showModal} onHide={this.close}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Login or Create Account</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <div className="btn-group btn-group-justified">
+                            <div className="btn-group">
+                                <button type="button" id="loginToggle" onClick={this.loginMode} className={loginClass}>Login</button>
+                            </div>
+                            <div className="btn-group">
+                                <button type="button" id="createToggle" onClick={this.createMode} className={createClass}>Create Account</button>
+                            </div>
                         </div>
-                        <hr className="divider" />
-                        <form id="login-form" onSubmit={this.login}>
-                            <div className="form-group">
-                            <label htmlFor="usernameLogin">Username</label>
-                            <input type="text" className="form-control" ref="usernameLogin" placeholder="Username" />
-                            </div>
-                            <div className="form-group">
-                            <label htmlFor="passwordLogin">Password</label>
-                            <input type="password" className="form-control" ref="usernameLogin" placeholder="Password" />
-                            </div>
+                        { this.state.loginMode ?
+                            <div>
+                                <hr className="divider" />
+                                <div className="service-buttons">
+                                    <button className="google-login btn" onClick={this.googleLogin}><i className="fa fa-google-plus"></i> &nbsp;Login with Google</button>
+                                </div>
+                                <hr className="divider" />
+                                <form id="login-form" onSubmit={this.login}>
+                                    <div className="form-group">
+                                    <label htmlFor="usernameLogin">Username</label>
+                                    <input type="text" className="form-control" ref="usernameLogin" placeholder="Username" />
+                                    </div>
+                                    <div className="form-group">
+                                    <label htmlFor="passwordLogin">Password</label>
+                                    <input type="password" className="form-control" ref="passwordLogin" placeholder="Password" />
+                                    </div>
 
-                            <button type="submit" className="btn btn-primary">Log In</button>
-                        </form>
-                    </div>
-                    :
-                    <div>
-                        <hr className="divider" />
-                        <form id="create-account-form" onSubmit={this.register}>
-                            <div className="form-group">
-                                <label htmlFor="usernameRegister">Username</label>
-                                <input type="text" className="form-control" ref="usernameRegister" placeholder="Username" />
+                                    <button type="submit" className="btn btn-primary">Log In</button>
+                                </form>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="passwordRegister">Password</label>
-                                <input type="password" className="form-control" ref="passwordRegister" placeholder="Password" />
+                            :
+                            <div>
+                                <hr className="divider" />
+                                <form id="create-account-form" onSubmit={this.register}>
+                                    <div className="form-group">
+                                        <label htmlFor="usernameRegister">Username</label>
+                                        <input type="text" className="form-control" ref="usernameRegister" placeholder="Username" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="passwordRegister">Password</label>
+                                        <input type="password" className="form-control" ref="passwordRegister" placeholder="Password" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email Address</label>
+                                        <input type="email" className="form-control" ref="emailAddress" placeholder="name@domain.com" />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Create Account</button>
+                                </form>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="email">Email Address</label>
-                                <input type="email" className="form-control" ref="emailAddress" placeholder="name@domain.com" />
-                            </div>
-                            <button type="submit" className="btn btn-primary">Create Account</button>
-                        </form>
-                    </div>
-                }
-            </Modal.Body>
+                        }
+                    </Modal.Body>
+                </Modal>
             </div>
         )
     }

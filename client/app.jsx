@@ -1,9 +1,30 @@
 App = React.createClass({
     getInitialState() {
-        return { selectedUser: Meteor.user() };
+        return {loggedIn: Meteor.user()}
     },
     loggedIn() {
-        return Meteor.user();
+        return this.state.loggedIn();
+    },
+    render() {
+        return (
+            <div>
+                {this.loggedIn ?
+                    <MainLayout />
+                    :
+                    <Auth/>
+                }
+            </div>
+        );
+    }
+});
+
+MainLayout = React.createClass({
+    getInitialState() {
+        return { selectedUser: Meteor.user() };
+    },
+    getConnectApiStatus() {
+        let user = this.state.selectedUser;
+        return user.profile.apikey != "";
     },
     toggleSidebar() {
         this.setState({mainClass: this.state.mainClass === "col-sm-12" ?  "col-sm-offset-4 col-sm-8" : "col-sm-12"});
@@ -14,23 +35,31 @@ App = React.createClass({
         let sidebarClass = this.state.sidebarClass === "col-sm-4 sidebar-closed" ?  "col-sm-4 sidebar-open" : "col-sm-4 sidebar-closed";
         return (
             <div>
-                <div id="header">
-                    <ActionBar toggleSidebar={this.toggleSidebar} />
-                </div>
-                <div id="organizations" className={mainClass}>
-                    <OrganizationList />
-                </div>
-                <div id="users" className={mainClass}>
-                    <UserList />
-                </div>
-                <div id="sidebar" className={sidebarClass}>
-                    <TaskForm />
-                    <TaskList />
-                </div>
+                {this.getConnectApiStatus ?
+                    <div>
+                        <div id="header">
+                            <ActionBar toggleSidebar={this.toggleSidebar} />
+                        </div>
+                        <div id="organizations" className={mainClass}>
+                            <OrganizationList />
+                        </div>
+                        <div id="users" className={mainClass}>
+                            <UserList />
+                        </div>
+                        <div id="sidebar" className={sidebarClass}>
+                            <TaskForm />
+                            <TaskList />
+                        </div>
+                    </div>
+                    :
+                    <ConnectApi />
+                    }
             </div>
         );
     }
 });
+
+
 
 var ActionBar = React.createClass({
     render() {
