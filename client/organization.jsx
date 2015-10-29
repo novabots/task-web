@@ -37,9 +37,11 @@ OrganizationForm = React.createClass({
             <form id="create-org-form" onSubmit={this.handleSubmit}>
                 <div className="form-group col-sm-4">
                     <input type="text" className="form-control big-input" ref="orgName" id="orgName" placeholder="Organization Name" />
+                    <button type="button" className="btn btn-primary" ref="cancel" onClick={this.handleCancel}>Cancel <i className="fa fa-close"></i></button>
                 </div>
             </form> : <div className="btn-group btn-group-lg">
                         <button className="btn btn-primary" id="create-org-button" onClick={this.handleClick}>Create Organisation <i className="fa fa-plus"></i></button>
+
                     </div>
             }
             </div>
@@ -59,5 +61,8 @@ OrganizationForm = React.createClass({
                 toastr.error('Error: Organization not created.');
             }
         });
+    },
+    handleCancel(evt) {
+        this.setState({"creatingOrg": false});
     }
 });
