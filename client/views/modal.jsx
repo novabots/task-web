@@ -1,6 +1,6 @@
-var Modal = React.createClass({
+AppModal = React.createClass({
     getInitialState() {
-        return { showModal: false };
+        return { showModal: true };
     },
     close() {
         this.setState({ showModal: false });
