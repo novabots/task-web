@@ -4,13 +4,13 @@ Meteor.startup(() => {
     let user = Meteor.user();
     if ( user ) {
         if ( user.profile.apikey === "" ) {
-            React.render(<AppModal component="ConnectApi" />, document.getElementById('render-element'));
+            React.render(<AppModal component={ConnectApi} />, document.getElementById('render-element'));
         } else {
             React.render(<App />, document.getElementById('render-element'));
         }
         React.render(<App />, document.getElementById('render-element'));
     } else {
-        React.render(<AppModal component="Auth" />, document.getElementById('render-element'));
+        React.render(<AppModal component={Auth} />, document.getElementById('render-element'));
     }
 });
 
