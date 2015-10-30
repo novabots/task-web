@@ -9,6 +9,7 @@ TaskForm = React.createClass({
             <div>
             { this.state.enteringNew ?
                 <div><form className="new-task" onSubmit={this.handleSubmit}>
+                    <ReactAutosuggest suggestions={this.getSuggestions} />
                     <input ref="personId" type="text" className="form-control typeahead" name="person" autoComplete="off" spellCheck="off" data-source="persons" data-min-length="0" data-select="personSelected" placeholder="Search People" />
                     <input ref="clientId" type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
                     <input ref="projectId" type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
@@ -33,6 +34,10 @@ TaskForm = React.createClass({
             }
             </div>
         );
+    },
+    getSuggestions(input, cb) {
+        let clients = Clients.find({"name": input});
+        cb(null, ["Hello"]);
     },
     toggleForm() {
         if (this.state.enteringNew === true) {
