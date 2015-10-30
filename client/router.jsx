@@ -1,15 +1,7 @@
 FlowRouter.route('/', {
-    action: function(){
-        if (Meteor.user()) {
-            ReactLayout.render(MainLayout, {
-                content: <MainLayout />
-            });
-        } else {
-            ReactLayout.render(Auth, {
-                content: <Auth />
-            });
-        }
-    }
+    // action: function(){
+    //     BlazeLayout.render("mainLayout");
+    // }
 });
 FlowRouter.route('/api', {
     action: function () {

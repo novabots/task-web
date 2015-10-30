@@ -5,13 +5,16 @@ App = React.createClass({
     loggedIn() {
         return this.state.loggedIn();
     },
+    setLoggedIn(state) {
+        this.setState({loggedIn: state});
+    },
     render() {
         return (
             <div>
                 {this.state.loggedIn ?
-                    <MainLayout />
+                    <MainLayout setLoggedIn={this.setLoggedIn}/>
                     :
-                    <Auth />
+                    <Auth setLoggedIn={this.setLoggedIn}/>
                 }
             </div>
         );
@@ -38,7 +41,7 @@ MainLayout = React.createClass({
                 {this.getConnectApiStatus ?
                     <div>
                         <div id="header">
-                            <ActionBar toggleSidebar={this.toggleSidebar} />
+                            <ActionBar setLoggedIn={this.props.setLoggedIn} toggleSidebar={this.toggleSidebar} />
                         </div>
                         <div id="organizations" className={mainClass}>
                             <OrganizationList />
@@ -68,7 +71,7 @@ var ActionBar = React.createClass({
                 <ul className="nav nav-pills pull-right">
                     <UserButton toggleSidebar={this.props.toggleSidebar} />
                     <RefreshData />
-                    <LogoutButton />
+                    <LogoutButton setLoggedIn={this.props.setLoggedIn}/>
                 </ul>
             </div>
         );
@@ -137,6 +140,7 @@ var RefreshData = React.createClass({
 var LogoutButton = React.createClass({
     logoutUser() {
         Meteor.logout();
+        this.props.setLoggedIn(false);
     },
     render() {
         return (

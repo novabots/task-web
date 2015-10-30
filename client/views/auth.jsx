@@ -28,11 +28,13 @@ Auth = React.createClass({
         Meteor.loginWithPassword(
             ReactDOM.findDOMNode(this.refs.usernameLogin).value.trim(),
             ReactDOM.findDOMNode(this.refs.passwordLogin).value.trim(),
-            function(error) {
+            (error) => {
                 if (! error) {
+                    this.props.setLoggedIn(true);
                     Session.set("modal", false);
                 } else {
                     toastr.warning("There was a problem logging in. Try again.");
+                    this.props.setLoggedIn(false);
                 }
             }
         );
@@ -40,8 +42,9 @@ Auth = React.createClass({
     googleLogin() {
         Meteor.loginWithGoogle(function(error){
             if(! error){
-
+                this.props.setLoggedIn(true);
             } else {
+                this.props.setLoggedIn(false);
                 toastr.warning('Failed to authenticate. Reason: '+ error.reason);
             }
 
