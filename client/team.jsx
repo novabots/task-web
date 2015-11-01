@@ -32,7 +32,7 @@ Team = React.createClass({
 TeamForm = React.createClass({
     createTeam(e) {
         e.preventDefault();
-        Meteor.call("createTeam", this.refs.teamName.value, this.props.orgId, function(err, res) {
+        Meteor.call("createTeam", this.refs.teamName.value, this.props.orgId, (err, res) => {
             if(res) {
                 toastr.success('Team created.');
                 this.props.toggleTeamForm(false);
