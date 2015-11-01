@@ -166,6 +166,7 @@ var Task = React.createClass({
         }
     }
 });
+/*
 Template.taskForm.helpers({
     TaskForm() {
         return TaskForm;
@@ -244,3 +245,4 @@ Template.taskIcon.onRendered(function () {
         }
     });
 });
+*/

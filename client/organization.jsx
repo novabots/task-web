@@ -3,8 +3,19 @@ OrganizationList = React.createClass({
     userId: Meteor.userId(),
     getMeteorData() {
         return {
-            organizations: Organizations.find().fetch()
+            organizations: Organizations.find().fetch(), users: Meteor.users.find().fetch()
         }
+    },
+    renderUsersWithNoTeam() {
+        let noTeams = [];
+        _.each(this.data.users, function(user){
+            if(_.isEmpty(user.profile.teams)){
+                noTeams.push(user);
+            }
+        });
+        return noTeams.map((user) => {
+            return <User key={user._id} user={user} />
+        });
     },
     renderOrganizations() {
         return this.data.organizations.map((organization) => {
@@ -13,15 +24,49 @@ OrganizationList = React.createClass({
     },
     render() {
         return (
-            <div id="org" className="well well-lg">{this.renderOrganizations()}</div>
+            <div>
+                {this.renderOrganizations()}
+                {this.renderUsersWithNoTeam()}
+            </div>
         );
     }
 });
 
 Organization = React.createClass({
+    getInitialState() {
+        return { "creatingTeam" : false };
+    },
+    mixins: [ReactMeteorData],
+    getMeteorData() {
+        return {
+            teams: Teams.find().fetch()
+        }
+    },
+    creatingTeam(){
+        this.setState({ "creatingTeam" : true })
+    },
+    toggleTeamForm(state){
+        this.setState({ "creatingTeam" : state })
+    },
+    renderTeams(){
+        return this.data.teams.map((team) => {
+            return <Team key={team._id} team={team} />;
+        });
+    },
     render() {
         return (
-            <div>{this.props.organization.name}</div>
+            <div id="org" className="well well-lg">
+                <h1>{this.props.organization.name}</h1>
+                {this.state.creatingTeam ?
+                    <TeamForm orgId={this.props._id} toggleTeamForm={this.toggleTeamForm}  />
+                    :
+                    <div className="btn-group btn-group-lg">
+                        <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
+                    </div>
+                }
+                {this.renderTeams}
+            </div>
+
         );
     }
 });
@@ -34,15 +79,16 @@ OrganizationForm = React.createClass({
         return (
             <div>
             { this.state.creatingOrg ?
-            <form id="create-org-form" onSubmit={this.handleSubmit}>
-                <div className="form-group col-sm-4">
-                    <input type="text" className="form-control big-input" ref="orgName" id="orgName" placeholder="Organization Name" />
-                    <button type="button" className="btn btn-primary" ref="cancel" onClick={this.handleCancel}>Cancel <i className="fa fa-close"></i></button>
-                </div>
-            </form> : <div className="btn-group btn-group-lg">
-                        <button className="btn btn-primary" id="create-org-button" onClick={this.handleClick}>Create Organisation <i className="fa fa-plus"></i></button>
-
+                <form id="create-org-form" onSubmit={this.handleSubmit}>
+                    <div className="form-group col-sm-4">
+                        <input type="text" className="form-control big-input" ref="orgName" id="orgName" placeholder="Organization Name" />
+                        <button type="button" className="btn btn-primary" ref="cancel" onClick={this.handleCancel}>Cancel <i className="fa fa-close"></i></button>
                     </div>
+                </form>
+                :
+                <div className="btn-group btn-group-lg">
+                    <button className="btn btn-primary" id="create-org-button" onClick={this.handleClick}>Create Organisation <i className="fa fa-plus"></i></button>
+                </div>
             }
             </div>
         );

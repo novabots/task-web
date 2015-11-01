@@ -18,11 +18,9 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 insecure                # Allow all DB writes from clients (for prototyping)
 react
-react-template-helper
 less
 matb33:collection-hooks
 kadira:flow-router
-kadira:blaze-layout
 momentjs:moment
 accounts-password
 accounts-google

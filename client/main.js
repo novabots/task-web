@@ -5,44 +5,11 @@
 //     Session.set("creatingTeam", false);
 // });
 
-Template.app.helpers({
-    apiConnected: function(){
-        var user = Meteor.user();
-        return user.profile.apikey != "";
-    }
-});
 
 Template.connectApi.events({
     'submit #api-key-form': function(event, template) {
         event.preventDefault();
 
-    }
-});
-
-Template.users.helpers({
-    users: function(){
-        return Meteor.users.find();
-    },
-    statusClass: function() {
-        return Session.get("sidebarOpen") ? "col-sm-8 col-sm-offset-4" : "col-sm-12"
-    },
-    orgExists: function() {
-        return Organizations.find().count() > 0;
-    },
-    organization: function() {
-        return Organizations.find();
-    },
-    noTeam: function(userId) {
-        var user = Meteor.users.findOne(userId);
-        if(user){
-            return _.isEmpty(user.profile.teams);
-        }
-    }
-});
-
-Template.users.events({
-    'click #create-org-button': function(e) {
-        e.preventDefault();
     }
 });
 
