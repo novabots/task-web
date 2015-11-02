@@ -1,15 +1,33 @@
 TaskForm = React.createClass({
+    mixins: [ReactMeteorData],
     getInitialState() {
         return { enteringNew: false, user: Meteor.user() }
     },
     userId: Meteor.userId(),
+    getMeteorData(){
+        const persons = Meteor.subscribe('persons');
+        const projects = Meteor.subscribe('projects');
+        const clients = Meteor.subscribe("clients");
+        const projectmodules = Meteor.subscribe("projectmodules");
+        const projectworktypes = Meteor.subscribe("projectworktypes");
+
+        const data = {};
+
+        if(persons.ready() && projects.ready() && clients.ready() && projectmodules.ready() && projectworktypes.ready()) {
+            data.persons = Persons.find().fetch();
+            data.projects = Projects.find().fetch();
+            data.clients = Clients.find().fetch();
+            data.projectmodules = ProjectModules.find().fetch();
+            data.projectworktypes = ProjectWorkTypes.find().fetch();
+        }
+
+        return data;
+    },
     render() {
         const inputAttributes = {
             className: 'form-control',
             placeholder: 'Enter locations...',
-            type: 'search',
-            onChange: value => console.log(`Input value changed to: ${value}`),
-            onBlur: event => console.log('Input blurred. Event:', event)
+            type: 'search'
         };
         return (
             <div>
@@ -23,6 +41,7 @@ TaskForm = React.createClass({
                         suggestions={this.getPersonSuggestions}
                         suggestionRenderer={this.renderPersonSuggestion}
                         suggestionValue={this.renderPersonSuggestionValue}
+                        onSuggestionSelected={this.personSelected}
                         inputAttributes={inputAttributes} />
                     <ReactAutosuggest
                         id="clientId"
@@ -31,6 +50,7 @@ TaskForm = React.createClass({
                         suggestions={this.getClientSuggestions}
                         suggestionRenderer={this.renderClientSuggestion}
                         suggestionValue={this.renderClientSuggestionValue}
+                        onSuggestionSelected={this.clientSelected}
                         inputAttributes={inputAttributes} />
                     <ReactAutosuggest
                         id="projectId"
@@ -39,6 +59,7 @@ TaskForm = React.createClass({
                         suggestions={this.getProjectSuggestions}
                         suggestionRenderer={this.renderProjectSuggestion}
                         suggestionValue={this.renderProjectSuggestionValue}
+                        onSuggestionSelected={this.projectSelected}
                         inputAttributes={inputAttributes} />
                     <ReactAutosuggest
                         id="projectModuleId"
@@ -47,6 +68,7 @@ TaskForm = React.createClass({
                         suggestions={this.getProjectModuleSuggestions}
                         suggestionRenderer={this.renderProjectModuleSuggestion}
                         suggestionValue={this.renderProjectModuleSuggestionValue}
+                        onSuggestionSelected={this.projectModuleSelected}
                         inputAttributes={inputAttributes} />
                     <ReactAutosuggest
                         id="projectWorkTypeId"
@@ -55,6 +77,7 @@ TaskForm = React.createClass({
                         suggestions={this.getProjectWorkTypeSuggestions}
                         suggestionRenderer={this.renderProjectWorkTypeSuggestion}
                         suggestionValue={this.renderProjectWorkTypeSuggestionValue}
+                        onSuggestionSelected={this.projectWorkTypeSelected}
                         inputAttributes={inputAttributes} />
                     <input
                         type="text"
@@ -89,8 +112,14 @@ TaskForm = React.createClass({
     renderPersonSuggestionValue(suggestionObj) {
         return suggestionObj.firstname + " " + suggestionObj.lastname;
     },
+    personSelected(suggestion, event) {
+        const personId = suggestion.id;
+        const personName = suggestion.firstname + " " + suggestion.lastname;
+        this.data.personId = personId;
+        this.data.personName = personName;
+    },
     getClientSuggestions(input, cb) {
-        const clients = Clients.find({ "name": { $regex: input } }).fetch();
+        const clients = Clients.find({ name: { $regex: input } }).fetch();
         cb(null, clients);
     },
     renderClientSuggestion(suggestion, input) {
@@ -101,6 +130,66 @@ TaskForm = React.createClass({
     renderClientSuggestionValue(suggestionObj) {
         return suggestionObj.name;
     },
+    clientSelected(suggestion, event) {
+        const clientId = suggestion.id;
+        const clientName = suggestion.name;
+        this.data.clientId = clientId;
+        this.data.clientName = clientName;
+    },
+    getProjectSuggestions(input, cb) {
+        const projects = Projects.find({ clientid: this.data.clientId, name: { $regex: input } }).fetch();
+        cb(null, projects);
+    },
+    renderProjectSuggestion(suggestion, input) {
+        return (
+            suggestion.name
+        );
+    },
+    renderProjectSuggestionValue(suggestionObj) {
+        return suggestionObj.name;
+    },
+    projectSelected(suggestion, event) {
+        const projectId = suggestion.id;
+        const projectName = suggestion.name;
+        this.data.projectId = projectId;
+        this.data.projectName = projectName;
+    },
+    getProjectModuleSuggestions(input, cb) {
+        const projectmodules = ProjectModules.find({ projectid: this.data.projectId, modulename: { $regex: input } }).fetch();
+        cb(null, projectmodules);
+    },
+    renderProjectModuleSuggestion(suggestion, input) {
+        return (
+            suggestion.modulename
+        );
+    },
+    renderProjectModuleSuggestionValue(suggestionObj) {
+        return suggestionObj.modulename;
+    },
+    projectModuleSelected(suggestion, event) {
+        const projectModuleId = suggestion.moduleid;
+        const projectModuleName = suggestion.modulename
+        this.data.projectModuleId = projectModuleId;
+        this.data.projectModuleName = projectModuleName;
+    },
+    getProjectWorkTypeSuggestions(input, cb) {
+        const projectworktypes = ProjectWorkTypes.find({ projectid: this.data.projectId, worktype: { $regex: input } }).fetch();
+        cb(null, projectworktypes);
+    },
+    renderProjectWorkTypeSuggestion(suggestion, input) {
+        return (
+            suggestion.worktype
+        );
+    },
+    renderProjectWorkTypeSuggestionValue(suggestionObj) {
+        return suggestionObj.worktype;
+    },
+    projectWorkTypeSelected(suggestion, event) {
+        const projectWorkTypeId = suggestion.worktypeid;
+        const projectWorkTypeName = suggestion.worktype;
+        this.data.projectWorkTypeId = projectWorkTypeId;
+        this.data.projectWorkTypeName = projectWorkTypeName;
+    },
     toggleForm() {
         if (this.state.enteringNew === true) {
             this.setState({enteringNew: false});
@@ -110,20 +199,22 @@ TaskForm = React.createClass({
     },
     handleSubmit(event) {
         event.preventDefault();
+        console.log("handleSubmit");
         // Find the text field via the React ref
-        var taskTitle = React.findDOMNode(this.refs.taskTitle).value.trim();
-        var taskDescription = React.findDOMNode(this.refs.taskDescription).value.trim();
-        var taskDueDate = React.findDOMNode(this.refs.taskDueDate).value.trim();
-        var personId = Session.get("person").id;
-        var personName = Session.get("person").value;
-        var clientId = Session.get("client").id;
-        var clientName = Session.get("client").value;
-        var projectId = Session.get("project").id;
-        var projectName = Session.get("project").value;
-        var projectModuleId = Session.get("projectModule").id;
-        var projectModuleName = Session.get("projectModule").value;
-        var projectWorkTypeId = Session.get("projectWorkType").id;
-        var projectWorkTypeName = Session.get("projectWorkType").value;
+        console.log(this.refs.taskTitle.value);
+        const taskTitle = this.refs.taskTitle.value;
+        const taskDescription = this.refs.taskDescription.value;
+        const taskDueDate = this.refs.taskDueDate.value;
+        const personId = this.data.personId;
+        const personName = this.data.personName;
+        const clientId = this.data.clientId;
+        const clientName = this.data.clientName;
+        const projectId = this.data.projectId;
+        const projectName = this.data.projectName;
+        const projectModuleId = this.data.projectModuleId;
+        const projectModuleName = this.data.projectModuleName;
+        const projectWorkTypeId = this.data.projectWorkTypeId;
+        const projectWorkTypeName = this.data.projectWorkTypeName;
 
         // Meteor.call("postTime", {
         //     "projectid": projectId,
