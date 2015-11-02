@@ -4,17 +4,58 @@ TaskForm = React.createClass({
     },
     userId: Meteor.userId(),
     render() {
-        //console.log(this.props.taskId);
+        const inputAttributes = {
+            className: 'form-control',
+            placeholder: 'Enter locations...',
+            type: 'search',
+            onChange: value => console.log(`Input value changed to: ${value}`),
+            onBlur: event => console.log('Input blurred. Event:', event)
+        };
         return (
             <div>
             { this.state.enteringNew ?
-                <div><form className="new-task" onSubmit={this.handleSubmit}>
-                    <ReactAutosuggest suggestions={this.getSuggestions} />
-                    <input ref="personId" type="text" className="form-control typeahead" name="person" autoComplete="off" spellCheck="off" data-source="persons" data-min-length="0" data-select="personSelected" placeholder="Search People" />
-                    <input ref="clientId" type="text" className="form-control typeahead" name="client" autoComplete="off" spellCheck="off" data-source="clients" data-min-length="0" data-select="clientSelected" placeholder="Search Clients" />
-                    <input ref="projectId" type="text" className="form-control typeahead" name="project" autoComplete="off" spellCheck="off" data-source="projects" data-min-length="0" data-select="projectSelected" placeholder="Search Projects" />
-                    <input ref="projectModuleId" type="text" className="form-control typeahead" name="projectmodule" autoComplete="off" spellCheck="off" data-source="projectmodules" data-min-length="0" data-select="projectmoduleSelected" placeholder="Search Modules" />
-                    <input ref="projectWorkTypeId" type="text" className="form-control typeahead" name="projectworktype" autoComplete="off" spellCheck="off" data-source="projectworktypes" data-min-length="0" data-select="projectworktypeSelected" placeholder="Search Work Types" />
+                <div>
+                <form className="new-task" onSubmit={this.handleSubmit}>
+                    <ReactAutosuggest
+                        id="personId"
+                        ref="personId"
+                        className="form-control"
+                        suggestions={this.getPersonSuggestions}
+                        suggestionRenderer={this.renderPersonSuggestion}
+                        suggestionValue={this.renderPersonSuggestionValue}
+                        inputAttributes={inputAttributes} />
+                    <ReactAutosuggest
+                        id="clientId"
+                        ref="clientId"
+                        className="form-control"
+                        suggestions={this.getClientSuggestions}
+                        suggestionRenderer={this.renderClientSuggestion}
+                        suggestionValue={this.renderClientSuggestionValue}
+                        inputAttributes={inputAttributes} />
+                    <ReactAutosuggest
+                        id="projectId"
+                        ref="projectId"
+                        className="form-control"
+                        suggestions={this.getProjectSuggestions}
+                        suggestionRenderer={this.renderProjectSuggestion}
+                        suggestionValue={this.renderProjectSuggestionValue}
+                        inputAttributes={inputAttributes} />
+                    <ReactAutosuggest
+                        id="projectModuleId"
+                        ref="projectModuleId"
+                        className="form-control"
+                        suggestions={this.getProjectModuleSuggestions}
+                        suggestionRenderer={this.renderProjectModuleSuggestion}
+                        suggestionValue={this.renderProjectModuleSuggestionValue}
+                        inputAttributes={inputAttributes} />
+                    <ReactAutosuggest
+                        id="projectWorkTypeId"
+                        ref="projectWorkTypeId"
+                        className="form-control"
+                        suggestions={this.getProjectWorkTypeSuggestions}
+                        suggestionRenderer={this.renderProjectWorkTypeSuggestion}
+                        suggestionValue={this.renderProjectWorkTypeSuggestionValue}
+                        inputAttributes={inputAttributes} />
                     <input
                         type="text"
                         className="form-control"
@@ -35,9 +76,30 @@ TaskForm = React.createClass({
             </div>
         );
     },
-    getSuggestions(input, cb) {
-        let clients = Clients.find({"name": input});
-        cb(null, ["Hello"]);
+    getPersonSuggestions(input, cb) {
+        const regex = new RegExp('^' + input, 'i');
+        const persons = Persons.find().fetch().filter(person => regex.test(person.firstname + " " + person.lastname));
+        cb(null, persons);
+    },
+    renderPersonSuggestion(suggestion, input) {
+        return (
+            suggestion.firstname + " " + suggestion.lastname
+        );
+    },
+    renderPersonSuggestionValue(suggestionObj) {
+        return suggestionObj.firstname + " " + suggestionObj.lastname;
+    },
+    getClientSuggestions(input, cb) {
+        const clients = Clients.find({ "name": { $regex: input } }).fetch();
+        cb(null, clients);
+    },
+    renderClientSuggestion(suggestion, input) {
+        return (
+            suggestion.name
+        );
+    },
+    renderClientSuggestionValue(suggestionObj) {
+        return suggestionObj.name;
     },
     toggleForm() {
         if (this.state.enteringNew === true) {
@@ -98,9 +160,6 @@ TaskForm = React.createClass({
         // });
 
         this.setState({enteringNew: false});
-    },
-    componentDidUpdate() {
-        Meteor.typeahead.inject();
     }
 });
 TaskList = React.createClass({
@@ -167,9 +226,6 @@ var Task = React.createClass({
     }
 });
 Template.taskForm.helpers({
-    TaskForm() {
-        return TaskForm;
-    },
     persons() {
         return Persons.find().fetch().map(function (it) { return { "value": it.firstname + " " + it.lastname, "id": it.id }; });
     },

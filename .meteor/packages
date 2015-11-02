@@ -30,7 +30,6 @@ reactive-var
 http
 pfafman:font-awesome-4
 chrismbeckett:toastr
-sergeyt:typeahead
 ryanwu:jquery-ui-interactions
 service-configuration
 shadyendless:react-bootstrap
