@@ -1,4 +1,10 @@
 App = React.createClass({
+    mixins: [ReactMeteorData],
+    getMeteorData() {
+        return {
+            user: Meteor.user(), authenticating: Meteor.loggingIn()
+        };
+    },
     getInitialState() {
         return {loggedIn: Meteor.user()}
     },
@@ -8,13 +14,26 @@ App = React.createClass({
     setLoggedIn(state) {
         this.setState({loggedIn: state});
     },
-    render() {
+    renderAuth(){
         return (
             <div>
-                {this.state.loggedIn ?
-                    <MainLayout setLoggedIn={this.setLoggedIn}/>
-                    :
+                {this.data.authenticating ?
+                    <div className="loading-indicator"><i className="fa fa-circle-o-notch fa-spin"></i></div>
+                :
                     <Auth setLoggedIn={this.setLoggedIn}/>
+                }
+            </div>
+        );
+    },
+    render() {
+
+        return (
+
+            <div>
+                {this.data.user ?
+                    <MainLayout setLoggedIn={this.setLoggedIn} />
+                    :
+                    this.renderAuth()
                 }
             </div>
         );

@@ -79,7 +79,7 @@ body {
     }
     #create-team-form {
       text-align: center;
-      .form-group {
+      .input-group {
         float: none;
         display: inline-block;
       }
@@ -92,6 +92,19 @@ body {
     font-size: 30px;
     height: 60px;
     box-shadow: none;
+    width: 99%;
+  }
+  .input-group-btn {
+    float: left;
+    .btn {
+      height: 60px;
+    }
+  }
+  .cancel-x {
+    background: none;
+    color: #777;
+    font-size: 60px;
+    line-height: 40px;
   }
 }
 .draggable {
@@ -104,4 +117,12 @@ body {
 }
 #taskList .panel {
   color: #777;
+}
+.loading-indicator {
+  width: 100%;
+  margin-top: 100px;
+  text-align: center;
+  i.fa {
+    font-size: 60px;
+  }
 }
