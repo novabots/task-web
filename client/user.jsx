@@ -22,19 +22,27 @@ UserList = React.createClass({
 User = React.createClass({
     mixins: [ReactMeteorData],
     getMeteorData(){
-        return {
-            user: Meteor.user()
+        const user = Meteor.users.find({_id: this.props.user._id}).fetch();
+        const data = {};
+        if(user){
+            data.user = user;
         }
+        return data;
     },
     render () {
+        let user = this.data.user[0];
         return (
             <div className="col-sm-3">
+            {this.data.user ?
                 <div className="well well-lg">
-                    <h3>{this.data.user.username}</h3>
+                    <h3>{user.username}</h3>
                     <div className="droppable" id="{this.data.user._id}">
 
                     </div>
                 </div>
+            :
+                null
+            }
             </div>
         );
     }
