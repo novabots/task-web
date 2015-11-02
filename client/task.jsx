@@ -225,6 +225,7 @@ var Task = React.createClass({
         }
     }
 });
+/*
 Template.taskForm.helpers({
     persons() {
         return Persons.find().fetch().map(function (it) { return { "value": it.firstname + " " + it.lastname, "id": it.id }; });
@@ -300,3 +301,4 @@ Template.taskIcon.onRendered(function () {
         }
     });
 });
+*/

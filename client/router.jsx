@@ -4,7 +4,7 @@ FlowRouter.route('/', {
     // }
 });
 FlowRouter.route('/api', {
-    action: function () {
-        BlazeLayout.render("apiLayout");
-    }
+    //action: function () {
+    //    BlazeLayout.render("apiLayout");
+    //}
 });

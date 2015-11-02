@@ -9,55 +9,6 @@
     <div id="render-element"></div>
 </body>
 
-<template name="mainLayout">
-    {{#if currentUser}}
-        {{> app}}
-    {{else}}
-        {{> auth}}
-    {{/if}}
-</template>
-
-<template name="app">
-    {{> header}}
-    {{#if apiConnected}}
-        {{> sidebar}}
-        {{> users}}
-        {{> createTimeEntry }}
-    {{else}}
-        {{> connectApi}}
-    {{/if}}
-</template>
-
-<template name="header">
-    <div id="header">
-        {{> React component=ActionBar}}
-    </div>
-</template>
-
-<template name="sidebar">
-    <div id="sidebar" class="col-sm-4 {{statusClass}}">
-        {{> taskForm }}
-        {{> taskList }}
-    </div>
-</template>
-<template name="users">
-    <div id="organizations" class="{{statusClass}}">
-        {{#if orgExists}}
-            {{#each organization}}
-                {{> org}}
-            {{/each}}
-        {{else}}
-            {{> createOrg}}
-        {{/if}}
-    </div>
-    <div id="users" class="{{statusClass}}">
-        {{#each users}}
-            {{#if noTeam _id}}
-                {{> userBox}}
-            {{/if}}
-        {{/each}}
-    </div>
-</template>
 <template name="userBox">
     <div class="col-sm-3">
         <div class="well well-lg">
@@ -118,31 +69,13 @@
 </template>
 <template name="createTeam">
     {{#if creatingTeam}}
-        <form id="create-team-form">
-            <div class="form-group col-sm-4">
-                <input type="text" class="form-control big-input" id="teamName" placeholder="Team Name" />
-                <input type="hidden" id="orgId" value="{{_id}}" />
-            </div>
-        </form>
+
     {{else}}
-    <div class="btn-group btn-group-lg">
-        <input type="hidden" id="orgId" value="{{_id}}" />
-        <button class="btn btn-support create-team-button">Create Team <i class="fa fa-plus"></i></button>
-    </div>
+
     {{/if}}
 </template>
 <template name="clientPill">
     <span class="label">{{name}}</span>
-</template>
-<template name="taskForm">
-    <div id="taskForm">
-        {{> React component=TaskForm }}
-    </div>
-</template>
-<template name="taskList">
-    <div id="taskList">
-        {{> React component=TaskList}}
-    </div>
 </template>
 <template name="connectApi">
     <div class="mask"> </div>

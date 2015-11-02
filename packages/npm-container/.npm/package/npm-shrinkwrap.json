@@ -188,7 +188,7 @@
           "version": "0.3.2",
           "dependencies": {
             "core-js": {
-              "version": "1.2.3"
+              "version": "1.2.4"
             },
             "loose-envify": {
               "version": "1.1.0",
@@ -323,8 +323,122 @@
         }
       }
     },
+    "react-dnd": {
+      "version": "2.0.2",
+      "dependencies": {
+        "disposables": {
+          "version": "1.0.1"
+        },
+        "dnd-core": {
+          "version": "1.2.2",
+          "dependencies": {
+            "redux": {
+              "version": "3.0.4"
+            }
+          }
+        },
+        "invariant": {
+          "version": "2.1.2",
+          "dependencies": {
+            "loose-envify": {
+              "version": "1.1.0",
+              "dependencies": {
+                "js-tokens": {
+                  "version": "1.0.2"
+                }
+              }
+            }
+          }
+        },
+        "lodash": {
+          "version": "3.10.1"
+        }
+      }
+    },
+    "react-dnd-touch-backend": {
+      "version": "0.2.0",
+      "dependencies": {
+        "invariant": {
+          "version": "2.1.2",
+          "dependencies": {
+            "loose-envify": {
+              "version": "1.1.0",
+              "dependencies": {
+                "js-tokens": {
+                  "version": "1.0.2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "react-dom": {
-      "version": "0.14.1"
+      "version": "0.14.1",
+      "dependencies": {
+        "react": {
+          "version": "0.14.1",
+          "dependencies": {
+            "envify": {
+              "version": "3.4.0",
+              "dependencies": {
+                "through": {
+                  "version": "2.3.8"
+                },
+                "jstransform": {
+                  "version": "10.1.0",
+                  "dependencies": {
+                    "base62": {
+                      "version": "0.1.1"
+                    },
+                    "esprima-fb": {
+                      "version": "13001.1001.0-dev-harmony-fb"
+                    },
+                    "source-map": {
+                      "version": "0.1.31",
+                      "dependencies": {
+                        "amdefine": {
+                          "version": "1.0.0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "fbjs": {
+              "version": "0.3.2",
+              "dependencies": {
+                "core-js": {
+                  "version": "1.2.4"
+                },
+                "loose-envify": {
+                  "version": "1.1.0",
+                  "dependencies": {
+                    "js-tokens": {
+                      "version": "1.0.2"
+                    }
+                  }
+                },
+                "promise": {
+                  "version": "7.0.4",
+                  "dependencies": {
+                    "asap": {
+                      "version": "2.0.3"
+                    }
+                  }
+                },
+                "ua-parser-js": {
+                  "version": "0.7.9"
+                },
+                "whatwg-fetch": {
+                  "version": "0.9.0"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
