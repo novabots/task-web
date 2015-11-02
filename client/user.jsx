@@ -20,9 +20,34 @@ UserList = React.createClass({
 });
 
 User = React.createClass({
+    mixins: [ReactMeteorData],
+    getMeteorData(){
+        return {
+            user: Meteor.user()
+        }
+    },
     render () {
         return (
-            <div>{this.props.user._id}</div>
+            <div className="col-sm-3">
+                <div className="well well-lg">
+                    <h3>{this.data.user.username}</h3>
+                    <div className="droppable" id="{this.data.user._id}">
+
+                    </div>
+                </div>
+            </div>
         );
+    }
+});
+
+UserForm = React.createClass({
+    handleClick(e){
+        e.preventDefault();
+
+    },
+    render () {
+        return (
+            <button className="btn btn-support join-team" onClick={this.handleClick}>Join Team</button>
+        )
     }
 });

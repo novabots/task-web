@@ -1,16 +1,38 @@
 Team = React.createClass({
+    mixins: [ReactMeteorData],
+    getMeteorData(){
+        const teams = Meteor.subscribe("teams");
+        const users = Meteor.subscribe("users");
+        const user = Meteor.user();
+        const data = {};
+        if(teams.ready() && users.ready()){
+            data.team = Teams.find({_id: this.props.team._id}).fetch();
+            data.users = Meteor.users.find({teams: this.props.team._id}).fetch();
+            if(user){
+                data.teamMember = user.profile.teams.indexOf(this.props.team._id) != -1;
+            }
+        }
+
+        return data;
+    },
     setInitialState() {
         return {teamMember: function() {
-            let user = Meteor.user();
-            return user.teams.indexOf(this.props._id) != -1;
+
         }};
     },
     renderTeamMembers() {
-
+        return (
+            <div>
+                {this.data.users.map(user => {
+                    return <User key={user._id} user={user}/>
+                    })
+                }
+            </div>
+            )
     },
     render () {
         return (
-            <div id="team" className="panel panel-default">
+            <div className="panel panel-default">
                 <div className="panel-heading">
                     <h3>{this.props.team.name}</h3>
                 </div>
@@ -18,10 +40,10 @@ Team = React.createClass({
                     {this.renderTeamMembers}
                 </div>
                 <div className="panel-footer">
-                    {this.state.teamMember ?
-                        <UserForm teamId={this.props._id} />
+                    {this.data.teamMember ?
+                        <UserForm teamId={this.props.team._id} />
                         :
-                        <div></div>
+                        null
                     }
                 </div>
             </div>
@@ -42,11 +64,18 @@ TeamForm = React.createClass({
             }
         });
     },
+    cancel(e){
+        e.preventDefault();
+        this.props.toggleTeamForm(false);
+    },
     render () {
         return (
             <form id="create-team-form" onSubmit={this.createTeam}>
-                <div className="form-group col-sm-4">
+                <div className="input-group col-sm-4">
                     <input type="text" className="form-control big-input" ref="teamName" id="teamName" placeholder="Team Name" />
+                    <span className="input-group-btn">
+                        <button className="btn cancel-x" onClick={this.cancel}>&times;</button>
+                    </span>
                 </div>
             </form>
         );

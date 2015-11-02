@@ -39,7 +39,7 @@ Organization = React.createClass({
     mixins: [ReactMeteorData],
     getMeteorData() {
         return {
-            teams: Teams.find().fetch()
+            teams: Teams.find({orgId: this.props.organization._id}).fetch()
         }
     },
     creatingTeam(){
@@ -58,13 +58,13 @@ Organization = React.createClass({
             <div id="org" className="well well-lg">
                 <h1>{this.props.organization.name}</h1>
                 {this.state.creatingTeam ?
-                    <TeamForm orgId={this.props._id} toggleTeamForm={this.toggleTeamForm}  />
+                    <TeamForm orgId={this.props.organization._id} toggleTeamForm={this.toggleTeamForm}  />
                     :
                     <div className="btn-group btn-group-lg">
                         <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
                     </div>
                 }
-                {this.renderTeams}
+                {this.renderTeams()}
             </div>
 
         );
