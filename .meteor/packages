@@ -33,6 +33,6 @@ service-configuration
 shadyendless:react-bootstrap
 meteorhacks:npm
 
+cosmos:browserify
 
 npm-container
-cosmos:browserify
