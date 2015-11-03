@@ -9,7 +9,7 @@ Team = React.createClass({
             data.team = Teams.find({_id: this.props.team._id}).fetch();
             data.users = Meteor.users.find({"profile.teams": this.props.team._id}).fetch();
             if(user){
-                data.teamMember = user.profile.teams.indexOf(this.props.team._id) != -1;
+                data.teamMember = ! (user.profile.teams.indexOf(this.props.team._id) !== -1);
             }
         }
 
