@@ -80,9 +80,11 @@ OrganizationForm = React.createClass({
             <div>
             { this.state.creatingOrg ?
                 <form id="create-org-form" onSubmit={this.handleSubmit}>
-                    <div className="form-group col-sm-4">
+                    <div className="input-group col-sm-4">
                         <input type="text" className="form-control big-input" ref="orgName" id="orgName" placeholder="Organization Name" />
-                        <button type="button" className="btn btn-primary" ref="cancel" onClick={this.handleCancel}>Cancel <i className="fa fa-close"></i></button>
+                        <span className="input-group-btn">
+                            <button type="button" className="btn cancel-x" ref="cancel" onClick={this.handleCancel}>&times;</button>
+                        </span>
                     </div>
                 </form>
                 :
