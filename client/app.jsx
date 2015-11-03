@@ -65,9 +65,7 @@ MainLayout = React.createClass({
                         <div id="organizations" className={mainClass}>
                             <OrganizationList />
                         </div>
-                        <div id="users" className={mainClass}>
-                            <UserList />
-                        </div>
+
                         <div id="sidebar" className={sidebarClass}>
                             <TaskForm />
                             <TaskList />
