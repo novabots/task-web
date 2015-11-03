@@ -47,15 +47,3 @@ User = React.createClass({
         );
     }
 });
-
-UserForm = React.createClass({
-    handleClick(e){
-        e.preventDefault();
-
-    },
-    render () {
-        return (
-            <button className="btn btn-support join-team" onClick={this.handleClick}>Join Team</button>
-        )
-    }
-});

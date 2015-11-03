@@ -45,7 +45,7 @@ Team = React.createClass({
                 </div>
                 <div className="panel-footer">
                     {this.data.teamMember ?
-                        <UserForm teamId={this.props.team._id} />
+                        <TeamJoinForm teamId={this.props.team._id} />
                         :
                         null
                     }
@@ -86,5 +86,24 @@ TeamForm = React.createClass({
                 </div>
             </form>
         );
+    }
+});
+
+TeamJoinForm = React.createClass({
+    handleClick(e){
+        e.preventDefault();
+        Meteor.call("joinTeam", this.props.teamId, (err, res) => {
+            if(res) {
+                toastr.success('Joined Team.');
+            }
+            if(err) {
+                toastr.error('Error: Team not joined.');
+            }
+        });
+    },
+    render () {
+        return (
+            <button className="btn btn-support join-team" onClick={this.handleClick}>Join Team</button>
+        )
     }
 });
