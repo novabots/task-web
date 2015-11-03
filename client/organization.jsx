@@ -27,6 +27,7 @@ OrganizationList = React.createClass({
             <div>
                 {this.renderOrganizations()}
                 {this.renderUsersWithNoTeam()}
+                <OrganizationForm />
             </div>
         );
     }
