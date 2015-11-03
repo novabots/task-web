@@ -24,11 +24,31 @@ TaskForm = React.createClass({
         return data;
     },
     render() {
-        const inputAttributes = {
+        const personInputAttributes = {
             className: 'form-control',
-            placeholder: 'Enter locations...',
+            placeholder: 'Search People',
             type: 'search'
         };
+        const clientInputAttributes = {
+            className: 'form-control',
+            placeholder: 'Search Clients',
+            type: 'search'
+        };
+        const projectInputAttributes = {
+            className: 'form-control',
+            placeholder: 'Search Projects',
+            type: 'search'
+        };
+        const projectModuleInputAttributes = {
+            className: 'form-control',
+            placeholder: 'Search Modules',
+            type: 'search'
+        };
+        const projectWorkTypeInputAttributes = {
+            className: 'form-control',
+            placeholder: 'Search Work Types',
+            type: 'search'
+        }
         return (
             <div>
             { this.state.enteringNew ?
@@ -42,7 +62,7 @@ TaskForm = React.createClass({
                         suggestionRenderer={this.renderPersonSuggestion}
                         suggestionValue={this.renderPersonSuggestionValue}
                         onSuggestionSelected={this.personSelected}
-                        inputAttributes={inputAttributes} />
+                        inputAttributes={personInputAttributes} />
                     <ReactAutosuggest
                         id="clientId"
                         ref="clientId"
@@ -51,7 +71,7 @@ TaskForm = React.createClass({
                         suggestionRenderer={this.renderClientSuggestion}
                         suggestionValue={this.renderClientSuggestionValue}
                         onSuggestionSelected={this.clientSelected}
-                        inputAttributes={inputAttributes} />
+                        inputAttributes={clientInputAttributes} />
                     <ReactAutosuggest
                         id="projectId"
                         ref="projectId"
@@ -60,7 +80,7 @@ TaskForm = React.createClass({
                         suggestionRenderer={this.renderProjectSuggestion}
                         suggestionValue={this.renderProjectSuggestionValue}
                         onSuggestionSelected={this.projectSelected}
-                        inputAttributes={inputAttributes} />
+                        inputAttributes={projectInputAttributes} />
                     <ReactAutosuggest
                         id="projectModuleId"
                         ref="projectModuleId"
@@ -69,7 +89,7 @@ TaskForm = React.createClass({
                         suggestionRenderer={this.renderProjectModuleSuggestion}
                         suggestionValue={this.renderProjectModuleSuggestionValue}
                         onSuggestionSelected={this.projectModuleSelected}
-                        inputAttributes={inputAttributes} />
+                        inputAttributes={projectModuleInputAttributes} />
                     <ReactAutosuggest
                         id="projectWorkTypeId"
                         ref="projectWorkTypeId"
@@ -78,7 +98,7 @@ TaskForm = React.createClass({
                         suggestionRenderer={this.renderProjectWorkTypeSuggestion}
                         suggestionValue={this.renderProjectWorkTypeSuggestionValue}
                         onSuggestionSelected={this.projectWorkTypeSelected}
-                        inputAttributes={inputAttributes} />
+                        inputAttributes={projectWorkTypeInputAttributes} />
                     <input
                         type="text"
                         className="form-control"
