@@ -18,16 +18,19 @@ OrganizationList = React.createClass({
         });
     },
     renderOrganizations() {
-        return this.data.organizations.map((organization) => {
-            return <Organization key={organization._id} organization={organization} />;
-        });
+        if (this.data.organizations.length > 0) {
+            return this.data.organizations.map((organization) => {
+                return <Organization key={organization._id} organization={organization} />;
+            });
+        } else {
+            return <OrganizationForm />
+        }
     },
     render() {
         return (
             <div>
                 {this.renderOrganizations()}
                 {this.renderUsersWithNoTeam()}
-                <OrganizationForm />
             </div>
         );
     }
