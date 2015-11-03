@@ -48,20 +48,3 @@ User = React.createClass({
     }
 });
 
-UserForm = React.createClass({
-    handleClick(e){
-        e.preventDefault();
-        Meteor.call("joinTeam", this.props.teamId, (err, res) => {
-            if (err) {
-                toastr.error("Team joining failed");
-            } else {
-                toastr.success("You joined a team");
-            }
-        });
-    },
-    render () {
-        return (
-            <button className="btn btn-support join-team" onClick={this.handleClick}>Join Team</button>
-        )
-    }
-});
