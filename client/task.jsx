@@ -199,9 +199,8 @@ TaskForm = React.createClass({
     },
     handleSubmit(event) {
         event.preventDefault();
-        console.log("handleSubmit");
+
         // Find the text field via the React ref
-        console.log(this.refs.taskTitle.value);
         const taskTitle = this.refs.taskTitle.value;
         const taskDescription = this.refs.taskDescription.value;
         const taskDueDate = this.refs.taskDueDate.value;
