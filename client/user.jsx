@@ -19,17 +19,37 @@ UserList = React.createClass({
     }
 });
 
-UserTaskIcon = React.createClass({
+function collect(connect, monitor) {
+    console.log("collect");
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    };
+}
+const userTaskIconSource = {
+    beginDrag(props) {
+        return {};
+    }
+};
+var UserTaskIcon = React.createClass({
+    propTypes: {
+        connectDragSource: React.PropTypes.func.isRequired,
+        isDragging: React.PropTypes.bool.isRequired
+    },
     renderTask() {
         let taskTitle = this.props.task.clientName + " " + this.props.task.description;
         return <a className="btn btn-info btn-xs draggable" id={this.props.task._id} title={taskTitle}><i className="fa fa-arrows"></i> {this.props.task.title}</a>
     },
     render() {
-        return (
-            <div>{this.renderTask()}</div>
-        );
+        var isDragging = this.props.isDragging;
+        var connectDragSource = this.props.connectDragSource;
+        // return connectDragSource(
+        // <div style={{ opacity: isDragging ? 0.5 : 1 }}>{this.renderTask()}</div>;
+        // );
+        return <div style={{ opacity: isDragging ? 0.5 : 1 }}>{this.renderTask()}</div>;
     }
 });
+DragSource("userbox", userTaskIconSource, collect)(UserTaskIcon);
 
 User = React.createClass({
     mixins: [ReactMeteorData],
@@ -68,3 +88,4 @@ User = React.createClass({
         );
     }
 });
+DragDropContext(ReactDnDBackend)(User);
