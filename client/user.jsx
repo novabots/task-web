@@ -8,7 +8,7 @@ UserList = React.createClass({
     render () {
         return (
             <div>
-            {this.renderUsers}
+            {this.renderUsers()}
             </div>
         );
     },
