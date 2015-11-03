@@ -100,7 +100,7 @@ TaskForm = React.createClass({
         );
     },
     getPersonSuggestions(input, cb) {
-        const regex = new RegExp('^' + input, 'i');
+        const regex = new RegExp(input, 'i');
         const persons = Persons.find().fetch().filter(person => regex.test(person.firstname + " " + person.lastname));
         cb(null, persons);
     },
@@ -119,7 +119,8 @@ TaskForm = React.createClass({
         this.data.personName = personName;
     },
     getClientSuggestions(input, cb) {
-        const clients = Clients.find({ name: { $regex: input } }).fetch();
+        const regex = new RegExp(input, 'i');
+        const clients = Clients.find().fetch().filter(client => regex.test(client.name));
         cb(null, clients);
     },
     renderClientSuggestion(suggestion, input) {
@@ -137,7 +138,8 @@ TaskForm = React.createClass({
         this.data.clientName = clientName;
     },
     getProjectSuggestions(input, cb) {
-        const projects = Projects.find({ clientid: this.data.clientId, name: { $regex: input } }).fetch();
+        const regex = new RegExp(input, 'i');
+        const projects = Projects.find({ clientid: this.data.clientId }).fetch().filter(project => regex.test(project.name));
         cb(null, projects);
     },
     renderProjectSuggestion(suggestion, input) {
@@ -155,7 +157,8 @@ TaskForm = React.createClass({
         this.data.projectName = projectName;
     },
     getProjectModuleSuggestions(input, cb) {
-        const projectmodules = ProjectModules.find({ projectid: this.data.projectId, modulename: { $regex: input } }).fetch();
+        const regex = new RegExp(input, 'i');
+        const projectmodules = ProjectModules.find({ projectid: this.data.projectId }).fetch().filter(projectmodule => regex.test(projectmodule.modulename));
         cb(null, projectmodules);
     },
     renderProjectModuleSuggestion(suggestion, input) {
@@ -173,7 +176,8 @@ TaskForm = React.createClass({
         this.data.projectModuleName = projectModuleName;
     },
     getProjectWorkTypeSuggestions(input, cb) {
-        const projectworktypes = ProjectWorkTypes.find({ projectid: this.data.projectId, worktype: { $regex: input } }).fetch();
+        const regex = new RegExp(input, 'i');
+        const projectworktypes = ProjectWorkTypes.find({ projectid: this.data.projectId }).fetch().filter(projectworktype => regex.test(projectworktype.worktype));
         cb(null, projectworktypes);
     },
     renderProjectWorkTypeSuggestion(suggestion, input) {
