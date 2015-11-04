@@ -391,28 +391,6 @@ Template.taskForm.onCreated(function () {
 });
 
 Template.taskIcon.onRendered(function () {
-    $( ".draggable" ).draggable({
-        revert: "invalid"
-    });
-    $(".droppable").droppable({
-        drop: function( event, ui ) {
-            var userId = event.target.id,
-                user = Meteor.users.findOne(userId),
-                taskId = ui.draggable[0].id,
-                task = Tasks.findOne(taskId);
-            if(task && user && task.userId !== user._id) {
-                Meteor.call("changeTaskOwner", user._id, task._id, function(err, res){
-                    if(res) {
-                        toastr.success('You have updated the task.');
-                    }
-                    if(err) {
-                        toastr.error('Error: You have not updated the task.');
-                    }
-                });
-            } else {
-                return false;
-            }
-        }
-    });
+
 });
 */

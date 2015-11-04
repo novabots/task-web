@@ -28,13 +28,43 @@ function collect(connect, monitor) {
 }
 const userTaskIconSource = {
     beginDrag(props) {
-        return {};
+        return {
+            id: props.user._id,
+            user: props.user
+        };
     }
 };
 var UserTaskIcon = React.createClass({
+    /*
     propTypes: {
         connectDragSource: React.PropTypes.func.isRequired,
         isDragging: React.PropTypes.bool.isRequired
+    },
+    */
+    componentDidMount(){
+        $( ".draggable" ).draggable({
+            revert: "invalid"
+        });
+        $(".droppable").droppable({
+            drop: function( event, ui ) {
+                var userId = event.target.id,
+                    user = Meteor.users.findOne(userId),
+                    taskId = ui.draggable[0].id,
+                    task = Tasks.findOne(taskId);
+                if(task && user && task.userId !== user._id) {
+                    Meteor.call("changeTaskOwner", user._id, task._id, function(err, res){
+                        if(res) {
+                            toastr.success('You have updated the task.');
+                        }
+                        if(err) {
+                            toastr.error('Error: You have not updated the task.');
+                        }
+                    });
+                } else {
+                    return false;
+                }
+            }
+        });
     },
     renderTask() {
         let taskTitle = this.props.task.clientName + " " + this.props.task.description;
@@ -46,10 +76,11 @@ var UserTaskIcon = React.createClass({
         // return connectDragSource(
         // <div style={{ opacity: isDragging ? 0.5 : 1 }}>{this.renderTask()}</div>;
         // );
-        return <div style={{ opacity: isDragging ? 0.5 : 1 }}>{this.renderTask()}</div>;
+        return <div>{this.renderTask()}</div>;
     }
 });
-DragSource("userbox", userTaskIconSource, collect)(UserTaskIcon);
+
+DragSource("userTaskIcon", userTaskIconSource, collect)(UserTaskIcon);
 
 User = React.createClass({
     mixins: [ReactMeteorData],
@@ -71,7 +102,7 @@ User = React.createClass({
         });
     },
     render () {
-        let user = this.data.user[0];
+        const user = this.data.user[0];
         return (
             <div className="col-sm-3">
             {this.data.user ?
