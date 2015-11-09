@@ -1,6 +1,7 @@
 import { Component, PropTypes } from 'react';
 import ReactMixin from 'react-mixin';
 import { DragDropContext } from 'react-dnd';
+import Tasks from 'app/collections/Tasks';
 import HTML5Backend from 'react-dnd-html5-backend';
 import UserTaskIcon from './usertaskicon';
 

@@ -11,8 +11,12 @@ import Autosuggest from 'react-autosuggest';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class TaskForm extends Component {
-    getInitialState() {
-        return { enteringNew: false, user: Meteor.user() }
+    constructor(props){
+        super(props);
+        this.state = {
+            enteringNew: false, user: Meteor.user()
+        };
+        this.getMeteorData = this.getMeteorData.bind(this);
     }
     getMeteorData(){
         const persons = Meteor.subscribe('persons');

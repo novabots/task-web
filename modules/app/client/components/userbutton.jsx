@@ -1,9 +1,14 @@
 import { Component } from 'react';
 
 export default class UserButton extends Component {
-    getInitialState() {
-        return { selected: null, user: Meteor.user()}
+    constructor(props) {
+        super(props);
+        this.state = {
+            selected: null, user: Meteor.user()
+        };
+        this.selectUser = this.selectUser.bind(this);
     }
+
     selectUser() {
         this.props.toggleSidebar();
         Session.set("userSelected", this.state.selected === this.state.user._id ? this.state.user._id : null );

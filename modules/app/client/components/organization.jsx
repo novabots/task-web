@@ -7,6 +7,9 @@ import { User } from './user';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class OrganizationList extends Component{
+    constructor(props){
+        super(props);
+    }
     getMeteorData() {
         return {
             organizations: Organizations.find().fetch(), users: Meteor.users.find().fetch()
@@ -40,7 +43,7 @@ export class OrganizationList extends Component{
             </div>
         );
     }
-};
+}
 
 @ReactMixin.decorate(ReactMeteorData)
 export class Organization extends Component {
@@ -81,10 +84,15 @@ export class Organization extends Component {
     }
 }
 
-@ReactMixin.decorate(ReactMeteorData)
 export class OrganizationForm extends Component {
-    getInitialState() {
-        return { "creatingOrg" : false };
+    constructor(props){
+        super(props);
+        this.state = {
+            "creatingOrg" : false
+        };
+        this.handleClick = this.handleClick.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     render () {
         return (
