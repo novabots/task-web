@@ -5,6 +5,13 @@ import { MainLayout } from './mainlayout.jsx';
 
 @ReactMixin.decorate(ReactMeteorData)
 export default class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loggedIn: Meteor.user()
+        };
+        this.setLoggedIn = this.setLoggedIn.bind(this);
+    }
     getMeteorData() {
         return {
             user: Meteor.user(), authenticating: Meteor.loggingIn()
@@ -13,9 +20,6 @@ export default class App extends Component {
     componentWillMount() {
         require('./style.less');
     }
-    state = {
-        loggedIn: Meteor.user()
-    };
     loggedIn() {
         return this.state.loggedIn();
     }

@@ -1,3 +1,12 @@
+import Organizations from 'app/collections/Organizations';
+import Teams from 'app/collections/Teams';
+import Projects from 'app/collections/Projects';
+import ProjectWorkTypes from 'app/collections/ProjectWorkTypes';
+import ProjectModules from 'app/collections/ProjectModules';
+import Clients from 'app/collections/Clients';
+import Persons from 'app/collections/Persons';
+import Tasks from 'app/collections/Tasks';
+
 Meteor.methods({
     getProjects: function (req) {
         if (Meteor.isServer) {
@@ -173,7 +182,7 @@ Meteor.methods({
                     }
                 });
                 if (result.statusCode === 200) {
-                    return Meteor.users.update({_id: user._id }, { $set: { profile: { personid: result.data.personid, apikey: apikey } }});
+                    return Meteor.users.update({_id: user._id }, { $set: { "profile.personid": result.data.personid, "profile.apikey": apikey } });
                 } else {
                     throw Meteor.Error(result.statusCode);
                 }

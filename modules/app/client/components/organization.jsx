@@ -47,8 +47,13 @@ export class OrganizationList extends Component{
 
 @ReactMixin.decorate(ReactMeteorData)
 export class Organization extends Component {
-    getInitialState() {
-        return { "creatingTeam" : false };
+    constructor(props){
+        super(props);
+        this.state = {
+            "creatingTeam" : false
+        };
+        this.creatingTeam = this.creatingTeam.bind(this);
+        this.toggleTeamForm = this.toggleTeamForm.bind(this);
     }
     getMeteorData() {
         return {

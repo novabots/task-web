@@ -181,6 +181,7 @@ export class TaskForm extends Component {
         this.data.clientName = clientName;
     }
     getProjectSuggestions(input, cb) {
+        console.log(this.data);
         const regex = new RegExp(input, 'i');
         const projects = Projects.find({ clientid: this.data.clientId }).fetch().filter(project => regex.test(project.name));
         cb(null, projects);

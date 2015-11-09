@@ -29,7 +29,7 @@ export class MainLayout extends Component {
         let sidebarClass = this.state.sidebarClass === "col-sm-4 sidebar-closed" ?  "col-sm-4 sidebar-open" : "col-sm-4 sidebar-closed";
         return (
             <div>
-                {this.getConnectApiStatus ?
+                {this.getConnectApiStatus() ?
                 <div>
                     <div id="header">
                         <ActionBar setLoggedIn={this.props.setLoggedIn} toggleSidebar={this.toggleSidebar} />

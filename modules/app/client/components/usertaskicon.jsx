@@ -4,8 +4,8 @@ import { DragSource } from 'react-dnd';
 const userTaskIconSource = {
     beginDrag(props) {
         return {
-            id: props.user._id,
-            user: props.user
+            id: props.task._id,
+            task: props.task
         };
     }
 };

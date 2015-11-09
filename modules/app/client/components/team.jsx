@@ -56,6 +56,10 @@ export class Team extends Component {
 }
 
 export class TeamJoinForm extends Component {
+    constructor(props){
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
     handleClick(e){
         e.preventDefault();
         Meteor.call("joinTeam", this.props.teamId, (err, res) => {
@@ -74,8 +78,12 @@ export class TeamJoinForm extends Component {
     }
 }
 
-@ReactMixin.decorate(ReactMeteorData)
 export class TeamForm extends Component {
+    constructor(props){
+        super(props);
+        this.createTeam = this.createTeam.bind(this);
+        this.cancel = this.cancel.bind(this);
+    }
     createTeam(e) {
         e.preventDefault();
         Meteor.call("createTeam", this.refs.teamName.value, this.props.orgId, (err, res) => {
