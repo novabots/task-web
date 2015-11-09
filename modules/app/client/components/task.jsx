@@ -16,7 +16,13 @@ export class TaskForm extends Component {
         this.state = {
             enteringNew: false, user: Meteor.user()
         };
-
+        this.personSelected = this.personSelected.bind(this);
+        this.clientSelected = this.clientSelected.bind(this);
+        this.projectSelected = this.projectSelected.bind(this);
+        this.projectModuleSelected = this.projectModuleSelected.bind(this);
+        this.projectWorkTypeSelected = this.projectWorkTypeSelected.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
     getMeteorData(){
         const persons = Meteor.subscribe('persons');
@@ -365,4 +371,3 @@ export class Task extends Component {
         }
     }
 }
-
