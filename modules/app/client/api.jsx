@@ -2,8 +2,15 @@ import { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 
 export class ConnectApi extends Component {
-    getInitialState() {
-        return { showModal: true };
+    constructor(props) {
+        super(props);
+        this.state = {
+            showModal: true
+        };
+        this.close = this.close.bind(this);
+        this.open = this.open.bind(this);
+        this.inputApiKey = this.inputApiKey.bind(this);
+
     }
     close() {
         this.setState({ showModal: false });
@@ -54,6 +61,10 @@ function handleApiResponse(err, res, collection) {
 }
 
 export class RefreshData extends Component{
+    constructor(props) {
+        super(props);
+        this.refreshData = this.refreshData.bind(this);
+    }
     render() {
         return (
             <li><a className="btn btn-default" onClick={this.refreshData}>refresh</a></li>
@@ -80,4 +91,4 @@ export class RefreshData extends Component{
             toastr.error(e);
         }
     }
-};
+}

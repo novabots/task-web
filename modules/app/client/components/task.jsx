@@ -16,7 +16,7 @@ export class TaskForm extends Component {
         this.state = {
             enteringNew: false, user: Meteor.user()
         };
-        this.getMeteorData = this.getMeteorData.bind(this);
+
     }
     getMeteorData(){
         const persons = Meteor.subscribe('persons');
@@ -318,13 +318,17 @@ export class TaskList extends Component {
 }
 
 export class Task extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            expandTask: false
+        };
+        this.handleExpand = this.handleExpand.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+    }
     static propTypes = {
         task: React.PropTypes.object.isRequired
     };
-
-    getInitialState() {
-        return { expandTask: false };
-    }
     render() {
         return (
             <div>

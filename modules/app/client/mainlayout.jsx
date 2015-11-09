@@ -42,4 +42,4 @@ export class MainLayout extends Component {
             </div>
         );
     }
-};
+}
