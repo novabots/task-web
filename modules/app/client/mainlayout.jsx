@@ -6,9 +6,16 @@ import { OrganizationList } from './components/organization';
 import { ConnectApi } from './api';
 
 export class MainLayout extends Component {
-    state = {
-        selectedUser: Meteor.user()
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedUser: Meteor.user(),
+            mainClass: false,
+            sidebarClass: false
+        };
+        this.toggleSidebar = this.toggleSidebar.bind(this);
+        this.getConnectApiStatus = this.getConnectApiStatus.bind(this);
+    }
     getConnectApiStatus() {
         let user = this.state.selectedUser;
         return user.profile.apikey != "";
