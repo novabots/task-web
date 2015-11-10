@@ -81,46 +81,46 @@ export class TaskForm extends Component {
                         id="personId"
                         ref="personId"
                         className="form-control"
-                        suggestions={this.getPersonSuggestions}
-                        suggestionRenderer={this.renderPersonSuggestion}
-                        suggestionValue={this.renderPersonSuggestionValue}
-                        onSuggestionSelected={this.personSelected}
+                        suggestions={this.getPersonSuggestions.bind(this)}
+                        suggestionRenderer={this.renderPersonSuggestion.bind(this)}
+                        suggestionValue={this.renderPersonSuggestionValue.bind(this)}
+                        onSuggestionSelected={this.personSelected.bind(this)}
                         inputAttributes={personInputAttributes} />
                     <Autosuggest
                         id="clientId"
                         ref="clientId"
                         className="form-control"
-                        suggestions={this.getClientSuggestions}
-                        suggestionRenderer={this.renderClientSuggestion}
-                        suggestionValue={this.renderClientSuggestionValue}
-                        onSuggestionSelected={this.clientSelected}
+                        suggestions={this.getClientSuggestions.bind(this)}
+                        suggestionRenderer={this.renderClientSuggestion.bind(this)}
+                        suggestionValue={this.renderClientSuggestionValue.bind(this)}
+                        onSuggestionSelected={this.clientSelected.bind(this)}
                         inputAttributes={clientInputAttributes} />
                     <Autosuggest
                         id="projectId"
                         ref="projectId"
                         className="form-control"
-                        suggestions={this.getProjectSuggestions}
-                        suggestionRenderer={this.renderProjectSuggestion}
-                        suggestionValue={this.renderProjectSuggestionValue}
-                        onSuggestionSelected={this.projectSelected}
+                        suggestions={this.getProjectSuggestions.bind(this)}
+                        suggestionRenderer={this.renderProjectSuggestion.bind(this)}
+                        suggestionValue={this.renderProjectSuggestionValue.bind(this)}
+                        onSuggestionSelected={this.projectSelected.bind(this)}
                         inputAttributes={projectInputAttributes} />
                     <Autosuggest
                         id="projectModuleId"
                         ref="projectModuleId"
                         className="form-control"
-                        suggestions={this.getProjectModuleSuggestions}
-                        suggestionRenderer={this.renderProjectModuleSuggestion}
-                        suggestionValue={this.renderProjectModuleSuggestionValue}
-                        onSuggestionSelected={this.projectModuleSelected}
+                        suggestions={this.getProjectModuleSuggestions.bind(this)}
+                        suggestionRenderer={this.renderProjectModuleSuggestion.bind(this)}
+                        suggestionValue={this.renderProjectModuleSuggestionValue.bind(this)}
+                        onSuggestionSelected={this.projectModuleSelected.bind(this)}
                         inputAttributes={projectModuleInputAttributes} />
                     <Autosuggest
                         id="projectWorkTypeId"
                         ref="projectWorkTypeId"
                         className="form-control"
-                        suggestions={this.getProjectWorkTypeSuggestions}
-                        suggestionRenderer={this.renderProjectWorkTypeSuggestion}
-                        suggestionValue={this.renderProjectWorkTypeSuggestionValue}
-                        onSuggestionSelected={this.projectWorkTypeSelected}
+                        suggestions={this.getProjectWorkTypeSuggestions.bind(this)}
+                        suggestionRenderer={this.renderProjectWorkTypeSuggestion.bind(this)}
+                        suggestionValue={this.renderProjectWorkTypeSuggestionValue.bind(this)}
+                        onSuggestionSelected={this.projectWorkTypeSelected.bind(this)}
                         inputAttributes={projectWorkTypeInputAttributes} />
                     <input
                         type="text"
@@ -181,7 +181,6 @@ export class TaskForm extends Component {
         this.data.clientName = clientName;
     }
     getProjectSuggestions(input, cb) {
-        console.log(this.data);
         const regex = new RegExp(input, 'i');
         const projects = Projects.find({ clientid: this.data.clientId }).fetch().filter(project => regex.test(project.name));
         cb(null, projects);
