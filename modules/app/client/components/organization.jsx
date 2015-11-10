@@ -71,7 +71,7 @@ export class Organization extends Component {
 
         const data = {};
         if(teams.ready()){
-            data.teams = Teams.find({orgId: this.props.organization._id}).fetch()
+            data.teams = Teams.find({orgId: this.props.organization._id}).fetch();
         }
         return data;
     }

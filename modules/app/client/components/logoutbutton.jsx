@@ -1,6 +1,10 @@
 import { Component } from 'react';
 
 export default class LogoutButton extends Component {
+    constructor(props){
+        super(props);
+        this.logoutUser = this.logoutUser.bind(this);
+    }
     logoutUser() {
         Meteor.logout();
         this.props.setLoggedIn(false);

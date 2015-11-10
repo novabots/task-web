@@ -20,7 +20,8 @@ export class ConnectApi extends Component {
     }
     inputApiKey(event) {
         event.preventDefault();
-        Meteor.call("setAPIKey", ReactDOM.findDOMNode(this.refs.apiKey).value.trim(), function(err, res) {
+        let apikey = this.refs.apiKey.value.trim();
+        Meteor.call("setAPIKey", apikey, function(err, res) {
             if(res) {
                 toastr.success('API Key Saved.');
             }
