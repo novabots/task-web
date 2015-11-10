@@ -99,13 +99,13 @@ export class Organization extends Component {
                         <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
                     </div>
                 }
-                <div>
+                <div className="org-teams">
                 {this.data.teams ?
                     <div>
                         {this.renderTeams()}
                     </div>
                 :
-                    null
+                    <div className="loading-indicator"><i className="fa fa-circle-o-notch fa-spin"></i></div>
                 }
                 </div>
             </div>

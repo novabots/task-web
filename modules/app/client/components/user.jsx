@@ -44,11 +44,11 @@ const userTaskIconTarget = {
         });
         return { name: props.user.username };
     }
-}
+};
 @DropTarget(Types.UserTaskIcon, userTaskIconTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     canDrop: monitor.canDrop(),
-    isOver: monitor.isOver(),
+    isOver: monitor.isOver()
 }))
 @ReactMixin.decorate(ReactMeteorData)
 export class User extends Component {
@@ -73,7 +73,7 @@ export class User extends Component {
         const user = this.data.user[0];
         const { connectDropTarget, canDrop, isOver } = this.props;
         return connectDropTarget(
-            <div className="col-sm-3">
+            <div className="col-sm-6 user-box">
             {this.data.user ?
                 <div className="well well-lg">
                     <h3>{user.username}</h3>
