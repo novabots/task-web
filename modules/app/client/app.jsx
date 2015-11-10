@@ -41,7 +41,7 @@ export default class App extends Component {
         return (
             <div>
                 {this.data.user ?
-                    <MainLayout setLoggedIn={this.setLoggedIn} />
+                    <MainLayout setLoggedIn={this.setLoggedIn} user={this.data.user} />
                     :
                     this.renderAuth()
                 }

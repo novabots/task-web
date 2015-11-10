@@ -1,34 +1,22 @@
 import { Component, PropTypes } from 'react';
 import ReactMixin from 'react-mixin';
 import Teams from 'app/collections/Teams';
-import { User } from './user';
+import { UserList } from './user';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class Team extends Component {
+    constructor(props){
+        super(props);
+    }
     getMeteorData(){
-        const teams = Meteor.subscribe("teams");
         const users = Meteor.subscribe("users");
-        const user = Meteor.user();
         const data = {};
-        if(teams.ready() && users.ready()){
-            data.team = Teams.find({_id: this.props.team._id}).fetch();
+        if(users.ready()){
+            data.team = this.props.team;
             data.users = Meteor.users.find({"profile.teams": this.props.team._id}).fetch();
-            if(user){
-                data.teamMember = ! (user.profile.teams.indexOf(this.props.team._id) !== -1);
-            }
         }
 
         return data;
-    }
-    renderTeamMembers() {
-        return (
-            <div>
-                {this.data.users.map(user => {
-                    return <User key={user._id} user={user}/>
-                    })
-                }
-            </div>
-            )
     }
     render () {
         return (
@@ -38,13 +26,13 @@ export class Team extends Component {
                 </div>
                 <div className="panel-body">
                     {this.data.users ?
-                        this.renderTeamMembers()
+                        <UserList users={this.data.users} />
                     :
                         null
                     }
                 </div>
                 <div className="panel-footer">
-                    {this.data.teamMember ?
+                    {this.props.teamMember ?
                         <TeamJoinForm teamId={this.props.team._id} />
                         :
                         null

@@ -5,24 +5,16 @@ import UserTaskIcon from './usertaskicon';
 import { DropTarget } from 'react-dnd';
 import { Types } from './constants';
 
-@ReactMixin.decorate(ReactMeteorData)
+
 export class UserList extends Component {
-    getMeteorData() {
-        return {
-            users: Meteor.users.find().fetch()
-        }
-    }
     render () {
         return (
             <div>
-            {this.renderUsers()}
+            {this.props.users.map((user) => {
+                return <User key={user._id} user={user} />;
+            })}
             </div>
         );
-    }
-    renderUsers () {
-        return this.data.users.map((user) => {
-            return <User key={user._id} user={user} />;
-        });
     }
 }
 const userTaskIconTarget = {

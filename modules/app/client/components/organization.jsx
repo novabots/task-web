@@ -11,9 +11,14 @@ export class OrganizationList extends Component{
         super(props);
     }
     getMeteorData() {
-        return {
-            organizations: Organizations.find().fetch(), users: Meteor.users.find().fetch()
+        const organizations = Meteor.subscribe("organizations");
+        const users = Meteor.subscribe("users");
+        const data = {};
+        if(organizations.ready() && users.ready()){
+            data.organizations = Organizations.find().fetch();
+            data.users = Meteor.users.find().fetch();
         }
+        return data;
     }
     renderUsersWithNoTeam() {
         let noTeams = [];
@@ -29,7 +34,7 @@ export class OrganizationList extends Component{
     renderOrganizations() {
         if (this.data.organizations.length > 0) {
             return this.data.organizations.map((organization) => {
-                return <Organization key={organization._id} organization={organization} />;
+                return <Organization key={organization._id} organization={organization} user={this.props.user} />;
             });
         } else {
             return <OrganizationForm />
@@ -38,8 +43,14 @@ export class OrganizationList extends Component{
     render() {
         return (
             <div>
+        {this.data.organizations ?
+            <div>
                 {this.renderOrganizations()}
                 {this.renderUsersWithNoTeam()}
+            </div>
+        :
+            null
+        }
             </div>
         );
     }
@@ -56,9 +67,13 @@ export class Organization extends Component {
         this.toggleTeamForm = this.toggleTeamForm.bind(this);
     }
     getMeteorData() {
-        return {
-            teams: Teams.find({orgId: this.props.organization._id}).fetch()
+        const teams = Meteor.subscribe("teams");
+
+        const data = {};
+        if(teams.ready()){
+            data.teams = Teams.find({orgId: this.props.organization._id}).fetch()
         }
+        return data;
     }
     creatingTeam(){
         this.setState({ "creatingTeam" : true })
@@ -67,8 +82,10 @@ export class Organization extends Component {
         this.setState({ "creatingTeam" : state })
     }
     renderTeams(){
+        let user = this.props.user;
         return this.data.teams.map((team) => {
-            return <Team key={team._id} team={team} />;
+            let teamMember =  ! (user.profile.teams.indexOf(team._id) > -1);
+            return <Team key={team._id} team={team} teamMember={teamMember} />;
         });
     }
     render() {
@@ -82,7 +99,15 @@ export class Organization extends Component {
                         <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
                     </div>
                 }
-                {this.renderTeams()}
+                <div>
+                {this.data.teams ?
+                    <div>
+                        {this.renderTeams()}
+                    </div>
+                :
+                    null
+                }
+                </div>
             </div>
 
         );

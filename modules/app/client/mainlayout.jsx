@@ -38,7 +38,7 @@ export class MainLayout extends Component {
                         <ActionBar setLoggedIn={this.props.setLoggedIn} toggleSidebar={this.toggleSidebar} />
                     </div>
                     <div id="organizations" className={mainClass}>
-                        <OrganizationList />
+                        <OrganizationList user={this.props.user} />
                     </div>
 
                     <div id="sidebar" className={sidebarClass}>
