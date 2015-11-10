@@ -1,10 +1,9 @@
 import { Component, PropTypes } from 'react';
 import ReactMixin from 'react-mixin';
-import { DragDropContext } from 'react-dnd';
 import Tasks from 'app/collections/Tasks';
-import HTML5Backend from 'react-dnd-html5-backend';
 import UserTaskIcon from './usertaskicon';
-
+import { DropTarget } from 'react-dnd';
+import { Types } from './constants';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class UserList extends Component {
@@ -26,8 +25,39 @@ export class UserList extends Component {
         });
     }
 }
-
-@DragDropContext(HTML5Backend)
+const userTaskIconTarget = {
+    canDrop(props, monitor) {
+        const targetUserId = props.user._id;
+        const user = Meteor.users.findOne(targetUserId);
+        const item = monitor.getItem();
+        const taskId = item.id;
+        const task = Tasks.findOne(taskId);
+        if(task && user && task.userId !== targetUserId) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    drop(props, monitor) {
+        const targetUserId = props.user._id;
+        const item = monitor.getItem();
+        const task = Tasks.findOne(item.id);
+        Meteor.call("changeTaskOwner", targetUserId, task._id, function(err, res){
+            if(res) {
+                toastr.success('You have updated the task.');
+            }
+            if(err) {
+                toastr.error('Error: You have not updated the task.');
+            }
+        });
+        return { name: props.user.username };
+    }
+}
+@DropTarget(Types.UserTaskIcon, userTaskIconTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    canDrop: monitor.canDrop(),
+    isOver: monitor.isOver(),
+}))
 @ReactMixin.decorate(ReactMeteorData)
 export class User extends Component {
     getMeteorData(){
@@ -49,12 +79,13 @@ export class User extends Component {
     }
     render () {
         const user = this.data.user[0];
-        return (
+        const { connectDropTarget, canDrop, isOver } = this.props;
+        return connectDropTarget(
             <div className="col-sm-3">
             {this.data.user ?
                 <div className="well well-lg">
                     <h3>{user.username}</h3>
-                    <div className="droppable" id={this.data.user._id}>
+                    <div id={this.data.user._id}>
                         {this.renderTaskIcons()}
                     </div>
                 </div>

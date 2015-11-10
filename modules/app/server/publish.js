@@ -10,7 +10,7 @@ import Persons from '../collections/Persons';
 
 Meteor.publish("tasks", function(){
     if(this.userId){
-        return Tasks.find();
+        return Tasks.find({archived: { $ne: true } });
     }
 });
 
