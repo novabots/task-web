@@ -40,7 +40,7 @@ export class ConnectApi extends Component {
                     <Modal.Body>
                     <form id="api-key-form" onSubmit={this.inputApiKey}>
                         <div className="form-group">
-                            <label for="api-key">Retrieve API Key from MyIntervals Account</label>
+                            <label htmlFor="api-key">Retrieve API Key from MyIntervals Account</label>
                             <input type="text" id="api-key" className="form-control" ref="apiKey" placeholder="API Key" />
                         </div>
                         <button type="submit" className="btn btn-primary">Save</button>

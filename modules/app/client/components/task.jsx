@@ -133,8 +133,7 @@ export class TaskForm extends Component {
                     <input
                         className="form-control"
                         ref="taskDueDate"
-                        type="date"
-                        placeholder="Task Due Date" />
+                        type="date" />
                     <button type="submit" className="btn btn-primary btn-block">Save</button>
                 </form>
                 <button className="btn btn-danger btn-block" onClick={this.toggleForm}>Cancel</button></div> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
