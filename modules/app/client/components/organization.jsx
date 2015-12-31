@@ -1,40 +1,35 @@
 import { Component, PropTypes } from 'react';
-import ReactMixin from 'react-mixin';
 import Organizations from 'app/collections/Organizations';
 import Teams from 'app/collections/Teams';
 import { Team, TeamForm } from './team';
 import { User } from './user';
 
-@ReactMixin.decorate(ReactMeteorData)
 export class OrganizationList extends Component{
     constructor(props){
         super(props);
     }
-    getMeteorData() {
-        const organizations = Meteor.subscribe("organizations");
-        const users = Meteor.subscribe("users");
-        const data = {};
-        if(organizations.ready() && users.ready()){
-            data.organizations = Organizations.find().fetch();
-            data.users = Meteor.users.find().fetch();
-        }
-        return data;
-    }
+
     renderUsersWithNoTeam() {
         let noTeams = [];
-        _.each(this.data.users, function(user){
+        _.each(this.props.users, function(user){
             if(_.isEmpty(user.profile.teams)){
                 noTeams.push(user);
             }
         });
         return noTeams.map((user) => {
-            return <User key={user._id} user={user} />
+            return <User key={user._id} user={user} tasks={this.props.tasks} />
         });
     }
+
     renderOrganizations() {
-        if (this.data.organizations.length > 0) {
-            return this.data.organizations.map((organization) => {
-                return <Organization key={organization._id} organization={organization} user={this.props.user} />;
+        if (this.props.organizations.length > 0) {
+            return this.props.organizations.map((organization) => {
+                let teams = this.props.teams.filter((val) => {
+                    if (val.orgId === organization._id) {
+                        return val;
+                    }
+                });
+                return <Organization key={organization._id} organization={organization} user={this.props.user} teams={teams} tasks={this.props.tasks} />;
             });
         } else {
             return <OrganizationForm />
@@ -43,20 +38,19 @@ export class OrganizationList extends Component{
     render() {
         return (
             <div>
-        {this.data.organizations ?
-            <div>
-                {this.renderOrganizations()}
-                {this.renderUsersWithNoTeam()}
-            </div>
-        :
-            null
-        }
+            {this.props.organizations ?
+                <div>
+                    {this.renderOrganizations()}
+                    {this.renderUsersWithNoTeam()}
+                </div>
+            :
+                null
+            }
             </div>
         );
     }
 }
 
-@ReactMixin.decorate(ReactMeteorData)
 export class Organization extends Component {
     constructor(props){
         super(props);
@@ -66,28 +60,23 @@ export class Organization extends Component {
         this.creatingTeam = this.creatingTeam.bind(this);
         this.toggleTeamForm = this.toggleTeamForm.bind(this);
     }
-    getMeteorData() {
-        const teams = Meteor.subscribe("teams");
 
-        const data = {};
-        if(teams.ready()){
-            data.teams = Teams.find({orgId: this.props.organization._id}).fetch();
-        }
-        return data;
-    }
     creatingTeam(){
         this.setState({ "creatingTeam" : true })
     }
+
     toggleTeamForm(state){
         this.setState({ "creatingTeam" : state })
     }
+
     renderTeams(){
         let user = this.props.user;
-        return this.data.teams.map((team) => {
+        return this.props.teams.map((team) => {
             let teamMember =  ! (user.profile.teams.indexOf(team._id) > -1);
-            return <Team key={team._id} team={team} teamMember={teamMember} />;
+            return <Team key={team._id} team={team} teamMember={teamMember} tasks={this.props.tasks} />;
         });
     }
+
     render() {
         return (
             <div id="org" className="well well-lg">
@@ -100,7 +89,7 @@ export class Organization extends Component {
                     </div>
                 }
                 <div className="org-teams">
-                {this.data.teams ?
+                {this.props.teams ?
                     <div>
                         {this.renderTeams()}
                     </div>

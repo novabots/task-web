@@ -5,10 +5,12 @@ export default class LogoutButton extends Component {
         super(props);
         this.logoutUser = this.logoutUser.bind(this);
     }
+
     logoutUser() {
-        Meteor.logout();
         this.props.setLoggedIn(false);
+        Meteor.logout();
     }
+
     render() {
         return (
             <li><a className="btn btn-default" onClick={this.logoutUser}>Logout <i className="fa fa-sign-out"></i></a></li>

@@ -1,266 +1,261 @@
 import { Component, PropTypes } from 'react';
-import ReactMixin from 'react-mixin';
-import Teams from 'app/collections/Teams';
 import Tasks from 'app/collections/Tasks';
-import Persons from 'app/collections/Persons';
-import Projects from 'app/collections/Projects';
-import ProjectModules from 'app/collections/ProjectModules';
-import ProjectWorkTypes from 'app/collections/ProjectWorkTypes';
-import Clients from 'app/collections/Clients';
-import Autosuggest from 'react-autosuggest';
 
-@ReactMixin.decorate(ReactMeteorData)
+import TaskStatuses from 'app/collections/TaskStatuses';
+import TaskPriorities from 'app/collections/TaskPriorities';
+
+import PersonAutosuggest from './personautosuggest';
+import ClientAutosuggest from './clientautosuggest';
+import ProjectAutosuggest from './projectautosuggest';
+import ProjectModuleAutosuggest from './projectmoduleautosuggest';
+import ProjectWorkTypeAutosuggest from './projectworktypeautosuggest';
+
 export class TaskForm extends Component {
     constructor(props){
         super(props);
         this.state = {
-            enteringNew: false, user: Meteor.user()
+            enteringNew: false,
+            isEditing: props.isEditing,
+            user: props.user,
+            status: props.task ? props.task.status : "",
+            priority: props.task ? props.task.priority : "",
+            title: props.task ? props.task.title : "",
+            description: props.task ? props.task.description : "",
+            dueDate: props.task ? props.task.dueDate : "",
+            personId: props.task ? props.task.personId : "",
+            personName: props.task ? props.task.personName : "",
+            clientId: props.task ? props.task.clientId : "",
+            clientName: props.task ? props.task.clientName : "",
+            projectId: props.task ? props.task.projectId : "",
+            projectName: props.task ? props.task.projectName : "",
+            projectModuleId: props.task ? props.task.projectModuleId : "",
+            projectModuleName: props.task ? props.task.projectModuleName : "",
+            projectWorkTypeId: props.task ? props.task.projectWorkTypeId : "",
+            projectWorkTypeName: props.task ? props.task.projectWorkTypeName : ""
         };
         this.personSelected = this.personSelected.bind(this);
         this.clientSelected = this.clientSelected.bind(this);
         this.projectSelected = this.projectSelected.bind(this);
         this.projectModuleSelected = this.projectModuleSelected.bind(this);
         this.projectWorkTypeSelected = this.projectWorkTypeSelected.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
+        this.open = this.open.bind(this);
+        this.close = this.close.bind(this);
+        this.stopEdit = this.stopEdit.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    getMeteorData(){
-        const persons = Meteor.subscribe('persons');
-        const projects = Meteor.subscribe('projects');
-        const clients = Meteor.subscribe("clients");
-        const projectmodules = Meteor.subscribe("projectmodules");
-        const projectworktypes = Meteor.subscribe("projectworktypes");
 
-        const data = {};
-
-        if(persons.ready() && projects.ready() && clients.ready() && projectmodules.ready() && projectworktypes.ready()) {
-            data.persons = Persons.find().fetch();
-            data.projects = Projects.find().fetch();
-            data.clients = Clients.find().fetch();
-            data.projectmodules = ProjectModules.find().fetch();
-            data.projectworktypes = ProjectWorkTypes.find().fetch();
-            if(Meteor.user()){
-                data.userId = Meteor.userId();
-            }
-        }
-
-        return data;
-    }
     render() {
-        const personInputAttributes = {
-            className: 'form-control',
-            placeholder: 'Search People',
-            type: 'search'
-        };
-        const clientInputAttributes = {
-            className: 'form-control',
-            placeholder: 'Search Clients',
-            type: 'search'
-        };
-        const projectInputAttributes = {
-            className: 'form-control',
-            placeholder: 'Search Projects',
-            type: 'search'
-        };
-        const projectModuleInputAttributes = {
-            className: 'form-control',
-            placeholder: 'Search Modules',
-            type: 'search'
-        };
-        const projectWorkTypeInputAttributes = {
-            className: 'form-control',
-            placeholder: 'Search Work Types',
-            type: 'search'
-        };
         return (
             <div>
-            { this.state.enteringNew ?
+            { this.state.enteringNew || this.state.isEditing ?
                 <div>
-                <form className="new-task" onSubmit={this.handleSubmit}>
-                    <Autosuggest
-                        id="personId"
-                        ref="personId"
-                        className="form-control"
-                        suggestions={this.getPersonSuggestions.bind(this)}
-                        suggestionRenderer={this.renderPersonSuggestion.bind(this)}
-                        suggestionValue={this.renderPersonSuggestionValue.bind(this)}
-                        onSuggestionSelected={this.personSelected.bind(this)}
-                        inputAttributes={personInputAttributes} />
-                    <Autosuggest
-                        id="clientId"
-                        ref="clientId"
-                        className="form-control"
-                        suggestions={this.getClientSuggestions.bind(this)}
-                        suggestionRenderer={this.renderClientSuggestion.bind(this)}
-                        suggestionValue={this.renderClientSuggestionValue.bind(this)}
-                        onSuggestionSelected={this.clientSelected.bind(this)}
-                        inputAttributes={clientInputAttributes} />
-                    <Autosuggest
-                        id="projectId"
-                        ref="projectId"
-                        className="form-control"
-                        suggestions={this.getProjectSuggestions.bind(this)}
-                        suggestionRenderer={this.renderProjectSuggestion.bind(this)}
-                        suggestionValue={this.renderProjectSuggestionValue.bind(this)}
-                        onSuggestionSelected={this.projectSelected.bind(this)}
-                        inputAttributes={projectInputAttributes} />
-                    <Autosuggest
-                        id="projectModuleId"
-                        ref="projectModuleId"
-                        className="form-control"
-                        suggestions={this.getProjectModuleSuggestions.bind(this)}
-                        suggestionRenderer={this.renderProjectModuleSuggestion.bind(this)}
-                        suggestionValue={this.renderProjectModuleSuggestionValue.bind(this)}
-                        onSuggestionSelected={this.projectModuleSelected.bind(this)}
-                        inputAttributes={projectModuleInputAttributes} />
-                    <Autosuggest
-                        id="projectWorkTypeId"
-                        ref="projectWorkTypeId"
-                        className="form-control"
-                        suggestions={this.getProjectWorkTypeSuggestions.bind(this)}
-                        suggestionRenderer={this.renderProjectWorkTypeSuggestion.bind(this)}
-                        suggestionValue={this.renderProjectWorkTypeSuggestionValue.bind(this)}
-                        onSuggestionSelected={this.projectWorkTypeSelected.bind(this)}
-                        inputAttributes={projectWorkTypeInputAttributes} />
-                    <input
-                        type="text"
-                        className="form-control"
-                        ref="taskTitle"
-                        placeholder="Task Title" />
-                    <textarea
-                        className="form-control"
-                        ref="taskDescription" placeholder="Task Description"></textarea>
-                    <input
-                        className="form-control"
-                        ref="taskDueDate"
-                        type="date" />
-                    <button type="submit" className="btn btn-primary btn-block">Save</button>
-                </form>
-                <button className="btn btn-danger btn-block" onClick={this.toggleForm}>Cancel</button></div> : <button className="btn btn-primary btn-block" onClick={this.toggleForm}>New Task</button>
+                    <form className="new-task" onSubmit={this.handleSubmit}>
+                        <PersonAutosuggest
+                            selected={this.personSelected}
+                            task={this.props.task}
+                            value={this.state.personName}
+                            data={this.props.persons} />
+                        <ClientAutosuggest
+                            selected={this.clientSelected}
+                            task={this.props.task}
+                            value={this.state.clientName}
+                            data={this.props.clients} />
+                        <ProjectAutosuggest
+                            selected={this.projectSelected}
+                            task={this.props.task}
+                            value={this.state.projectName}
+                            client={this.state.clientId}
+                            data={this.props.projects} />
+                        <ProjectModuleAutosuggest
+                            selected={this.projectModuleSelected}
+                            task={this.props.task}
+                            value={this.state.projectModuleName}
+                            project={this.state.projectId}
+                            data={this.props.projectModules} />
+                        <ProjectWorkTypeAutosuggest
+                            selected={this.projectWorkTypeSelected}
+                            task={this.props.task}
+                            value={this.state.projectWorkTypeName}
+                            project={this.state.projectId} />
+                        <input
+                            type="text"
+                            className="form-control"
+                            onChange={(e) => this.setState({title: e.target.value})}
+                            placeholder="Task Title"
+                            value={this.state.title} />
+                        <textarea
+                            className="form-control"
+                            placeholder="Task Description"
+                            onChange={(e) => this.setState({description: e.target.value})}
+                            value={this.state.description}></textarea>
+                        <input
+                            className="form-control"
+                            type="date"
+                            onChange={(e) => this.setState({dueDate: e.target.value})}
+                            value={this.state.dueDate} />
+                        <select value={this.state.status} onChange={(e) => this.setState({status: e.target.value})} className="form-control">
+                            <option label="Task Status"></option>
+                            {this.props.statuses ?
+                                this.props.statuses.map((status, i) => {
+                                    return <option value={status.description} key={status.description}>{status.description}</option>
+                                })
+                                :
+                                null
+                            }
+                        </select>
+                        <select value={this.state.priority} onChange={(e) => this.setState({priority: e.target.value})} className="form-control">
+                            <option label="Task Priority"></option>
+                            {this.props.priorities ?
+                                this.props.priorities.map((priority, i) => {
+                                    return <option value={priority.description} key={priority.description}>{priority.description}</option>
+                                })
+                                :
+                                null
+                            }
+                        </select>
+                        {this.state.isEditing ?
+                            <button type="submit" className="btn btn-primary btn-block">Update</button>
+                            :
+                            null
+                        }
+                        {this.state.enteringNew ?
+                            <button type="submit" className="btn btn-primary btn-block">Save</button>
+                            :
+                            null
+                        }
+                    </form>
+                    {this.state.isEditing ?
+                        <button className="btn btn-danger btn-block" type="button" onClick={this.stopEdit}>Cancel</button>
+                        :
+                        null
+                    }
+                    {this.state.enteringNew ?
+                        <button className="btn btn-danger btn-block" type="button" onClick={this.close}>Cancel</button>
+                        :
+                        null
+                    }
+                </div>
+                :
+                <button className="btn btn-primary btn-block" type="button" onClick={this.open}>New Task</button>
             }
             </div>
         );
     }
-    getPersonSuggestions(input, cb) {
-        const regex = new RegExp(input, 'i');
-        const persons = Persons.find().fetch().filter(person => regex.test(person.firstname + " " + person.lastname));
-        cb(null, persons);
-    }
-    renderPersonSuggestion(suggestion, input) {
-        return (
-            suggestion.firstname + " " + suggestion.lastname
-        );
-    }
-    renderPersonSuggestionValue(suggestionObj) {
-        return suggestionObj.firstname + " " + suggestionObj.lastname;
-    }
+
     personSelected(suggestion, event) {
         const personId = suggestion.id;
         const personName = suggestion.firstname + " " + suggestion.lastname;
-        this.data.personId = personId;
-        this.data.personName = personName;
+        this.setState({personId: personId});
+        this.setState({personName: personName});
     }
-    getClientSuggestions(input, cb) {
-        const regex = new RegExp(input, 'i');
-        const clients = Clients.find().fetch().filter(client => regex.test(client.name));
-        cb(null, clients);
-    }
-    renderClientSuggestion(suggestion, input) {
-        return (
-            suggestion.name
-        );
-    }
-    renderClientSuggestionValue(suggestionObj) {
-        return suggestionObj.name;
-    }
+
     clientSelected(suggestion, event) {
         const clientId = suggestion.id;
         const clientName = suggestion.name;
-        this.data.clientId = clientId;
-        this.data.clientName = clientName;
+        this.setState({clientName: clientName});
+        this.setState({clientId: clientId});
     }
-    getProjectSuggestions(input, cb) {
-        const regex = new RegExp(input, 'i');
-        const projects = Projects.find({ clientid: this.data.clientId }).fetch().filter(project => regex.test(project.name));
-        cb(null, projects);
-    }
-    renderProjectSuggestion(suggestion, input) {
-        return (
-            suggestion.name
-        );
-    }
-    renderProjectSuggestionValue(suggestionObj) {
-        return suggestionObj.name;
-    }
+
     projectSelected(suggestion, event) {
         const projectId = suggestion.id;
         const projectName = suggestion.name;
-        this.data.projectId = projectId;
-        this.data.projectName = projectName;
+        this.setState({projectName: projectName});
+        this.setState({projectId: projectId});
     }
-    getProjectModuleSuggestions(input, cb) {
-        const regex = new RegExp(input, 'i');
-        const projectmodules = ProjectModules.find({ projectid: this.data.projectId }).fetch().filter(projectmodule => regex.test(projectmodule.modulename));
-        cb(null, projectmodules);
-    }
-    renderProjectModuleSuggestion(suggestion, input) {
-        return (
-            suggestion.modulename
-        );
-    }
-    renderProjectModuleSuggestionValue(suggestionObj) {
-        return suggestionObj.modulename;
-    }
+
     projectModuleSelected(suggestion, event) {
         const projectModuleId = suggestion.moduleid;
         const projectModuleName = suggestion.modulename
-        this.data.projectModuleId = projectModuleId;
-        this.data.projectModuleName = projectModuleName;
+        this.setState({projectModuleId: projectModuleId});
+        this.setState({projectModuleName: projectModuleName});
     }
-    getProjectWorkTypeSuggestions(input, cb) {
-        const regex = new RegExp(input, 'i');
-        const projectworktypes = ProjectWorkTypes.find({ projectid: this.data.projectId }).fetch().filter(projectworktype => regex.test(projectworktype.worktype));
-        cb(null, projectworktypes);
-    }
-    renderProjectWorkTypeSuggestion(suggestion, input) {
-        return (
-            suggestion.worktype
-        );
-    }
-    renderProjectWorkTypeSuggestionValue(suggestionObj) {
-        return suggestionObj.worktype;
-    }
+
+
     projectWorkTypeSelected(suggestion, event) {
         const projectWorkTypeId = suggestion.worktypeid;
         const projectWorkTypeName = suggestion.worktype;
-        this.data.projectWorkTypeId = projectWorkTypeId;
-        this.data.projectWorkTypeName = projectWorkTypeName;
+        this.setState({projectWorkTypeId: projectWorkTypeId});
+        this.setState({projectWorkTypeName: projectWorkTypeName});
     }
-    toggleForm() {
-        if (this.state.enteringNew === true) {
-            this.setState({enteringNew: false});
-        } else {
-            this.setState({enteringNew: true});
+
+    close() {
+        this.setState({enteringNew: false});
+    }
+
+    stopEdit() {
+        this.setState({isEditing: false});
+        if (this.props.edit) {
+            this.props.edit(false);
         }
     }
+
+    open() {
+        this.setState({enteringNew: true});
+    }
+
     handleSubmit(event) {
         event.preventDefault();
 
-        // Find the text field via the React ref
-        const taskTitle = this.refs.taskTitle.value;
-        const taskDescription = this.refs.taskDescription.value;
-        const taskDueDate = this.refs.taskDueDate.value;
-        const personId = this.data.personId;
-        const personName = this.data.personName;
-        const clientId = this.data.clientId;
-        const clientName = this.data.clientName;
-        const projectId = this.data.projectId;
-        const projectName = this.data.projectName;
-        const projectModuleId = this.data.projectModuleId;
-        const projectModuleName = this.data.projectModuleName;
-        const projectWorkTypeId = this.data.projectWorkTypeId;
-        const projectWorkTypeName = this.data.projectWorkTypeName;
+        const taskTitle = this.state.title;
+        const userId = this.props.user._id;
+        const taskDescription = this.state.description;
+        const taskDueDate = this.state.dueDate;
+        const taskStatus = this.state.status;
+        const taskPriority = this.state.priority;
+        const personId = this.state.personId;
+        const personName = this.state.personName;
+        const clientId = this.state.clientId;
+        const clientName = this.state.clientName;
+        const projectId = this.state.projectId;
+        const projectName = this.state.projectName;
+        const projectModuleId = this.state.projectModuleId;
+        const projectModuleName = this.state.projectModuleName;
+        const projectWorkTypeId = this.state.projectWorkTypeId;
+        const projectWorkTypeName = this.state.projectWorkTypeName;
 
+        let task = {};
+        if (this.props.task) {
+            task = this.props.task;
+            task.userId = userId;
+            task.title = taskTitle;
+            task.description = taskDescription;
+            task.dueDate = taskDueDate;
+            task.status = taskStatus;
+            task.priority = taskPriority;
+            task.personId = personId;
+            task.personName = personName;
+            task.clientId = clientId;
+            task.clientName = clientName;
+            task.projectId = projectId;
+            task.projectName = projectName;
+            task.projectModuleId = projectModuleId;
+            task.projectModuleName = projectModuleName;
+            task.projectWorkTypeId = projectWorkTypeId;
+            task.projectWorkTypeName = projectWorkTypeName;
+            Tasks.update(task._id, task);
+        } else {
+            task = {
+                title: taskTitle,
+                status: taskStatus,
+                priority: taskPriority,
+                description: taskDescription,
+                createdAt: new Date(), // current time
+                dueDate: taskDueDate,
+                userId: userId,
+                personId: personId,
+                personName: personName,
+                clientId: clientId,
+                clientName: clientName,
+                projectId: projectId,
+                projectName: projectName,
+                projectModuleId: projectModuleId,
+                projectModuleName: projectModuleName,
+                projectWorkTypeId: projectWorkTypeId,
+                projectWorkTypeName: projectWorkTypeName,
+                archived: false
+            };
+            Tasks.insert(task);
+        }
         // Meteor.call("postTime", {
         //     "projectid": projectId,
         //     "moduleid": projectModuleId,
@@ -274,47 +269,41 @@ export class TaskForm extends Component {
         //     if (error) {
         //         toastr.error(error);
         //     } else {
-                Tasks.insert({
-                    title: taskTitle,
-                    description: taskDescription,
-                    createdAt: new Date(), // current time
-                    dueDate: taskDueDate,
-                    userId: this.data.userId,
-                    personId: personId,
-                    personName: personName,
-                    clientId: clientId,
-                    clientName: clientName,
-                    projectId: projectId,
-                    projectName: projectName,
-                    projectModuleId: projectModuleId,
-                    projectModuleName: projectModuleName,
-                    projectWorkTypeId: projectWorkTypeId,
-                    projectWorkTypeName: projectWorkTypeName,
-                    archived: false
-                });
         //     }
         // });
 
-        this.setState({enteringNew: false});
+        this.close();
+        this.stopEdit();
     }
 }
 
-@ReactMixin.decorate(ReactMeteorData)
 export class TaskList extends Component {
-    getMeteorData() {
-        const user = Meteor.user();
-        const data = {};
-        if(user){
-            data.tasks = Tasks.find({userId: user._id, archived: {$ne: true}},{sort: {dueDate: 1}}).fetch()
-        }
+    constructor(props) {
+        super(props);
+    }
 
-        return data;
-    }
     renderTasks() {
-        return this.data.tasks.map((task) => {
-            return <Task key={task._id} task={task} />;
-        });
+        if (this.props.tasks) {
+            return this.props.tasks.map((task) => {
+                let expandTask = false;
+                if (this.props.data && (this.props.data.task._id === task._id)) {
+                    expandTask = true;
+                }
+                return <Task
+                    persons={this.props.persons}
+                    clients={this.props.clients}
+                    projects={this.props.projects}
+                    projectModules={this.props.projectModules}
+                    statuses={this.props.statuses}
+                    priorities={this.props.priorities}
+                    expandTask={expandTask}
+                    key={task._id}
+                    task={task}
+                    user={this.props.user} />;
+            });
+        }
     }
+
     render() {
         return (
             <div>{this.renderTasks()}</div>
@@ -326,47 +315,100 @@ export class Task extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            expandTask: false
+            expandTask: props.expandTask,
+            edit: false
         };
         this.handleExpand = this.handleExpand.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.edit = this.edit.bind(this);
+        this.taskFormEdit = this.taskFormEdit.bind(this);
+        this.clientSelected = this.clientSelected.bind(this);
     }
+
     static propTypes = {
         task: React.PropTypes.object.isRequired
     };
+
     render() {
         return (
-            <div>
-            { this.state.expandTask ?
                 <div className="panel panel-default">
-                    <div className="panel-heading"><span>{this.props.task.title}</span> <div className="btn-group pull-right"><button className="btn btn-xs btn-danger pull-right" onClick={this.handleClose}><i className="fa fa-times" title="Delete Task" ></i></button> <button className="btn btn-xs btn-info pull-right" onClick={this.handleExpand}><i title="Expand Task" className="fa fa-expand" ></i></button></div></div>
-                    <div className="panel-body">
-                        <p>{this.props.task.description}</p>
+                    <div className="panel-heading">
+                        <span>{this.props.task.title}</span>
+                        <div className="btn-group pull-right">
+                            <button className="btn btn-xs btn-danger pull-right" onClick={this.handleDelete}>
+                                <i className="fa fa-times" title="Delete Task" ></i>
+                            </button>
+                            { this.state.expandTask ?
+                                <button className="btn btn-xs btn-info pull-right" onClick={this.handleClose}><i title="Expand Task" className="fa fa-expand" ></i></button>
+                            :
+                                <button className="btn btn-xs btn-info pull-right" onClick={this.handleExpand}><i title="Expand Task" className="fa fa-expand" ></i></button>
+                            }
+                        </div>
                     </div>
-                    <ul className="list-group">
-                        <li className="list-group-item">{this.props.task.clientName}</li>
-                        <li className="list-group-item">{this.props.task.projectName}</li>
-                        <li className="list-group-item">{this.props.task.projectModuleName}</li>
-                        <li className="list-group-item">{this.props.task.projectWorkTypeName}</li>
-                        <li className="list-group-item">{this.props.task.personName}</li>
-                    </ul>
+                    { this.state.expandTask ?
+                    <div className="panel-body">
+                        {this.state.edit ?
+                            <TaskForm
+                                persons={this.props.persons}
+                                clients={this.props.clients}
+                                projects={this.props.projects}
+                                projectModules={this.props.projectModules}
+                                statuses={this.props.statuses}
+                                priorities={this.props.priorities}
+                                task={this.props.task}
+                                edit={this.taskFormEdit}
+                                user={this.props.user}
+                                isEditing={this.state.edit} />
+                            :
+                            <div>
+                                <ul className="list-group">
+                                    <li className="list-group-item">{this.props.task.personName}</li>
+                                    <li className="list-group-item">{this.props.task.clientName}</li>
+                                    <li className="list-group-item">{this.props.task.projectName}</li>
+                                    <li className="list-group-item">{this.props.task.projectModuleName}</li>
+                                    <li className="list-group-item">{this.props.task.projectWorkTypeName}</li>
+                                    <li className="list-group-item">{this.props.task.description}</li>
+                                    <li className="list-group-item">{this.props.task.dueDate}</li>
+                                    <li className="list-group-item">{this.props.task.status}</li>
+                                    <li className="list-group-item">{this.props.task.priority}</li>
+                                </ul>
+                                <button className="btn btn-xs btn-info pull-right" onClick={this.edit} type="button">Edit</button>
+                            </div>
+                        }
+                    </div>
+                    :
+                        null
+                    }
                 </div>
-            : <div className="panel panel-default">
-                <div className="panel-heading"><span>{this.props.task.title}</span> <div className="btn-group pull-right"><button className="btn btn-xs btn-danger pull-right" onClick={this.handleClose}><i className="fa fa-times" title="Delete Task" ></i></button> <button className="btn btn-xs btn-info pull-right" onClick={this.handleExpand}><i title="Expand Task" className="fa fa-expand" ></i></button></div></div>
-            </div> }
-            </div>
         );
     }
-    handleExpand() {
-        if (this.state.expandTask === true) {
-            this.setState({ expandTask: false })
-        } else {
-            this.setState({ expandTask: true });
-        }
+
+    edit() {
+        this.setState({ edit: true });
     }
-    handleClose() {
+
+    taskFormEdit(edit) {
+        this.setState({ edit: edit });
+    }
+
+    clientSelected(suggestion, event) {
+        const clientId = suggestion.id;
+        const clientName = suggestion.name;
+        this.setState({clientId: clientId});
+    }
+
+    handleDelete() {
         if (confirm("Are you sure you want to delete this task?")) {
             Tasks.remove({ _id: this.props.task._id });
         }
+    }
+
+    handleExpand() {
+        this.setState({ expandTask: true });
+    }
+
+    handleClose() {
+        this.setState({ expandTask: false });
     }
 }

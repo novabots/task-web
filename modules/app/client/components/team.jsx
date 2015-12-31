@@ -26,7 +26,7 @@ export class Team extends Component {
                 </div>
                 <div className="panel-body">
                     {this.data.users ?
-                        <UserList users={this.data.users} />
+                        <UserList users={this.data.users} tasks={this.props.tasks} />
                     :
                         null
                     }

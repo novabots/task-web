@@ -1,12 +1,19 @@
 import { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
 import { Types } from './constants';
+import ReactDOM from 'react-dom';
 
 const userTaskIconSource = {
     beginDrag(props) {
         return {
             id: props.task._id
         };
+    },
+    endDrag(props, monitor, component) {
+        let e = document.createEvent('Event');
+        e.initEvent('usertaskicondrop', true, true);
+        e.detail = props;
+        window.dispatchEvent(e);
     }
 };
 
