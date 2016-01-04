@@ -4,6 +4,8 @@ import Teams from 'app/collections/Teams';
 import { Team, TeamForm, TeamNode } from './team';
 import { UserNode } from './user';
 import { findPoint, nextAngle } from 'app/client/lib/graph';
+import { default as TouchBackend } from 'react-dnd-touch-backend';
+import { DragDropContext } from 'react-dnd';
 
 export class OrganizationList extends Component{
     constructor(props){
@@ -105,6 +107,7 @@ export class Organization extends Component {
     }
 }
 
+@DragDropContext(TouchBackend({ enableMouseEvents: true }))
 export class OrganizationGraph extends Component {
     constructor(props){
         super(props);
@@ -165,7 +168,7 @@ export class OrganizationGraph extends Component {
             let pos = positions[counter];
             let r = baseRadius * zoom;
             counter++;
-            return <TeamNode key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={angle} tasks={tasks} />;
+            return <TeamNode canvas={this.canvas} key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={angle} tasks={tasks} />;
         });
     }
     render() {
@@ -181,7 +184,7 @@ export class OrganizationGraph extends Component {
                 }
                 <div className="org-teams">
                     {this.props.teams ?
-                    <svg width="100%" height={this.state.height} viewBox={"0 0 " + this.state.width + " " + this.state.height}>
+                    <svg width="100%" height={this.state.height} ref={(ref) => this.canvas = ref} viewBox={"0 0 " + this.state.width + " " + this.state.height}>
                         {this.renderTeams(this.state.zoom)}
                     </svg>
                     :
