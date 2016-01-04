@@ -4,6 +4,7 @@ import { UserTaskIcon, UserTaskCircle, TaskCirclePreview } from './usertaskicon'
 import { DropTarget } from 'react-dnd';
 import { Types } from './constants';
 import { findPoint, nextAngle } from 'app/client/lib/graph';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 export class UserNodes extends Component {
     render () {
@@ -123,18 +124,13 @@ export class UserNode extends Component {
         const user = this.props.user;
         const { connectDropTarget, canDrop, isOver } = this.props;
         return connectDropTarget(
-            <g>
-                {user ?
-                    <g>
+           <g>
+               <OverlayTrigger placement="top" overlay={<Tooltip id={user._id}>{user.username}</Tooltip>}>
                     <circle className="user-circle" id={user._id} cx={this.props.cx} cy={this.props.cy} r={this.props.r} />
-                    <text x={this.props.text.x} y={this.props.text.y} textAnchor="middle" className="user-text">{user.username}</text>
-                    {this.renderTaskCircles()}
-                        <TaskCirclePreview offset={this.props.offset} />
-                    </g>
-                :
-                    null
-                }
-            </g>
+               </OverlayTrigger>
+               {this.renderTaskCircles()}
+               <TaskCirclePreview offset={this.props.offset} />
+           </g>
         );
     }
 }
