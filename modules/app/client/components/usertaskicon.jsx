@@ -2,6 +2,7 @@ import { Component, PropTypes } from 'react';
 import { DragSource, DragLayer } from 'react-dnd';
 import { Types } from './constants';
 import ReactDOM from 'react-dom';
+import { OverlayTrigger, Popover } from 'react-bootstrap';
 
 const userTaskIconSource = {
     beginDrag(props) {
@@ -59,13 +60,13 @@ export class UserTaskCircle extends Component {
         let taskDescription = this.props.task.description;
         let id = this.props.task._id;
         return (
-            <g>
+            <OverlayTrigger placement="top" overlay={<Popover id={id} title={taskTitle}>{taskDescription}</Popover>}>
                 {
                     connectDragPreview(connectDragSource(
-                    <g style={{ opacity: isDragging ? 0.5 : 1 }}><circle className="task-circle" cx={this.props.cx} cy={this.props.cy} r={this.props.r} /><text className="task-description" x={this.props.text.x} textAnchor="middle" y={this.props.text.y} id={id} title={taskDescription}>{taskTitle}</text></g>
+                    <g style={{ opacity: isDragging ? 0.5 : 1 }}><circle className="task-circle" cx={this.props.cx} cy={this.props.cy} r={this.props.r} /></g>
                     ))
                 }
-            </g>
+            </OverlayTrigger>
         );
     }
 };
@@ -74,8 +75,8 @@ function collect(monitor) {
     var item = monitor.getItem();
     return {
         id: item && item._id,
-        currentOffset: monitor.getSourceClientOffset(),
-        isDragging: monitor.isDragging(),
+        currentOffset: monitor.getClientOffset(),
+        isDragging: monitor.isDragging()
     };
 }
 
@@ -86,27 +87,23 @@ function getItemStyles (currentOffset) {
         };
     }
 
-    var x = currentOffset.x;
-    var y = currentOffset.y;
-    var transform = `translate(${x}px, ${y}px)`;
     return {
-        pointerEvents: 'none',
-        //transform: transform,
-        //WebkitTransform: transform
+        pointerEvents: 'none'
     };
 }
 
 @DragLayer(collect)
 export class TaskCirclePreview extends React.Component {
     render () {
-        console.log(this.props);
         if (!this.props.isDragging) {
             return <g></g>;
         }
+        let x = this.props.currentOffset ? this.props.currentOffset.x : 0;
+        let y = this.props.currentOffset ? this.props.currentOffset.y : 0;
 
         return (
             <g>
-               <circle className="task-circle preview" r="20" cx={this.props.currentOffset.x + this.props.offset.left} cy={this.props.currentOffset.y - this.props.offset.top} style={getItemStyles(this.props.currentOffset)} />
+               <circle className="task-circle preview" r="20" cx={x} cy={y} style={getItemStyles(this.props.currentOffset)} />
             </g>
         );
     }

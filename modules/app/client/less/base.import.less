@@ -72,6 +72,8 @@ body {
     }
   }
   #org {
+    position: relative;
+    z-index:2;
     h1 {
       text-align: center;
     }
@@ -85,9 +87,14 @@ body {
         display: inline-block;
       }
     }
-    .org-teams {
-      margin-top: 20px;
-    }
+  }
+  .org-teams {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
   }
   .big-input {
     background-color: #999999;

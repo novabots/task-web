@@ -1,7 +1,7 @@
 import { Component, PropTypes } from 'react';
 import ReactMixin from 'react-mixin';
 import Teams from 'app/collections/Teams';
-import { UserList, UserNodes } from './user';
+import { UserNodes } from './user';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class Team extends Component {

@@ -113,11 +113,10 @@ export class UserNode extends Component {
         }
         let counter = 0;
         return tasks.map((task) => {
-            let text = positions[counter];
             let pos = positions[counter];
             let r = radius * this.props.zoom;
             counter++;
-            return <UserTaskCircle key={task._id} task={task} cx={pos.x} cy={pos.y} r={r} text={text} />;
+            return <UserTaskCircle key={task._id} task={task} cx={pos.x} cy={pos.y} r={r} />;
         });
     }
     render () {

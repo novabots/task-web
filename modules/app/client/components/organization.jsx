@@ -4,8 +4,6 @@ import Teams from 'app/collections/Teams';
 import { Team, TeamForm, TeamNode } from './team';
 import { UserNode } from './user';
 import { findPoint, nextAngle } from 'app/client/lib/graph';
-import { default as TouchBackend } from 'react-dnd-touch-backend';
-import { DragDropContext } from 'react-dnd';
 
 export class OrganizationList extends Component{
     constructor(props){
@@ -107,7 +105,7 @@ export class Organization extends Component {
     }
 }
 
-@DragDropContext(TouchBackend({ enableMouseEvents: true }))
+
 export class OrganizationGraph extends Component {
     constructor(props){
         super(props);
@@ -138,7 +136,7 @@ export class OrganizationGraph extends Component {
         window.addEventListener("resize", this.updateDimensions);
     }
     updateDimensions() {
-        this.setState({width: document.getElementById("org").offsetWidth -48, height: (document.getElementById("org").offsetWidth * 0.6)});
+        this.setState({width: window.innerWidth , height: window.innerHeight });
     }
     renderTeams(zoom){
         let user = this.props.user;
@@ -173,26 +171,28 @@ export class OrganizationGraph extends Component {
     }
     render() {
         return (
-            <div id="org" className="well well-lg">
-                <h1>{this.props.organization.name}</h1>
-                {this.state.creatingTeam ?
-                <TeamForm orgId={this.props.organization._id} toggleTeamForm={this.toggleTeamForm}  />
-                    :
-                <div className="btn-group btn-group-lg">
-                    <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
+            <div>
+                <div id="org" className="well well-lg">
+                    <h1>{this.props.organization.name}</h1>
+                    {this.state.creatingTeam ?
+                    <TeamForm orgId={this.props.organization._id} toggleTeamForm={this.toggleTeamForm}  />
+                        :
+                    <div className="btn-group btn-group-lg">
+                        <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
+                    </div>
+                    }
+
                 </div>
-                }
                 <div className="org-teams">
-                    {this.props.teams ?
+                {this.props.teams ?
                     <svg width="100%" height={this.state.height} ref={(ref) => this.canvas = ref} viewBox={"0 0 " + this.state.width + " " + this.state.height}>
                         {this.renderTeams(this.state.zoom)}
                     </svg>
                     :
                     <div className="loading-indicator"><i className="fa fa-circle-o-notch fa-spin"></i></div>
-                    }
+                }
                 </div>
             </div>
-
         );
     }
 }
