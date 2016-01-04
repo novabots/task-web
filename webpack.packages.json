@@ -17,6 +17,6 @@
   "redbox-react": "^1.1.1",
   "react-autosuggest": "2.1.1",
   "react-dnd": "2.0.2",
-  "react-dnd-html5-backend" : "2.0.0",
+  "react-dnd-touch-backend" : "0.2.4",
   "react-bootstrap": "0.27.3"
 }

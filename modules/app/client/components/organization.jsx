@@ -2,8 +2,9 @@ import { Component, PropTypes } from 'react';
 import ReactMixin from 'react-mixin';
 import Organizations from 'app/collections/Organizations';
 import Teams from 'app/collections/Teams';
-import { Team, TeamForm } from './team';
+import { Team, TeamForm, TeamNode } from './team';
 import { User } from './user';
+import { findPoint, nextAngle } from 'app/client/lib/graph';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class OrganizationList extends Component{
@@ -34,7 +35,7 @@ export class OrganizationList extends Component{
     renderOrganizations() {
         if (this.data.organizations.length > 0) {
             return this.data.organizations.map((organization) => {
-                return <Organization key={organization._id} organization={organization} user={this.props.user} />;
+                return <OrganizationGraph key={organization._id} organization={organization} user={this.props.user} />;
             });
         } else {
             return <OrganizationForm />
@@ -107,6 +108,104 @@ export class Organization extends Component {
                 :
                     <div className="loading-indicator"><i className="fa fa-circle-o-notch fa-spin"></i></div>
                 }
+                </div>
+            </div>
+
+        );
+    }
+}
+
+@ReactMixin.decorate(ReactMeteorData)
+export class OrganizationGraph extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            creatingTeam : false,
+            zoom : 1,
+            width : 0,
+            height: 0
+        };
+        this.creatingTeam = this.creatingTeam.bind(this);
+        this.toggleTeamForm = this.toggleTeamForm.bind(this);
+        this.updateDimensions = this.updateDimensions.bind(this);
+        this.updateDimensions = _.debounce(this.updateDimensions,1000);
+    }
+    getMeteorData() {
+        const teams = Meteor.subscribe("teams");
+
+        const data = {};
+        if(teams.ready()){
+            data.teams = Teams.find({orgId: this.props.organization._id}).fetch();
+        }
+        return data;
+    }
+    creatingTeam(){
+        this.setState({ "creatingTeam" : true })
+    }
+    toggleTeamForm(state){
+        this.setState({ "creatingTeam" : state })
+    }
+    componentWillMount(){
+        this.updateDimensions();
+    }
+    componentWillUnmount(){
+        window.removeEventListener("resize", this.updateDimensions);
+    }
+    componentDidMount(){
+        window.addEventListener("resize", this.updateDimensions);
+    }
+    updateDimensions() {
+        this.setState({width: document.getElementById("org").offsetWidth -48, height: (document.getElementById("org").offsetWidth * 0.6)});
+    }
+    renderTeams(zoom){
+        let user = this.props.user;
+        let teamsCount = this.data.teams.length;
+        let baseRadius = 70;
+        let angle = 180;
+        let offset = 0;
+        if(teamsCount > 1) {
+            angle = 360 / teamsCount;
+            offset = baseRadius * zoom * 4;
+        }
+        let positions = [];
+        let angleInc = angle;
+        let startX = this.state.width / 2;
+        let startY = this.state.height / 2;
+        let start = {x: startX, y: startY};
+        for(var i = 0; i < teamsCount; i++) {
+            let pos = findPoint(nextAngle(angleInc, teamsCount), offset, start);
+            positions.push(pos);
+            angleInc = angleInc + angle;
+        }
+        let counter = 0;
+        return this.data.teams.map((team) => {
+            let teamMember = ! (user.profile.teams.indexOf(team._id) > -1);
+            let text = positions[counter];
+            let pos = positions[counter];
+            let r = baseRadius * zoom;
+            counter++;
+            return <TeamNode key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={angle} />;
+        });
+    }
+    render() {
+        return (
+            <div id="org" className="well well-lg">
+                <h1>{this.props.organization.name}</h1>
+                {this.state.creatingTeam ?
+                <TeamForm orgId={this.props.organization._id} toggleTeamForm={this.toggleTeamForm}  />
+                    :
+                <div className="btn-group btn-group-lg">
+                    <button className="btn btn-support create-team-button" onClick={this.creatingTeam}>Create Team <i className="fa fa-plus"></i></button>
+                </div>
+                }
+                <div className="org-teams">
+                    {this.data.teams ?
+                    <svg width={this.state.width} height={this.state.height}>
+                        {this.renderTeams(this.state.zoom)}
+                    </svg>
+                    :
+                    <div className="loading-indicator"><i className="fa fa-circle-o-notch fa-spin"></i></div>
+                    }
                 </div>
             </div>
 

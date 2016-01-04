@@ -4,10 +4,10 @@ import { ActionBar } from './components/actionbar';
 import { TaskForm, TaskList } from './components/task';
 import { OrganizationList } from './components/organization';
 import { ConnectApi } from './api';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { default as TouchBackend } from 'react-dnd-touch-backend';
 import { DragDropContext } from 'react-dnd';
 
-@DragDropContext(HTML5Backend)
+@DragDropContext(TouchBackend({ enableMouseEvents: true }))
 export class MainLayout extends Component {
     constructor(props) {
         super(props);

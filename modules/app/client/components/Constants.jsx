@@ -1,3 +1,4 @@
 export const Types = {
-    UserTaskIcon: 'usertaskicon'
+    UserTaskIcon: 'usertaskicon',
+    UserTaskCircle: 'usertaskcircle'
 };

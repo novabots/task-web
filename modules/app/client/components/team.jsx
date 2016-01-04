@@ -1,7 +1,7 @@
 import { Component, PropTypes } from 'react';
 import ReactMixin from 'react-mixin';
 import Teams from 'app/collections/Teams';
-import { UserList } from './user';
+import { UserList, UserNodes } from './user';
 
 @ReactMixin.decorate(ReactMeteorData)
 export class Team extends Component {
@@ -39,6 +39,38 @@ export class Team extends Component {
                     }
                 </div>
             </div>
+        );
+    }
+}
+
+@ReactMixin.decorate(ReactMeteorData)
+export class TeamNode extends Component {
+    constructor(props){
+        super(props);
+    }
+    getMeteorData(){
+        const users = Meteor.subscribe("users");
+        const data = {};
+        if(users.ready()){
+            data.team = this.props.team;
+            data.users = Meteor.users.find({"profile.teams": this.props.team._id}).fetch();
+        }
+
+        return data;
+    }
+    render () {
+        return (
+            <g>
+            <circle className="team-circle" cx={this.props.cx} cy={this.props.cy} r={this.props.r} />
+            <text className="team-title" x={this.props.text.x} y={this.props.text.y} textAnchor="middle">
+                {this.props.team.name}
+            </text>
+            {this.data.users ?
+                <UserNodes users={this.data.users} team={this.props.team} x={this.props.cx} y={this.props.cy} r={this.props.r} zoom={this.props.zoom} angle={this.props.angle} />
+                :
+                null
+            }
+            </g>
         );
     }
 }
