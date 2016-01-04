@@ -84,7 +84,6 @@ export class UserNode extends Component {
         super(props);
     }
     renderTaskCircles() {
-        console.log(this.props.tasks);
         let tasks = this.props.tasks.filter((val) => {
             if (val.userId === this.props.user._id) {
                 return val;

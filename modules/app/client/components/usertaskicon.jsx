@@ -99,7 +99,6 @@ function getItemStyles (currentOffset) {
 @DragLayer(collect)
 export class TaskCirclePreview extends React.Component {
     render () {
-        console.log(this.props);
         if (!this.props.isDragging) {
             return <g></g>;
         }
