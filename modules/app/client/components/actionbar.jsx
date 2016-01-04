@@ -10,7 +10,7 @@ export class ActionBar extends Component {
                 <ul className="nav nav-pills pull-right">
                     <UserButton toggleSidebar={this.props.toggleSidebar} />
                     <RefreshData />
-                    <LogoutButton setLoggedIn={this.props.setLoggedIn}/>
+                    <LogoutButton setLoggedIn={this.props.setLoggedIn} />
                 </ul>
             </div>
         );

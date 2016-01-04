@@ -1,41 +1,37 @@
 import { Component, PropTypes } from 'react';
-import ReactMixin from 'react-mixin';
 import Organizations from 'app/collections/Organizations';
 import Teams from 'app/collections/Teams';
 import { Team, TeamForm, TeamNode } from './team';
-import { User } from './user';
+import { UserNode } from './user';
 import { findPoint, nextAngle } from 'app/client/lib/graph';
 
-@ReactMixin.decorate(ReactMeteorData)
 export class OrganizationList extends Component{
     constructor(props){
         super(props);
     }
-    getMeteorData() {
-        const organizations = Meteor.subscribe("organizations");
-        const users = Meteor.subscribe("users");
-        const data = {};
-        if(organizations.ready() && users.ready()){
-            data.organizations = Organizations.find().fetch();
-            data.users = Meteor.users.find().fetch();
-        }
-        return data;
-    }
+
     renderUsersWithNoTeam() {
         let noTeams = [];
-        _.each(this.data.users, function(user){
+        _.each(this.props.users, function(user){
             if(_.isEmpty(user.profile.teams)){
                 noTeams.push(user);
             }
         });
         return noTeams.map((user) => {
-            return <User key={user._id} user={user} />
+            return <User key={user._id} user={user} tasks={this.props.tasks} />
         });
     }
+
     renderOrganizations() {
-        if (this.data.organizations.length > 0) {
-            return this.data.organizations.map((organization) => {
-                return <OrganizationGraph key={organization._id} organization={organization} user={this.props.user} />;
+        if (this.props.organizations.length > 0) {
+            return this.props.organizations.map((organization) => {
+                let teams = this.props.teams.filter((val) => {
+                    if (val.orgId === organization._id) {
+                        return val;
+                    }
+                });
+                return <OrganizationGraph key={organization._id} organization={organization} user={this.props.user} teams={teams} tasks={this.props.tasks} />;
+
             });
         } else {
             return <OrganizationForm />
@@ -44,20 +40,19 @@ export class OrganizationList extends Component{
     render() {
         return (
             <div>
-        {this.data.organizations ?
-            <div>
-                {this.renderOrganizations()}
-                {this.renderUsersWithNoTeam()}
-            </div>
-        :
-            null
-        }
+            {this.props.organizations ?
+                <div>
+                    {this.renderOrganizations()}
+                    {this.renderUsersWithNoTeam()}
+                </div>
+            :
+                null
+            }
             </div>
         );
     }
 }
 
-@ReactMixin.decorate(ReactMeteorData)
 export class Organization extends Component {
     constructor(props){
         super(props);
@@ -67,28 +62,23 @@ export class Organization extends Component {
         this.creatingTeam = this.creatingTeam.bind(this);
         this.toggleTeamForm = this.toggleTeamForm.bind(this);
     }
-    getMeteorData() {
-        const teams = Meteor.subscribe("teams");
 
-        const data = {};
-        if(teams.ready()){
-            data.teams = Teams.find({orgId: this.props.organization._id}).fetch();
-        }
-        return data;
-    }
     creatingTeam(){
         this.setState({ "creatingTeam" : true })
     }
+
     toggleTeamForm(state){
         this.setState({ "creatingTeam" : state })
     }
+
     renderTeams(){
         let user = this.props.user;
-        return this.data.teams.map((team) => {
+        return this.props.teams.map((team) => {
             let teamMember =  ! (user.profile.teams.indexOf(team._id) > -1);
-            return <Team key={team._id} team={team} teamMember={teamMember} />;
+            return <Team key={team._id} team={team} teamMember={teamMember} tasks={this.props.tasks} />;
         });
     }
+
     render() {
         return (
             <div id="org" className="well well-lg">
@@ -101,7 +91,7 @@ export class Organization extends Component {
                     </div>
                 }
                 <div className="org-teams">
-                {this.data.teams ?
+                {this.props.teams ?
                     <div>
                         {this.renderTeams()}
                     </div>
@@ -115,7 +105,6 @@ export class Organization extends Component {
     }
 }
 
-@ReactMixin.decorate(ReactMeteorData)
 export class OrganizationGraph extends Component {
     constructor(props){
         super(props);
@@ -129,15 +118,6 @@ export class OrganizationGraph extends Component {
         this.toggleTeamForm = this.toggleTeamForm.bind(this);
         this.updateDimensions = this.updateDimensions.bind(this);
         this.updateDimensions = _.debounce(this.updateDimensions,1000);
-    }
-    getMeteorData() {
-        const teams = Meteor.subscribe("teams");
-
-        const data = {};
-        if(teams.ready()){
-            data.teams = Teams.find({orgId: this.props.organization._id}).fetch();
-        }
-        return data;
     }
     creatingTeam(){
         this.setState({ "creatingTeam" : true })
@@ -159,7 +139,7 @@ export class OrganizationGraph extends Component {
     }
     renderTeams(zoom){
         let user = this.props.user;
-        let teamsCount = this.data.teams.length;
+        let teamsCount = this.props.teams.length;
         let baseRadius = 70;
         let angle = 180;
         let offset = 0;
@@ -178,13 +158,14 @@ export class OrganizationGraph extends Component {
             angleInc = angleInc + angle;
         }
         let counter = 0;
-        return this.data.teams.map((team) => {
+        let tasks = this.props.tasks;
+        return this.props.teams.map((team) => {
             let teamMember = ! (user.profile.teams.indexOf(team._id) > -1);
             let text = positions[counter];
             let pos = positions[counter];
             let r = baseRadius * zoom;
             counter++;
-            return <TeamNode key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={angle} />;
+            return <TeamNode key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={angle} tasks={tasks} />;
         });
     }
     render() {
@@ -199,8 +180,8 @@ export class OrganizationGraph extends Component {
                 </div>
                 }
                 <div className="org-teams">
-                    {this.data.teams ?
-                    <svg width={this.state.width} height={this.state.height}>
+                    {this.props.teams ?
+                    <svg width="100%" height={this.state.height} viewBox={"0 0 " + this.state.width + " " + this.state.height}>
                         {this.renderTeams(this.state.zoom)}
                     </svg>
                     :

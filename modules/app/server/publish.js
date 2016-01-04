@@ -1,4 +1,6 @@
 import Tasks from '../collections/Tasks';
+import TaskPriorities from '../collections/TaskPriorities';
+import TaskStatuses from '../collections/TaskStatuses';
 import Permissions from '../collections/Permissions';
 import Teams from '../collections/Teams';
 import Organizations from '../collections/Organizations';
@@ -10,7 +12,19 @@ import Persons from '../collections/Persons';
 
 Meteor.publish("tasks", function(){
     if(this.userId){
-        return Tasks.find({archived: { $ne: true } });
+        return Tasks.find({archived: {$ne: true}},{sort: {dueDate: 1}});
+    }
+});
+
+Meteor.publish("taskpriorities", function(){
+    if(this.userId) {
+        return TaskPriorities.find();
+    }
+});
+
+Meteor.publish("taskstatuses", function(){
+    if(this.userId) {
+        return TaskStatuses.find();
     }
 });
 
@@ -54,9 +68,9 @@ Meteor.publish("projectmodules", function () {
     }
 });
 
-Meteor.publish("projectworktypes", function () {
-    if (this.userId) {
-        return ProjectWorkTypes.find({ userId: this.userId });
+Meteor.publish("projectworktypes", function (projectId) {
+    if (this.userId && projectId) {
+        return ProjectWorkTypes.find({ userId: this.userId, projectid: projectId });
     }
 });
 

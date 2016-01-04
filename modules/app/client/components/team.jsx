@@ -26,7 +26,7 @@ export class Team extends Component {
                 </div>
                 <div className="panel-body">
                     {this.data.users ?
-                        <UserList users={this.data.users} />
+                        <UserList users={this.data.users} tasks={this.props.tasks} />
                     :
                         null
                     }
@@ -66,7 +66,7 @@ export class TeamNode extends Component {
                 {this.props.team.name}
             </text>
             {this.data.users ?
-                <UserNodes users={this.data.users} team={this.props.team} x={this.props.cx} y={this.props.cy} r={this.props.r} zoom={this.props.zoom} angle={this.props.angle} />
+                <UserNodes users={this.data.users} tasks={this.props.tasks} team={this.props.team} x={this.props.cx} y={this.props.cy} r={this.props.r} zoom={this.props.zoom} angle={this.props.angle} />
                 :
                 null
             }
