@@ -18,10 +18,7 @@ import Projects from 'app/collections/Projects';
 import ProjectModules from 'app/collections/ProjectModules';
 
 import { ConnectApi } from './api';
-import { default as TouchBackend } from 'react-dnd-touch-backend';
-import { DragDropContext } from 'react-dnd';
 
-@DragDropContext(TouchBackend({ enableMouseEvents: true }))
 @ReactMixin.decorate(ReactMeteorData)
 export class MainLayout extends Component {
     constructor(props) {

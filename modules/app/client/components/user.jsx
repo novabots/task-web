@@ -38,7 +38,7 @@ export class UserNodes extends Component {
                     let pos = positions[counter];
                     let r = radius * this.props.zoom;
                     counter++;
-                    return <UserNode key={user._id} user={user} cx={pos.x} cy={pos.y} r={r} text={text} zoom={this.props.zoom} angle={angle} tasks={tasks} />;
+                    return <UserNode offset={this.props.offset} key={user._id} user={user} cx={pos.x} cy={pos.y} r={r} text={text} zoom={this.props.zoom} angle={angle} tasks={tasks} />;
                     })}
             </g>
         );
@@ -130,7 +130,7 @@ export class UserNode extends Component {
                     <circle className="user-circle" id={user._id} cx={this.props.cx} cy={this.props.cy} r={this.props.r} />
                     <text x={this.props.text.x} y={this.props.text.y} textAnchor="middle" className="user-text">{user.username}</text>
                     {this.renderTaskCircles()}
-                        <TaskCirclePreview />
+                        <TaskCirclePreview offset={this.props.offset} />
                     </g>
                 :
                     null

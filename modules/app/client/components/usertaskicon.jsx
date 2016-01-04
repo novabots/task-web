@@ -75,7 +75,7 @@ function collect(monitor) {
     return {
         id: item && item._id,
         currentOffset: monitor.getSourceClientOffset(),
-        isDragging: monitor.isDragging()
+        isDragging: monitor.isDragging(),
     };
 }
 
@@ -89,24 +89,24 @@ function getItemStyles (currentOffset) {
     var x = currentOffset.x;
     var y = currentOffset.y;
     var transform = `translate(${x}px, ${y}px)`;
-
     return {
         pointerEvents: 'none',
-        transform: transform,
-        WebkitTransform: transform
+        //transform: transform,
+        //WebkitTransform: transform
     };
 }
 
 @DragLayer(collect)
 export class TaskCirclePreview extends React.Component {
     render () {
+        console.log(this.props);
         if (!this.props.isDragging) {
             return <g></g>;
         }
 
         return (
             <g>
-               <circle className="task-circle preview" r="20" style={getItemStyles(this.props.currentOffset)} />
+               <circle className="task-circle preview" r="20" cx={this.props.currentOffset.x + this.props.offset.left} cy={this.props.currentOffset.y - this.props.offset.top} style={getItemStyles(this.props.currentOffset)} />
             </g>
         );
     }
