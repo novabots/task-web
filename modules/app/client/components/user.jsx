@@ -50,9 +50,7 @@ const userTaskTarget = {
     canDrop(props, monitor) {
         const targetUserId = props.user._id;
         const user = Meteor.users.findOne(targetUserId);
-        const item = monitor.getItem();
-        const taskId = item.id;
-        const task = Tasks.findOne(taskId);
+        const task = Tasks.findOne(monitor.getItem().id);
         if(task && user && task.userId !== targetUserId) {
             return true;
         } else {
@@ -74,7 +72,6 @@ const userTaskTarget = {
         return { name: props.user.username };
     }
 };
-
 @DropTarget(Types.UserTaskCircle, userTaskTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     canDrop: monitor.canDrop(),
@@ -121,13 +118,12 @@ export class UserNode extends Component {
         });
     }
     render () {
-        const user = this.props.user;
-        const { connectDropTarget, canDrop, isOver } = this.props;
-        return connectDropTarget(
+        const { connectDropTarget, canDrop, isOver, user } = this.props;
+        return (
            <g>
-               <OverlayTrigger placement="top" overlay={<Tooltip id={user._id}>{user.username}</Tooltip>}>
-                    <circle className="user-circle" id={user._id} cx={this.props.cx} cy={this.props.cy} r={this.props.r} />
-               </OverlayTrigger>
+                <OverlayTrigger placement="top" overlay={<Tooltip id={user._id}>{user.username}</Tooltip>}>
+                     {connectDropTarget(<circle className="user-circle" id={user._id} cx={this.props.cx} cy={this.props.cy} r={this.props.r} />)}
+                </OverlayTrigger>
                {this.renderTaskCircles()}
                <TaskCirclePreview offset={this.props.offset} />
            </g>

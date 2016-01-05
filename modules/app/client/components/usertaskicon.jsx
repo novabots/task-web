@@ -44,7 +44,20 @@ export class UserTaskIcon extends Component {
     }
 };
 
-@DragSource(Types.UserTaskCircle, userTaskIconSource, (connect, monitor) => ({
+const userTaskCircleSource = {
+    beginDrag(props) {
+        return {
+            id: props.task._id
+        };
+    },
+    endDrag(props, monitor, component) {
+        let e = document.createEvent('Event');
+        e.initEvent('usertaskcircledrop', true, true);
+        e.detail = props;
+        window.dispatchEvent(e);
+    }
+};
+@DragSource(Types.UserTaskCircle, userTaskCircleSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging()
