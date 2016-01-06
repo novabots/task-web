@@ -12,23 +12,30 @@ export class UserNodes extends Component {
         let usersCount = this.props.users.length;
         let radius = this.props.r * 0.5;
         let avgAngle = Math.ceil(360 / usersCount);
-        let angle = this.props.angle + avgAngle;
+        let startAngle = this.props.angle;
+        let angle = 0;
         let offset = radius * 5;
         if(usersCount > 1) {
-            angle = (360 / usersCount) + angle;
-            if(angle > 360) {
-                angle = angle - 360;
-                if(angle == 0) {
-                    angle = 90;
+            if(usersCount == 2) {
+                angle = 180;
+            } else {
+                angle = avgAngle;
+                if(angle >= 360) {
+                    angle = angle - 360;
                 }
             }
         }
         let positions = [];
-        let angleInc = angle;
+        let angles = [];
+        let angleInc = Math.ceil(startAngle/2);
+        if(usersCount > 1) {
+            angleInc = startAngle + Math.ceil(angle/2);
+        }
         let start = {x: this.props.x, y: this.props.y};
         for(var i = 0; i < usersCount; i++) {
             let pos = findPoint(nextAngle(angleInc, usersCount), offset, start);
             positions.push(pos);
+            angles.push(angleInc);
             angleInc = angleInc + angle;
         }
         let counter = 0;
@@ -38,8 +45,9 @@ export class UserNodes extends Component {
                     let text = positions[counter];
                     let pos = positions[counter];
                     let r = radius * this.props.zoom;
+                    let startAngle = angles[counter];
                     counter++;
-                    return <UserNode offset={this.props.offset} key={user._id} user={user} cx={pos.x} cy={pos.y} r={r} text={text} zoom={this.props.zoom} angle={angle} tasks={tasks} />;
+                    return <UserNode offset={this.props.offset} key={user._id} user={user} cx={pos.x} cy={pos.y} r={r} text={text} zoom={this.props.zoom} angle={startAngle} tasks={tasks} />;
                     })}
             </g>
         );
@@ -90,19 +98,27 @@ export class UserNode extends Component {
         let tasksCount = tasks.length;
         let radius = this.props.r * 0.7;
         let avgAngle = Math.ceil(360 / tasksCount);
-        let angle = this.props.angle + 45;
+        let startAngle = this.props.angle;
+        if(startAngle == 0) {
+            startAngle = 180;
+        }
+        let angle = 0;
         let offset = radius * 3;
         if(tasksCount > 1) {
-            angle = avgAngle + (angle - 45);
-            if(angle >= 360) {
-                angle = angle - 360;
-                if(angle == 0) {
-                    angle = 90;
+            if(tasksCount == 2) {
+                angle = 180;
+            } else {
+                angle = avgAngle;
+                if(angle >= 360) {
+                    angle = angle - 360;
                 }
             }
         }
         let positions = [];
-        let angleInc = angle;
+        let angleInc = Math.ceil(startAngle/2);
+        if(tasksCount > 1) {
+            angleInc = startAngle + Math.ceil(angle/2);
+        }
         let start = {x: this.props.cx, y: this.props.cy};
         for(var i = 0; i < tasksCount; i++) {
             let pos = findPoint(nextAngle(angleInc, tasksCount), offset, start);

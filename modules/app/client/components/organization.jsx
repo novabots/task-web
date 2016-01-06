@@ -142,13 +142,14 @@ export class OrganizationGraph extends Component {
         let user = this.props.user;
         let teamsCount = this.props.teams.length;
         let baseRadius = 70;
-        let angle = 180;
+        let angle = 0;
         let offset = 0;
         if(teamsCount > 1) {
-            angle = 360 / teamsCount;
+            angle = Math.ceil(360 / teamsCount);
             offset = baseRadius * zoom * 4;
         }
         let positions = [];
+        let angles = [];
         let angleInc = angle;
         let startX = this.state.width / 2;
         let startY = this.state.height / 2;
@@ -156,6 +157,7 @@ export class OrganizationGraph extends Component {
         for(var i = 0; i < teamsCount; i++) {
             let pos = findPoint(nextAngle(angleInc, teamsCount), offset, start);
             positions.push(pos);
+            angles.push(angleInc);
             angleInc = angleInc + angle;
         }
         let counter = 0;
@@ -165,8 +167,9 @@ export class OrganizationGraph extends Component {
             let text = positions[counter];
             let pos = positions[counter];
             let r = baseRadius * zoom;
+            let startAngle = angles[counter];
             counter++;
-            return <TeamNode canvas={this.canvas} key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={angle} tasks={tasks} />;
+            return <TeamNode canvas={this.canvas} key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={startAngle} tasks={tasks} />;
         });
     }
     render() {

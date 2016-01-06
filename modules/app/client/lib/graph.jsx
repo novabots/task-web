@@ -1,4 +1,7 @@
 export function toRadians(angle) {
+    if(angle == 0) {
+        return 360 * (Math.PI / 180);
+    }
     return Math.floor(angle) * (Math.PI / 180);
 }
 
@@ -9,10 +12,15 @@ export function findPoint(angle, distance, ref) {
 }
 
 export function nextAngle(angle, num) {
-    let inc = 360 / num;
+    angle = Math.ceil(angle);
+    let inc = Math.ceil(360 / num);
     if( (angle + inc) > 360) {
-        return (angle + inc) - 360;
-    } else {
+        if((angle + inc) % 360 == 0){
+            return 0;
+        } else {
+            return (angle + inc) - 360;
+        }
+    }  else {
         return angle + inc;
     }
 }
