@@ -20,14 +20,21 @@ export default class PersonAutosuggest extends Component {
             }
         };
         return(
-            <Autosuggest
-                value={this.state.name}
-                className="form-control"
-                suggestions={this.getPersonSuggestions.bind(this)}
-                suggestionRenderer={this.renderPersonSuggestion.bind(this)}
-                suggestionValue={this.renderPersonSuggestionValue.bind(this)}
-                onSuggestionSelected={this.onSelected.bind(this)}
-                inputAttributes={personInputAttributes} />
+            <div className="form-group">
+                {this.props.label ?
+                    <label className="control-label"><span>{this.props.label}</span></label>
+                    :
+                    null
+                }
+                <Autosuggest
+                    value={this.state.name}
+                    className="form-control"
+                    suggestions={this.getPersonSuggestions.bind(this)}
+                    suggestionRenderer={this.renderPersonSuggestion.bind(this)}
+                    suggestionValue={this.renderPersonSuggestionValue.bind(this)}
+                    onSuggestionSelected={this.onSelected.bind(this)}
+                    inputAttributes={personInputAttributes} />
+            </div>
         );
     }
 

@@ -10,6 +10,8 @@ import ProjectAutosuggest from './projectautosuggest';
 import ProjectModuleAutosuggest from './projectmoduleautosuggest';
 import ProjectWorkTypeAutosuggest from './projectworktypeautosuggest';
 
+import { Input } from 'react-bootstrap';
+
 export class TaskForm extends Component {
     constructor(props){
         super(props);
@@ -31,7 +33,9 @@ export class TaskForm extends Component {
             projectModuleId: props.task ? props.task.projectModuleId : "",
             projectModuleName: props.task ? props.task.projectModuleName : "",
             projectWorkTypeId: props.task ? props.task.projectWorkTypeId : "",
-            projectWorkTypeName: props.task ? props.task.projectWorkTypeName : ""
+            projectWorkTypeName: props.task ? props.task.projectWorkTypeName : "",
+            billable: props.task ? props.task.billable : "",
+            time: props.task ? props.task.time : 0.00
         };
         this.personSelected = this.personSelected.bind(this);
         this.clientSelected = this.clientSelected.bind(this);
@@ -49,52 +53,57 @@ export class TaskForm extends Component {
             <div>
             { this.state.enteringNew || this.state.isEditing ?
                 <div>
-                    <form className="new-task" onSubmit={this.handleSubmit}>
+                    <form className="new-task" onSubmit={e => e.preventDefault()}>
                         <PersonAutosuggest
+                            label="Person"
                             selected={this.personSelected}
                             task={this.props.task}
                             value={this.state.personName}
                             data={this.props.persons} />
                         <ClientAutosuggest
+                            label="Client"
                             selected={this.clientSelected}
                             task={this.props.task}
                             value={this.state.clientName}
                             data={this.props.clients} />
                         <ProjectAutosuggest
+                            label="Project"
                             selected={this.projectSelected}
                             task={this.props.task}
                             value={this.state.projectName}
                             client={this.state.clientId}
                             data={this.props.projects} />
                         <ProjectModuleAutosuggest
+                            label="Module"
                             selected={this.projectModuleSelected}
                             task={this.props.task}
                             value={this.state.projectModuleName}
                             project={this.state.projectId}
                             data={this.props.projectModules} />
                         <ProjectWorkTypeAutosuggest
+                            label="Work Type"
                             selected={this.projectWorkTypeSelected}
                             task={this.props.task}
                             value={this.state.projectWorkTypeName}
                             project={this.state.projectId} />
-                        <input
+                        <Input label="Title"
                             type="text"
                             className="form-control"
                             onChange={(e) => this.setState({title: e.target.value})}
-                            placeholder="Task Title"
+                            placeholder="Title"
                             value={this.state.title} />
-                        <textarea
+                        <Input label="Description" type="textarea"
                             className="form-control"
-                            placeholder="Task Description"
+                            placeholder="Description"
                             onChange={(e) => this.setState({description: e.target.value})}
-                            value={this.state.description}></textarea>
-                        <input
+                            value={this.state.description}></Input>
+                        <Input label="Due Date"
                             className="form-control"
                             type="date"
                             onChange={(e) => this.setState({dueDate: e.target.value})}
                             value={this.state.dueDate} />
-                        <select value={this.state.status} onChange={(e) => this.setState({status: e.target.value})} className="form-control">
-                            <option label="Task Status"></option>
+                        <Input label="Status" type="select" value={this.state.status} onChange={(e) => this.setState({status: e.target.value})} className="form-control">
+                            <option label="Select ..."></option>
                             {this.props.statuses ?
                                 this.props.statuses.map((status, i) => {
                                     return <option value={status.description} key={status.description}>{status.description}</option>
@@ -102,9 +111,9 @@ export class TaskForm extends Component {
                                 :
                                 null
                             }
-                        </select>
-                        <select value={this.state.priority} onChange={(e) => this.setState({priority: e.target.value})} className="form-control">
-                            <option label="Task Priority"></option>
+                        </Input>
+                        <Input label="Priority" type="select" value={this.state.priority} onChange={(e) => this.setState({priority: e.target.value})} className="form-control">
+                            <option label="Select ..."></option>
                             {this.props.priorities ?
                                 this.props.priorities.map((priority, i) => {
                                     return <option value={priority.description} key={priority.description}>{priority.description}</option>
@@ -112,14 +121,23 @@ export class TaskForm extends Component {
                                 :
                                 null
                             }
-                        </select>
+                        </Input>
+                        <Input type="number" label="Time" step="0.25" value={this.state.time} onChange={e => this.setState({time: e.target.value })} />
+                        <Input type="select" label="Billable" placeholder="Billable" value={this.state.billable} onChange={e => this.setState({billable: e.target.value})}>
+                            <option label="Select ..."></option>
+                            <option value="t">Yes</option>
+                            <option value="f">No</option>
+                        </Input>
                         {this.state.isEditing ?
-                            <button type="submit" className="btn btn-primary btn-block">Update</button>
+                            this.props.task && this.state.status === "Time Entry" ?
+                                <button type="button" onClick={this.handleSubmit} className="btn btn-primary btn-block">Enter Time</button>
+                                :
+                                <button type="button" onClick={this.handleSubmit} className="btn btn-primary btn-block">Update</button>
                             :
                             null
                         }
                         {this.state.enteringNew ?
-                            <button type="submit" className="btn btn-primary btn-block">Save</button>
+                            <button type="button" onClick={this.handleSubmit} className="btn btn-primary btn-block">Save</button>
                             :
                             null
                         }
@@ -179,11 +197,49 @@ export class TaskForm extends Component {
     }
 
     close() {
-        this.setState({enteringNew: false});
+        this.setState({
+            enteringNew: false,
+            status: "",
+            priority: "",
+            title: "",
+            description: "",
+            dueDate: "",
+            personId: "",
+            personName: "",
+            clientId: "",
+            clientName: "",
+            projectId: "",
+            projectName: "",
+            projectModuleId: "",
+            projectModuleName: "",
+            projectWorkTypeId: "",
+            projectWorkTypeName: "",
+            billable: "",
+            time: 0.00
+        });
     }
 
     stopEdit() {
-        this.setState({isEditing: false});
+        this.setState({
+            isEditing: false,
+            status: "",
+            priority: "",
+            title: "",
+            description: "",
+            dueDate: "",
+            personId: "",
+            personName: "",
+            clientId: "",
+            clientName: "",
+            projectId: "",
+            projectName: "",
+            projectModuleId: "",
+            projectModuleName: "",
+            projectWorkTypeId: "",
+            projectWorkTypeName: "",
+            billable: "",
+            time: 0.00
+        });
         if (this.props.edit) {
             this.props.edit(false);
         }
@@ -212,9 +268,11 @@ export class TaskForm extends Component {
         const projectModuleName = this.state.projectModuleName;
         const projectWorkTypeId = this.state.projectWorkTypeId;
         const projectWorkTypeName = this.state.projectWorkTypeName;
+        const billable = this.state.billable;
+        const time = this.state.time;
 
         let task = {};
-        if (this.props.task) {
+        if (this.props.task && this.state.status === "Time Entry") {
             task = this.props.task;
             task.userId = userId;
             task.title = taskTitle;
@@ -232,6 +290,45 @@ export class TaskForm extends Component {
             task.projectModuleName = projectModuleName;
             task.projectWorkTypeId = projectWorkTypeId;
             task.projectWorkTypeName = projectWorkTypeName;
+            task.archived = true;
+            task.billable = billable;
+            task.time = time && parseFloat(time).toFixed(2);
+            Tasks.update(task._id, task);
+            // Meteor.call("postTime", {
+            //     "projectid": projectId,
+            //     "moduleid": projectModuleId,
+            //     "worktypeid": projectWorkTypeId,
+            //     "date": "2015-10-10",
+            //     "time": "1.00",
+            //     "description": taskDescription,
+            //     "billable": "f",
+            //     "personid": personId
+            // }, function (error, result) {
+            //     if (error) {
+            //         toastr.error(error);
+            //     } else {
+            //     }
+            // });
+        } else if (this.props.task) {
+            task = this.props.task;
+            task.userId = userId;
+            task.title = taskTitle;
+            task.description = taskDescription;
+            task.dueDate = taskDueDate;
+            task.status = taskStatus;
+            task.priority = taskPriority;
+            task.personId = personId;
+            task.personName = personName;
+            task.clientId = clientId;
+            task.clientName = clientName;
+            task.projectId = projectId;
+            task.projectName = projectName;
+            task.projectModuleId = projectModuleId;
+            task.projectModuleName = projectModuleName;
+            task.projectWorkTypeId = projectWorkTypeId;
+            task.projectWorkTypeName = projectWorkTypeName;
+            task.billable = billable;
+            task.time = time && parseFloat(time).toFixed(2);
             Tasks.update(task._id, task);
         } else {
             task = {
@@ -252,26 +349,12 @@ export class TaskForm extends Component {
                 projectModuleName: projectModuleName,
                 projectWorkTypeId: projectWorkTypeId,
                 projectWorkTypeName: projectWorkTypeName,
+                billable: billable,
+                time: time && time && parseFloat(time).toFixed(2),
                 archived: false
             };
             Tasks.insert(task);
         }
-        // Meteor.call("postTime", {
-        //     "projectid": projectId,
-        //     "moduleid": projectModuleId,
-        //     "worktypeid": projectWorkTypeId,
-        //     "date": "2015-10-10",
-        //     "time": "1.00",
-        //     "description": taskDescription,
-        //     "billable": "f",
-        //     "personid": personId
-        // }, function (error, result) {
-        //     if (error) {
-        //         toastr.error(error);
-        //     } else {
-        //     }
-        // });
-
         this.close();
         this.stopEdit();
     }

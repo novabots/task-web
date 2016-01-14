@@ -220,16 +220,16 @@ Meteor.methods({
     },
     changeTaskOwner: function(userId, taskId) {
         if (Meteor.isServer) {
-            var user = Meteor.users.findOne(userId);
-            var task = Tasks.findOne(taskId);
+            let user = Meteor.users.findOne(userId);
+            let task = Tasks.findOne(taskId);
             try {
                 if(user && task && user._id !== task.userId) {
-                    var doc = task;
+                    let doc = task;
                     delete doc._id;
                     doc.userId = user._id;
                     doc.personId = user.profile.personid;
                     doc.archived = false;
-                    Tasks.update({_id: taskId}, {$set: {archived: true}});
+                    Tasks.update({_id: taskId}, {$set: {status: "Time Entry"}});
                     return Tasks.insert(doc);
                 }
             } catch (e) {
