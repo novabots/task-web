@@ -7,7 +7,7 @@ if (TaskStatuses && TaskStatuses.find().count() === 0) {
         { description: 'Closed' },
         { description: 'Archived' },
         { description: 'Open' },
-        { description: 'TimeEntry' }
+        { description: 'Time Entry' }
     ];
     statuses.map(function(status, i) {
         TaskStatuses.insert(status);

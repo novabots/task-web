@@ -20,14 +20,21 @@ export default class ClientAutosuggest extends Component {
             }
         };
         return(
-            <Autosuggest
-                value={this.state.name}
-                className="form-control"
-                suggestions={this.getClientSuggestions.bind(this)}
-                suggestionRenderer={this.renderClientSuggestion.bind(this)}
-                suggestionValue={this.renderClientSuggestionValue.bind(this)}
-                onSuggestionSelected={this.onSelected.bind(this)}
-                inputAttributes={clientInputAttributes} />
+            <div className="form-group">
+                {this.props.label ?
+                    <label className="control-label"><span>{this.props.label}</span></label>
+                    :
+                    null
+                }
+                <Autosuggest
+                    value={this.state.name}
+                    className="form-control"
+                    suggestions={this.getClientSuggestions.bind(this)}
+                    suggestionRenderer={this.renderClientSuggestion.bind(this)}
+                    suggestionValue={this.renderClientSuggestionValue.bind(this)}
+                    onSuggestionSelected={this.onSelected.bind(this)}
+                    inputAttributes={clientInputAttributes} />
+            </div>
         );
     }
 

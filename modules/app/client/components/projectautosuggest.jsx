@@ -20,15 +20,22 @@ export default class ProjectAutosuggest extends Component {
             }
         };
         return(
-            <Autosuggest
-                cache={false}
-                value={this.state.name}
-                className="form-control"
-                suggestions={this.getProjectSuggestions.bind(this)}
-                suggestionRenderer={this.renderProjectSuggestion.bind(this)}
-                suggestionValue={this.renderProjectSuggestionValue.bind(this)}
-                onSuggestionSelected={this.onSelected.bind(this)}
-                inputAttributes={projectInputAttributes} />
+            <div className="form-group">
+                {this.props.label ?
+                    <label className="control-label"><span>{this.props.label}</span></label>
+                    :
+                    null
+                }
+                <Autosuggest
+                    cache={false}
+                    value={this.state.name}
+                    className="form-control"
+                    suggestions={this.getProjectSuggestions.bind(this)}
+                    suggestionRenderer={this.renderProjectSuggestion.bind(this)}
+                    suggestionValue={this.renderProjectSuggestionValue.bind(this)}
+                    onSuggestionSelected={this.onSelected.bind(this)}
+                    inputAttributes={projectInputAttributes} />
+            </div>
         );
     }
 

@@ -34,15 +34,22 @@ export default class ProjectWorkTypeAutosuggest extends Component {
             }
         };
         return(
-            <Autosuggest
-                cache={false}
-                defaultValue={this.props.task ? this.props.task.projectWorkTypeName : null}
-                className="form-control"
-                suggestions={this.getProjectWorkTypeSuggestions.bind(this)}
-                suggestionRenderer={this.renderProjectWorkTypeSuggestion.bind(this)}
-                suggestionValue={this.renderProjectWorkTypeSuggestionValue.bind(this)}
-                onSuggestionSelected={this.onSelected.bind(this)}
-                inputAttributes={projectWorkTypeInputAttributes} />
+            <div className="form-group">
+                {this.props.label ?
+                    <label className="control-label"><span>{this.props.label}</span></label>
+                    :
+                    null
+                }
+                <Autosuggest
+                    cache={false}
+                    defaultValue={this.props.task ? this.props.task.projectWorkTypeName : null}
+                    className="form-control"
+                    suggestions={this.getProjectWorkTypeSuggestions.bind(this)}
+                    suggestionRenderer={this.renderProjectWorkTypeSuggestion.bind(this)}
+                    suggestionValue={this.renderProjectWorkTypeSuggestionValue.bind(this)}
+                    onSuggestionSelected={this.onSelected.bind(this)}
+                    inputAttributes={projectWorkTypeInputAttributes} />
+            </div>
         );
     }
 

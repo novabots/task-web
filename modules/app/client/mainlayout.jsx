@@ -88,8 +88,28 @@ export class MainLayout extends Component {
         }
 
         if (user) {
-            data.tasks = Tasks.find().fetch()
-            data.userTasks = data.tasks.filter(task => task.userId === user._id);
+            data.tasks = Tasks.find().fetch();
+            data.userTasks = data.tasks.filter(task => task.userId === user._id).sort((a,b) => {
+                if (a.priority === b.priority) {
+                    return 0;
+                }
+                if (a.priority === "Urgent") {
+                    return -1;
+                } else if (b.priority === "Urgent") {
+                    return 1;
+                }
+                if (a.priority === "Medium") {
+                    return -1;
+                } else if (b.priority === "Medium") {
+                    return 1;
+                }
+                if (a.priority === "Low") {
+                    return -1;
+                } else if (b.priority === "Low") {
+                    return 1;
+                }
+                return 0;
+            });
         }
 
         if (teams.ready() && organizations.ready() && users.ready()
