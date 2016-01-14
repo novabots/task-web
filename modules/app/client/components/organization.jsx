@@ -136,7 +136,7 @@ export class OrganizationGraph extends Component {
         window.addEventListener("resize", this.updateDimensions);
     }
     updateDimensions() {
-        this.setState({width: window.innerWidth , height: window.innerHeight });
+        this.setState({ width: window.innerWidth , height: window.innerHeight });
     }
     renderTeams(zoom){
         let user = this.props.user;
@@ -172,6 +172,11 @@ export class OrganizationGraph extends Component {
             return <TeamNode canvas={this.canvas} key={team._id} team={team} teamMember={teamMember} cx={pos.x} cy={pos.y} r={r} text={text} zoom={zoom} angle={startAngle} tasks={tasks} />;
         });
     }
+
+    handleZoom(e) {
+        console.log(e.deltaY);
+    }
+
     render() {
         return (
             <div>
@@ -188,7 +193,7 @@ export class OrganizationGraph extends Component {
                 </div>
                 <div className="org-teams">
                 {this.props.teams ?
-                    <svg width="100%" height={this.state.height} ref={(ref) => this.canvas = ref} viewBox={"0 0 " + this.state.width + " " + this.state.height}>
+                    <svg onWheel={this.handleZoom} id="org-graph" width="100%" height={this.state.height} ref={(ref) => this.canvas = ref} viewBox={"0 0 " + this.state.width + " " + this.state.height}>
                         {this.renderTeams(this.state.zoom)}
                     </svg>
                     :
