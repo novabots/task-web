@@ -44,10 +44,10 @@ export class UserNodes extends Component {
                 {this.props.users.map((user) => {
                     let text = positions[counter];
                     let pos = positions[counter];
-                    let r = radius * this.props.zoom;
+                    let r = radius;
                     let startAngle = angles[counter];
                     counter++;
-                    return <UserNode offset={this.props.offset} key={user._id} user={user} cx={pos.x} cy={pos.y} r={r} text={text} zoom={this.props.zoom} angle={startAngle} tasks={tasks} />;
+                    return <UserNode offset={this.props.offset} key={user._id} user={user} cx={pos.x} cy={pos.y} r={r} text={text} adjust={this.props.adjust} angle={startAngle} tasks={tasks} />;
                     })}
             </g>
         );
@@ -128,7 +128,7 @@ export class UserNode extends Component {
         let counter = 0;
         return tasks.map((task) => {
             let pos = positions[counter];
-            let r = radius * this.props.zoom;
+            let r = radius;
             counter++;
             return <UserTaskCircle key={task._id} task={task} cx={pos.x} cy={pos.y} r={r} />;
         });
@@ -141,7 +141,7 @@ export class UserNode extends Component {
                      {connectDropTarget(<circle className="user-circle" id={user._id} cx={this.props.cx} cy={this.props.cy} r={this.props.r} />)}
                 </OverlayTrigger>
                {this.renderTaskCircles()}
-               <TaskCirclePreview offset={this.props.offset} />
+               <TaskCirclePreview offset={this.props.offset} adjust={this.props.adjust} />
            </g>
         );
     }

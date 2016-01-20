@@ -111,8 +111,17 @@ export class TaskCirclePreview extends React.Component {
         if (!this.props.isDragging) {
             return <g></g>;
         }
-        let x = this.props.currentOffset ? this.props.currentOffset.x : 0;
-        let y = this.props.currentOffset ? this.props.currentOffset.y : 0;
+        let adjust = this.props.adjust;
+        let w = adjust.width;
+        let h = adjust.height;
+        let s = adjust.scale;
+        let px = adjust.panX;
+        let py = adjust.panY;
+
+        //IF it were 'real' math: (px + this.props.currentOffset.x)/s - w/2*s + w/2
+
+        let x = this.props.currentOffset ? (this.props.currentOffset.x + px)/s - w/(s * 2) + w/2 : 0;
+        let y = this.props.currentOffset ? (this.props.currentOffset.y + py)/s - h/(s * 2) + h/2 : 0;
 
         return (
             <g>

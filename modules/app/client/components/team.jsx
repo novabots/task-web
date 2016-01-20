@@ -69,7 +69,7 @@ export class TeamNode extends Component {
                 {this.props.team.name}
             </text>
             {this.data.users ?
-                <UserNodes users={this.data.users} tasks={this.props.tasks} offset={offset} team={this.props.team} x={this.props.cx} y={this.props.cy} r={this.props.r} zoom={this.props.zoom} angle={this.props.angle} />
+                <UserNodes users={this.data.users} tasks={this.props.tasks} offset={offset} team={this.props.team} x={this.props.cx} y={this.props.cy} r={this.props.r} angle={this.props.angle} adjust={this.props.adjust} />
                 :
                 null
             }

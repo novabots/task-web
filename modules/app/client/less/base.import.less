@@ -138,24 +138,26 @@ body {
   }
 }
 
-.team-circle {
-  fill: @brand-support;
+#org-graph {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  .team-circle {
+    fill: @brand-support;
+  }
+  .team-title {
+    fill: @white;
+    font-size: 200%;
+    text-transform: uppercase;
+  }
+  .user-circle {
+    fill: @brand-info;
+  }
+  .user-text {
+    fill: @white;
+  }
+  .task-circle {
+    fill: @brand-primary;
+  }
 }
 
-.team-title {
-  fill: @white;
-  font-size: 200%;
-  text-transform: uppercase;
-}
-
-.user-circle {
-  fill: @brand-info;
-}
-
-.user-text {
-  fill: @white;
-}
-
-.task-circle {
-  fill: @brand-primary;
-}
