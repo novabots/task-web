@@ -1,0 +1,163 @@
+body {
+  position: absolute;
+  background-color: #999999;
+  color: #777;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+*, *:focus, *:active {
+  outline: none !important;
+}
+
+.animate {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.modal {
+  // display: block !important;
+}
+
+#header {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  .nav.nav-pills {
+    a:hover {
+      background-color: @gray-dark;
+    }
+    a.btn-primary:hover {
+      background-color: @brand-success;
+    }
+  }
+}
+
+#sidebar {
+  .animate();
+  background-color: @gray-lighter;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 4;
+  overflow-y: scroll;
+  &.sidebar-closed {
+    left: -100%;
+  }
+  &.sidebar-open {
+    left: 0;
+  }
+}
+
+#users {
+  .animate();
+}
+
+
+#organizations {
+  .animate();
+  .btn-group {
+    width: 100%;
+    text-align: center;
+    .btn {
+      float: none;
+      display: inline-block;
+    }
+  }
+  #org {
+    position: relative;
+    z-index:2;
+    h1 {
+      text-align: center;
+    }
+    .big-input {
+      background-color: @gray-lighter;
+    }
+    #create-team-form {
+      text-align: center;
+      .input-group {
+        float: none;
+        display: inline-block;
+      }
+    }
+  }
+  .org-teams {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .big-input {
+    background-color: #999999;
+    border: none;
+    border-bottom: 3px solid @gray-dark;
+    font-size: 30px;
+    height: 60px;
+    box-shadow: none;
+    width: 99%;
+  }
+  .input-group-btn {
+    float: left;
+    .btn {
+      height: 60px;
+    }
+  }
+  .cancel-x {
+    background: none;
+    color: #777;
+    font-size: 60px;
+    line-height: 40px;
+  }
+}
+.draggable {
+    z-index: 100000;
+}
+.droppable {
+    min-height: 50px;
+    border: 1px solid @gray-lighter;
+    padding: 10px;
+}
+#taskList .panel {
+  color: #777;
+}
+.loading-indicator {
+  width: 100%;
+  margin-top: 100px;
+  text-align: center;
+  i.fa {
+    font-size: 60px;
+  }
+}
+
+#org-graph {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  .team-circle {
+    fill: @brand-support;
+  }
+  .team-title {
+    fill: @white;
+    font-size: 200%;
+    text-transform: uppercase;
+  }
+  .user-circle {
+    fill: @brand-info;
+  }
+  .user-text {
+    fill: @white;
+  }
+  .task-circle {
+    fill: @brand-primary;
+  }
+}
+
